@@ -7,7 +7,7 @@ public enum DoctorType {
 
     private final String type;
 
-    private DoctorType(String type) {
+    DoctorType(String type) {
         this.type = type;
     }
 
