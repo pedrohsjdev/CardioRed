@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,16 +26,18 @@ public class Medico {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @Column(length = 11, nullable = false)
+    @Column(length = 11)
+    @NotNull
     private String crm;
-    @Column(nullable = false)
+    @NotNull
     private String name;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @NotNull
     private DoctorType doctorType;
     
     //@OneToOne
-    //@JoinColumn(name="userId", nullable = false)
+    //@JoinColumn(name="userId")
+    //@NotNull
     //private User user;
 }

@@ -1,10 +1,10 @@
 package com.cardiored.cardio.domain;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.PrimaryKeyJoinColumn;
+import javax.validation.constraints.NotNull;
 
 import lombok.experimental.SuperBuilder;
 
@@ -13,6 +13,6 @@ import lombok.experimental.SuperBuilder;
 @PrimaryKeyJoinColumn(name="medicoId")
 public class Docente extends Medico{
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @NotNull
     private Titulation titulation;
 }
