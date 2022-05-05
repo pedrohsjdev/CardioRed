@@ -8,7 +8,7 @@ public enum Titulation {
 
     private final String titulation;
 
-    private Titulation(String titulation) {
+    Titulation(String titulation) {
         this.titulation = titulation;
     }
 
