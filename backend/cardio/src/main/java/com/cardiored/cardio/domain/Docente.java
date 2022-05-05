@@ -6,8 +6,12 @@ import javax.persistence.Enumerated;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.validation.constraints.NotNull;
 
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+@Getter
+@Setter
 @SuperBuilder
 @Entity
 @PrimaryKeyJoinColumn(name="medicoId")
