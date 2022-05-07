@@ -3,36 +3,48 @@ package com.cardiored.cardio.service;
 import javax.transaction.Transactional;
 
 import com.cardiored.cardio.domain.Docente;
+import com.cardiored.cardio.domain.Medico;
 import com.cardiored.cardio.repository.DocenteRepository;
+import com.cardiored.cardio.repository.MedicoRepository;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import lombok.RequiredArgsConstructor;
-
 @Service
-@RequiredArgsConstructor
-public class DocenteService {
+public class DocenteService extends MedicoService {
     private final DocenteRepository docenteRepository;
 
-    public Docente findByIdOrThrowException(Integer id) {
-        return docenteRepository.findById(id).orElseThrow(() -> new RuntimeException("Docente not found!"));
+    @Autowired
+    protected DocenteService(MedicoRepository medicoRepository, DocenteRepository docenteRepository) {
+        super(medicoRepository);
+        this.docenteRepository = docenteRepository;
     }
 
     @Transactional
     public Docente save(Docente docente) {
-        Docente docenteFound = findByIdOrThrowException(docente.getId());
-        if(docenteFound == null) {
-            return docenteRepository.save(docente);
+        // Search a Medico with the same CRM as the new Docente.
+        Medico medicoSameCRM = findByCrm(docente.getCrm());
+        // If Medico with the same CRM was found, then...
+        if(medicoSameCRM != null) {
+            throw new RuntimeException("Docente already exists!");
         }
-        throw new RuntimeException("Docente already exists!");
+
+        return docenteRepository.save(docente);
+        
     }
 
-    public void delete(Integer id) {
-        docenteRepository.delete(findByIdOrThrowException(id));
-    }
-
+    @Transactional
     public void replace(Docente docente) {
+        // Docente exists?
         findByIdOrThrowException(docente.getId());
-        docenteRepository.save(docente);
+
+        // Search a Medico with the same CRM as the new Docente.
+        Medico medicoSameCRM = findByCrm(docente.getCrm());
+        // If Medico with the same CRM was found and he isn't the Medico being updated, then...
+        if(medicoSameCRM != null && medicoSameCRM.getId() != docente.getId()) {
+            throw new RuntimeException("Already exists a Medico with this CRM!");
+        }
+
+        docenteRepository.save(docente);        
     } 
 }
