@@ -36,11 +36,14 @@ public class MedicoService {
 
     @Transactional
     public Medico save(Medico medico) {
+        // Search a Medico with the same CRM as the new Docente.
         Medico medicoFound = findByCrm(medico.getCrm());
-        if(medicoFound == null) {
-            return medicoRepository.save(medico);
+        // If Medico with the same CRM was found, then...
+        if(medicoFound != null) {
+            throw new RuntimeException("Medico already exists!");            
         }
-        throw new RuntimeException("Medico already exists!");
+
+        return medicoRepository.save(medico);
     }
 
     public void delete(Integer id) {
@@ -49,6 +52,14 @@ public class MedicoService {
 
     public void replace(Medico medico) {
         findByIdOrThrowException(medico.getId());
+
+        // Search a Medico with the same CRM as the new Medico.
+        Medico medicoSameCRM = findByCrm(medico.getCrm());
+        // If Medico with the same CRM was found and he isn't the Medico being updated, then...
+        if(medicoSameCRM != null && medicoSameCRM.getId() != medico.getId()) {
+            throw new RuntimeException("Already exists a Medico with this CRM!");
+        }
+
         medicoRepository.save(medico);
     } 
 }
