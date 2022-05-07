@@ -50,6 +50,7 @@ public class MedicoService {
         medicoRepository.delete(findByIdOrThrowException(id));
     }
 
+    @Transactional
     public void replace(Medico medico) {
         findByIdOrThrowException(medico.getId());
 

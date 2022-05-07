@@ -40,7 +40,7 @@ public class DocenteService extends MedicoService {
 
         // Search a Medico with the same CRM as the new Docente.
         Medico medicoSameCRM = findByCrm(docente.getCrm());
-        // If Medico with the same CRM was found and he isn't the Medico being updated, then...
+        // If Medico with the same CRM was found and he isn't the Docente being updated, then...
         if(medicoSameCRM != null && medicoSameCRM.getId() != docente.getId()) {
             throw new RuntimeException("Already exists a Medico with this CRM!");
         }

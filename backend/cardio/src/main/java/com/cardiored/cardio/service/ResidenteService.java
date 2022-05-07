@@ -32,6 +32,7 @@ public class ResidenteService extends MedicoService{
         return residenteRepository.save(residente);        
     }
 
+    @Transactional
     public void replace(Residente residente) {
         findByIdOrThrowException(residente.getId());
 
