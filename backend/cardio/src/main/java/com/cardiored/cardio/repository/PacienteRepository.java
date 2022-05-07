@@ -12,3 +12,4 @@ public interface PacienteRepository extends JpaRepository<Paciente, Integer> {
 
     Paciente findByCpf(String cpf);
 }
+
