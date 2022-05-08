@@ -1,5 +1,7 @@
 package com.cardiored.cardio.domain;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 public enum Ethnicity {
     BRANCO("Branco"),
     PRETO("Preto"),
@@ -7,6 +9,7 @@ public enum Ethnicity {
     AMARELO("Amarelo"),
     INDIGENA("Indígena");
 
+    @JsonValue
     private final String name;
 
     Ethnicity(String name) {
