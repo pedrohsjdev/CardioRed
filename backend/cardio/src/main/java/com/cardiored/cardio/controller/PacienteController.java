@@ -3,7 +3,6 @@ package com.cardiored.cardio.controller;
 import com.cardiored.cardio.domain.Paciente;
 import com.cardiored.cardio.service.PacienteService;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;

@@ -12,8 +12,8 @@ import javax.transaction.Transactional;
 public class UserService {
     private final UserRepository userRepository;
 
-    public User findUserByLoginAndPassword(String login, String password){
-        return userRepository.findUserByLoginAndPassword(login, password);
+    public User findUserByLoginAndPassword(User user){
+        return userRepository.findUserByLoginAndPassword(user.getLogin(), user.getPassword());
     }
 
     public User findById(Integer id){
