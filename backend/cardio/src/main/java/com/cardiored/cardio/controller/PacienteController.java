@@ -33,6 +33,11 @@ public class PacienteController {
         return ResponseEntity.ok(pacienteService.findByName(name));
     }
 
+    @GetMapping(path = "/cpf/{cpf}")
+    public ResponseEntity<Paciente> findByCpf(@PathVariable String cpf){
+        return ResponseEntity.ok(pacienteService.findByCpf(cpf));
+    }
+
     @PostMapping
     public ResponseEntity<Paciente> save(@RequestBody @Valid Paciente paciente){
         return new ResponseEntity<>(pacienteService.save(paciente), HttpStatus.CREATED);
