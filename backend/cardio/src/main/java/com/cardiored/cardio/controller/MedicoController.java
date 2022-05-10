@@ -64,7 +64,7 @@ public class MedicoController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @DeleteMapping("/delete")
+    @DeleteMapping
     public ResponseEntity<Void> delete(@RequestParam(required = true) Integer id) {
         medicoService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

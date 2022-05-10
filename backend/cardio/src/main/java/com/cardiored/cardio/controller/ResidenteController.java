@@ -38,7 +38,7 @@ public class ResidenteController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @DeleteMapping("delete")
+    @DeleteMapping
     public ResponseEntity<Void> delete(@RequestParam(required = true) Integer id) {
         residenteService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

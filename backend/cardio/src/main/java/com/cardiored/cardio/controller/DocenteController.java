@@ -36,7 +36,7 @@ public class DocenteController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @DeleteMapping("delete")
+    @DeleteMapping
     public ResponseEntity<Void> delete(@RequestParam(required = true) Integer id) {
         docenteService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
