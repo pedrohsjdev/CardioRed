@@ -5,7 +5,10 @@ import java.util.List;
 import javax.transaction.Transactional;
 
 import com.cardiored.cardio.domain.Medico;
+import com.cardiored.cardio.mapper.MedicoMapper;
 import com.cardiored.cardio.repository.MedicoRepository;
+import com.cardiored.cardio.request.MedicoPostDTO;
+import com.cardiored.cardio.request.MedicoPutDTO;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
@@ -35,15 +38,15 @@ public class MedicoService {
     }
 
     @Transactional
-    public Medico save(Medico medico) {
+    public Medico save(MedicoPostDTO medicoPostDTO) {
         // Search a Medico with the same CRM as the new Docente.
-        Medico medicoFound = findByCrm(medico.getCrm());
+        Medico medicoFound = findByCrm(medicoPostDTO.getCrm());
         // If Medico with the same CRM was found, then...
         if(medicoFound != null) {
             throw new RuntimeException("Medico already exists!");            
         }
 
-        return medicoRepository.save(medico);
+        return medicoRepository.save(MedicoMapper.INSTANCE.toMedico(medicoPostDTO));
     }
 
     public void delete(Integer id) {
@@ -51,16 +54,16 @@ public class MedicoService {
     }
 
     @Transactional
-    public void replace(Medico medico) {
-        findByIdOrThrowException(medico.getId());
+    public void replace(MedicoPutDTO medicoPutDTO) {
+        findByIdOrThrowException(medicoPutDTO.getId());
 
         // Search a Medico with the same CRM as the new Medico.
-        Medico medicoSameCRM = findByCrm(medico.getCrm());
+        Medico medicoSameCRM = findByCrm(medicoPutDTO.getCrm());
         // If Medico with the same CRM was found and he isn't the Medico being updated, then...
-        if(medicoSameCRM != null && medicoSameCRM.getId() != medico.getId()) {
+        if(medicoSameCRM != null && medicoSameCRM.getId() != medicoPutDTO.getId()) {
             throw new RuntimeException("Already exists a Medico with this CRM!");
         }
 
-        medicoRepository.save(medico);
+        medicoRepository.save(MedicoMapper.INSTANCE.toMedico(medicoPutDTO));
     } 
 }
