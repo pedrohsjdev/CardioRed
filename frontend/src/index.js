@@ -1,14 +1,13 @@
-import React from 'react';
-import { createRoot } from 'react-dom/client';
+import React from "react";
+import { createRoot } from "react-dom/client";
 
-const nome = 'CardioRed'
+import App from "./App";
 
-const rootElement = document.getElementById('root')
-const root = createRoot(rootElement)
+const nome = "CardioRed";
 
-root.render(
-    <div>Nome: {nome}</div>
-)
+const rootElement = document.getElementById("root");
+const root = createRoot(rootElement);
 
+root.render(<App />);
 
-console.log("funcionando")
+console.log("funcionando");
