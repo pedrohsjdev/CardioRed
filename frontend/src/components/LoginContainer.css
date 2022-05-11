@@ -24,7 +24,8 @@ body {
   font-family: "Helvetica Neue", sans-serif;
 }
 
-a {
+a,
+a:hover {
   text-decoration: none;
 }
 
@@ -116,7 +117,7 @@ img {
 }
 
 .login-input::placeholder {
-  font-size: var;
+  font-size: var(--normal-font-size);
 }
 
 .login-button {
