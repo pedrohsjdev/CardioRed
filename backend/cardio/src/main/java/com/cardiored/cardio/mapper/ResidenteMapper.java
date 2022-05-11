@@ -1,9 +1,9 @@
 package com.cardiored.cardio.mapper;
 
 import com.cardiored.cardio.domain.Residente;
-import com.cardiored.cardio.request.ResidentePostDTO;
-import com.cardiored.cardio.request.ResidentePutDTO;
-import com.cardiored.cardio.request.ResidenteResponsePostDTO;
+import com.cardiored.cardio.request.residente.ResidentePostDTO;
+import com.cardiored.cardio.request.residente.ResidentePutDTO;
+import com.cardiored.cardio.request.residente.ResidenteResponsePostDTO;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;

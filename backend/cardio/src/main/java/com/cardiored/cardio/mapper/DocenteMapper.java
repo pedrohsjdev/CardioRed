@@ -1,9 +1,9 @@
 package com.cardiored.cardio.mapper;
 
 import com.cardiored.cardio.domain.Docente;
-import com.cardiored.cardio.request.DocentePostDTO;
-import com.cardiored.cardio.request.DocentePutDTO;
-import com.cardiored.cardio.request.DocenteResponsePostDTO;
+import com.cardiored.cardio.request.docente.DocentePostDTO;
+import com.cardiored.cardio.request.docente.DocentePutDTO;
+import com.cardiored.cardio.request.docente.DocenteResponsePostDTO;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;

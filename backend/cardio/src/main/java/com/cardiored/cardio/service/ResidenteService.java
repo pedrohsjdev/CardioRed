@@ -7,8 +7,8 @@ import com.cardiored.cardio.domain.Residente;
 import com.cardiored.cardio.mapper.ResidenteMapper;
 import com.cardiored.cardio.repository.MedicoRepository;
 import com.cardiored.cardio.repository.ResidenteRepository;
-import com.cardiored.cardio.request.ResidentePostDTO;
-import com.cardiored.cardio.request.ResidentePutDTO;
+import com.cardiored.cardio.request.residente.ResidentePostDTO;
+import com.cardiored.cardio.request.residente.ResidentePutDTO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

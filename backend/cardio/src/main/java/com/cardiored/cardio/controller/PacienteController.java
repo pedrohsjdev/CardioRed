@@ -1,6 +1,8 @@
 package com.cardiored.cardio.controller;
 
 import com.cardiored.cardio.domain.Paciente;
+import com.cardiored.cardio.request.paciente.PacientePostDTO;
+import com.cardiored.cardio.request.paciente.PacientePutDTO;
 import com.cardiored.cardio.service.PacienteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -28,8 +30,8 @@ public class PacienteController {
         return ResponseEntity.ok(pacienteService.findById(id));
     }
 
-    @GetMapping(path = "/find")
-    public ResponseEntity<List<Paciente>> findByName(@RequestParam String name){
+    @GetMapping(path = "/find/{name}")
+    public ResponseEntity<List<Paciente>> findByName(@PathVariable String name){
         return ResponseEntity.ok(pacienteService.findByName(name));
     }
 
@@ -39,8 +41,9 @@ public class PacienteController {
     }
 
     @PostMapping
-    public ResponseEntity<Paciente> save(@RequestBody @Valid Paciente paciente){
-        return new ResponseEntity<>(pacienteService.save(paciente), HttpStatus.CREATED);
+    public ResponseEntity<Void> save(@RequestBody @Valid PacientePostDTO pacientePostDTO){
+        pacienteService.save(pacientePostDTO);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @DeleteMapping(path = "/{id}")
@@ -50,8 +53,8 @@ public class PacienteController {
     }
 
     @PutMapping
-    public ResponseEntity<Paciente> replace(@RequestBody Paciente paciente){
-        pacienteService.replace(paciente);
+    public ResponseEntity<Paciente> replace(@RequestBody PacientePutDTO pacientePutDTO){
+        pacienteService.replace(pacientePutDTO);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

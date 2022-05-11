@@ -1,6 +1,8 @@
 package com.cardiored.cardio.controller;
 
 import com.cardiored.cardio.domain.User;
+import com.cardiored.cardio.request.user.UserPostDTO;
+import com.cardiored.cardio.request.user.UserPutDTO;
 import com.cardiored.cardio.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -27,8 +29,9 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<User> save(@RequestBody @Valid User user){
-        return new ResponseEntity<>(userService.save(user), HttpStatus.CREATED);
+    public ResponseEntity<Void> save(@RequestBody @Valid UserPostDTO userPostDTO){
+        userService.save(userPostDTO);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @DeleteMapping(path = "/{id}")
@@ -38,8 +41,8 @@ public class UserController {
     }
 
     @PutMapping
-    public ResponseEntity<User> replace(@RequestBody User user){
-        userService.replace(user);
+    public ResponseEntity<Void> replace(@RequestBody UserPutDTO userPutDTO){
+        userService.replace(userPutDTO);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
