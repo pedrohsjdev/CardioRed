@@ -1,8 +1,8 @@
 import React from "react";
 
-import FormSearch from "../components/FormSearch";
-import Pagination from "../components/Pagination";
-import CounterElements from "../components/CounterElements";
+import FormSearch from "../components/SearchBar/FormSearch";
+import Pagination from "../components/Paginator/Pagination";
+import CounterElements from "../components/TableCounter/CounterElements";
 
 const PacientePage = () => {
   // Temporary test data
