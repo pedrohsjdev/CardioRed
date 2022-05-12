@@ -1,18 +1,18 @@
 import React from "react";
 import "./LoginContainer.css";
-import { Logo } from '../../assets/logo.svg';
-import { LoginImg } from '../../assets/img-login.svg';
+import Logo  from '../../assets/logo.svg';
+import LoginImg  from '../../assets/img-login.svg';
 
 function LoginContainer () {
   return (
       <div className="login-container">
         <div className="login-content">
           <div className="logo-img">
-            <Logo/>
+            <img src={Logo}/>
           </div>
 
           <div className="login-img">
-            <LoginImg/>
+          <img src={LoginImg}/>
           </div>
 
           <div className="login-forms">
