@@ -5,6 +5,7 @@ import Pagination from "../components/Pagination";
 import CounterElements from "../components/CounterElements";
 
 const PacientePage = () => {
+  // Temporary test data
   const pacientes = [
     {
       id: 1,
@@ -88,20 +89,35 @@ const PacientePage = () => {
     },
   ];
 
+  // Temporary test variables
   let pagesNumber = [1, 2, 3, 4, 5];
   let totalPacientes = 57;
   let firstPaciente = 1;
   let lastPaciente = 10;
+
+  //Temporary style variables
   const buttonStyle = {
     fontSize: "1rem",
     borderRadius: "8px",
     padding: "0.2rem 4rem",
   };
 
+  const h1Style = {
+    margin: "3rem 0 3rem 0",
+  };
+
+  const divTableStyle = {
+    margin: "3rem 0 0 0",
+  };
+
+  const tableStyle = {
+    textAlign: "center",
+  };
+
   return (
     <>
       <div className="container">
-        <h1 style={{ margin: "3rem 0 3rem 0" }}>Listagem de Pacientes</h1>
+        <h1 style={h1Style}>Listagem de Pacientes</h1>
         <div className="d-flex justify-content-between">
           <button
             style={buttonStyle}
@@ -113,11 +129,8 @@ const PacientePage = () => {
           <FormSearch criteria="CPF" />
         </div>
 
-        <div style={{ margin: "3rem 0 0 0" }}>
-          <table
-            style={{ textAlign: "center" }}
-            className="table table-striped table-hover"
-          >
+        <div style={divTableStyle}>
+          <table style={tableStyle} className="table table-striped table-hover">
             <thead>
               <tr>
                 <th scope="col">CPF</th>
