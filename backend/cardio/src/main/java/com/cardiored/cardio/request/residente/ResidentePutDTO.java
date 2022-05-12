@@ -1,7 +1,8 @@
-package com.cardiored.cardio.request;
+package com.cardiored.cardio.request.residente;
 
 import javax.persistence.PrimaryKeyJoinColumn;
 
+import com.cardiored.cardio.request.medico.MedicoPutDTO;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,6 +11,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @PrimaryKeyJoinColumn(name="medicoId")
-public class ResidenteResponsePostDTO extends MedicoResponsePostDTO {
+public class ResidentePutDTO extends MedicoPutDTO {
     private Integer residencyYear;
 }

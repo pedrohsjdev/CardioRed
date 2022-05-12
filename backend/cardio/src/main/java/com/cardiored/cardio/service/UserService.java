@@ -1,7 +1,10 @@
 package com.cardiored.cardio.service;
 
 import com.cardiored.cardio.domain.User;
+import com.cardiored.cardio.mapper.UserMapper;
 import com.cardiored.cardio.repository.UserRepository;
+import com.cardiored.cardio.request.user.UserPostDTO;
+import com.cardiored.cardio.request.user.UserPutDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,18 +25,20 @@ public class UserService {
     }
 
     @Transactional
-    public User save(User user){
-        return userRepository.save(user);
+    public void save(UserPostDTO userPostDTO){
+         userRepository.save(
+                UserMapper.INSTANCE.toUser(userPostDTO)
+        );
     }
 
     public void delete(Integer id){
         userRepository.delete(findById(id));
     }
 
-    public void replace(User user){
-        User savedUser = findById(user.getId());
-        User user1 = savedUser;
-        user1.setId(savedUser.getId());
-        userRepository.save(user1);
+    public void replace(UserPutDTO userPutDTO){
+        User savedUser = findById(userPutDTO.getId());
+        User user = UserMapper.INSTANCE.toUser(userPutDTO);
+        user.setId(savedUser.getId());
+        userRepository.save(user);
     }
 }

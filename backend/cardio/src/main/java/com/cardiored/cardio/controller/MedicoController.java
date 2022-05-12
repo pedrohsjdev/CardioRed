@@ -6,9 +6,9 @@ import javax.validation.Valid;
 
 import com.cardiored.cardio.domain.Medico;
 import com.cardiored.cardio.mapper.MedicoMapper;
-import com.cardiored.cardio.request.MedicoPostDTO;
-import com.cardiored.cardio.request.MedicoPutDTO;
-import com.cardiored.cardio.request.MedicoResponsePostDTO;
+import com.cardiored.cardio.request.medico.MedicoPostDTO;
+import com.cardiored.cardio.request.medico.MedicoPutDTO;
+import com.cardiored.cardio.request.medico.MedicoResponsePostDTO;
 import com.cardiored.cardio.service.MedicoService;
 
 import org.springframework.data.domain.Page;

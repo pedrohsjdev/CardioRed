@@ -4,9 +4,9 @@ package com.cardiored.cardio.controller;
 import javax.validation.Valid;
 
 import com.cardiored.cardio.mapper.ResidenteMapper;
-import com.cardiored.cardio.request.ResidentePostDTO;
-import com.cardiored.cardio.request.ResidentePutDTO;
-import com.cardiored.cardio.request.ResidenteResponsePostDTO;
+import com.cardiored.cardio.request.residente.ResidentePostDTO;
+import com.cardiored.cardio.request.residente.ResidentePutDTO;
+import com.cardiored.cardio.request.residente.ResidenteResponsePostDTO;
 import com.cardiored.cardio.service.ResidenteService;
 
 import org.springframework.http.HttpStatus;

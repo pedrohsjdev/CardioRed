@@ -1,4 +1,4 @@
-package com.cardiored.cardio.request;
+package com.cardiored.cardio.request.medico;
 
 import com.cardiored.cardio.domain.DoctorType;
 

@@ -3,9 +3,9 @@ package com.cardiored.cardio.controller;
 import javax.validation.Valid;
 
 import com.cardiored.cardio.mapper.DocenteMapper;
-import com.cardiored.cardio.request.DocentePostDTO;
-import com.cardiored.cardio.request.DocentePutDTO;
-import com.cardiored.cardio.request.DocenteResponsePostDTO;
+import com.cardiored.cardio.request.docente.DocentePostDTO;
+import com.cardiored.cardio.request.docente.DocentePutDTO;
+import com.cardiored.cardio.request.docente.DocenteResponsePostDTO;
 import com.cardiored.cardio.service.DocenteService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
