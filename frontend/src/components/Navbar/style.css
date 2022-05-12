@@ -1,0 +1,20 @@
+.navbar-shadow {
+    -webkit-box-shadow: 0px 5px 20px -16px rgba(41, 41, 41, 1);
+    -moz-box-shadow: 0px 5px 20px -16px rgba(41, 41, 41, 1);
+    box-shadow: 0px 5px 20px -16px rgba(41, 41, 41, 1);
+}
+
+.container-navbar{
+    width: calc(100% - 480px);
+    margin: 0 auto;
+}
+
+.nav-item > a:hover{
+    color: var(--first-color) !important;
+}
+
+a{
+   font-family: var(--body-font);
+   font-size: 18px;
+   color: var(--text-title-color) !important;
+}
