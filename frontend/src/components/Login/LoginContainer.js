@@ -1,17 +1,18 @@
 import React from "react";
 import "./LoginContainer.css";
+import { Logo } from '../../assets/logo.svg';
+import { LoginImg } from '../../assets/img-login.svg';
 
-const LoginContainer = () => {
+function LoginContainer () {
   return (
-    <>
       <div className="login-container">
         <div className="login-content">
           <div className="logo-img">
-            <img src={require("../assets/logo.svg")} alt="Cardio logo" />
+            <Logo/>
           </div>
 
           <div className="login-img">
-            <img src={require("../assets/img-login.svg")} alt="Login image" />
+            <LoginImg/>
           </div>
 
           <div className="login-forms">
@@ -41,7 +42,6 @@ const LoginContainer = () => {
           </div>
         </div>
       </div>
-    </>
   );
 };
 
