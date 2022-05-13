@@ -32,6 +32,7 @@ a:hover {
 }
 
 .container-page{
-    width: calc(100% - 320px) !important;
+    width: calc(100% - 20%) !important;
+    padding: 0 !important;
     margin: 0 auto;
 }

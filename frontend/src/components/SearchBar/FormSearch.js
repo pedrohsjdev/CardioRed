@@ -10,7 +10,7 @@ const FormSearch = ({ criteria }) => {
 
   return (
     <>
-      <div className="d-flex justify-content-between">
+      <div className="d-flex justify-content-between mt-5">
         <span style={style}>Pesquisar:</span>
         <form>
           <input
