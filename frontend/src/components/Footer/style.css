@@ -1,0 +1,21 @@
+a{
+    font-family: var(--body-font);
+    font-size: 18px;
+    color: var(--text-title-color) !important;
+}
+
+.footer{
+    background-color: var(--first-color);
+    height: 15vh;
+}
+
+nav > div > p{
+    font-size: 14px;
+    font-family: var(--body-font);
+    color: #EFEFEF;
+    margin: 0;
+}
+
+.github{
+    width: 30px;
+}

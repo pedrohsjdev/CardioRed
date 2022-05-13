@@ -18,6 +18,8 @@
   --body-font: "Helvetica Neue", sans-serif;
   --h1-font-size: 34px;
   --normal-font-size: 16px;
+
+  --title-font-weight: 600;
 }
 
 body {
@@ -27,4 +29,9 @@ body {
 a,
 a:hover {
   text-decoration: none;
+}
+
+.container-page{
+    width: calc(100% - 320px);
+    margin: 0 auto;
 }
