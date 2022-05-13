@@ -4,7 +4,7 @@ const Pagination = ({ pagesNumber }) => {
   return (
     <>
       <nav>
-        <ul className="pagination">
+        <ul className="pagination pagination-sm">
           <li className="page-item">
             <a className="page-link" href="#">
               Anterior

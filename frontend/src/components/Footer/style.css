@@ -4,16 +4,27 @@ a{
     color: var(--text-title-color) !important;
 }
 
-.footer{
+
+footer{
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
     background-color: var(--first-color);
     height: 15vh;
+    align-items: center;
+    display: flex;
 }
 
-nav > div > p{
+.footer-text{
     font-size: 14px;
     font-family: var(--body-font);
     color: #EFEFEF;
     margin: 0;
+}
+
+.footer-container{
+    text-align: center;
 }
 
 .github{

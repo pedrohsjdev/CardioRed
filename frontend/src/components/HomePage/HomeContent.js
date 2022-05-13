@@ -4,7 +4,7 @@ import "./style.css"
 
 const HomeContent = () => {
     return (
-        <div className="d-flex container-page mt-5">
+        <div className="d-flex container-page home-content">
             <div className="container">
                 <div className="d-flex flex-column">
                     <h1>Sistema de Cardiologia</h1>
@@ -22,7 +22,7 @@ const HomeContent = () => {
                 </div>
                 <div className="mb-3">
                     <h1 className="mt-3">Desenvolvedores</h1>
-                    <p className="developers">Pedro Henrique, Rafael Dutra, Iago Sampaio <br/> e Leisson</p>
+                    <p className="developers">Pedro Henrique, Rafael Dutra, Iago Sampaio <br/> e Leisson Gomes</p>
                 </div>
             </div>
             <div className="container heart-container">
