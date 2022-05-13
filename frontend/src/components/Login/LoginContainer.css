@@ -1,40 +1,38 @@
-
-
-img {
-  max-width: 100%;
-  height: auto;
-  display: block;
+.login-outer {
+  display: table;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
 }
 
-.login-container {
-  display: grid;
-  height: 100vh;
-  margin-left: 1.5rem;
-  margin-right: 1.5rem;
+.login-middle {
+  display: table-cell;
+  vertical-align: middle;
 }
 
-.login-content {
-  display: grid;
+.login-inner {
+  margin-left: auto;
+  margin-right: auto;
+  width: 349px;
 }
 
 .logo-img {
-  justify-self: center;
-  width: 310px;
+  width: 285px;
   margin: 1.5rem auto 1.5rem;
-}
-
-.login-img {
-  justify-self: center;
+  display: none;
 }
 
 .login-img img {
-  width: 310px;
+  width: 349px;
   margin-top: 1.5rem;
 }
 
 .login-forms {
   position: relative;
   height: 368px;
+  width: 348px;
 }
 
 .login {
@@ -43,7 +41,7 @@ img {
   width: 100%;
   background-color: var(--first-color);
   padding: 2rem 1rem;
-  border-radius: 1rem;
+  border-radius: 40px;
   text-align: center;
   box-shadow: 3px 3px 8px 5px rgb(0 0 0 / 25%);
   animation-duration: 0.4s;
@@ -95,8 +93,8 @@ img {
   display: block;
   padding: 1rem;
   margin: 2rem 0;
-  background-color: var(--second-color-light);
-  color: #fff;
+  background-color: var(--second-color);
+  color: #fff !important;
   font-weight: 600;
   text-align: center;
   border-radius: 0.5rem;
@@ -104,42 +102,33 @@ img {
 }
 
 .login-button:hover {
-  background-color: var(--second-color);
+  background-color: var(--second-color-light);
 }
 
-@media screen and (min-width: 576px) {
-  .login-forms {
-    width: 348px;
-    justify-self: center;
+@media screen and (min-height: 768px) {
+  .logo-img {
+    display: block;
   }
 }
 
 @media screen and (min-width: 1024px) {
-  .login-container {
-    height: 100vh;
-    overflow: hidden;
+  .login-forms {
+    width: 415px;
   }
 
-  .login-content {
-    grid-template-columns: repeat(2, max-content);
-    grid-template-rows: auto auto 8rem;
-    justify-content: center;
-    align-items: center;
+  .login-inner {
+    display: flex;
+    width: 1049px;
   }
-
-  .logo-img {
-    grid-column: 1/3;
-  }
-
   .login-img {
     display: flex;
-    width: 600px;
+    width: 700px;
     height: 588px;
     background-color: #f1f1f1;
-    border-radius: 1rem;
+    border-radius: 40px;
     padding-left: 1rem;
     box-shadow: 3px 3px 8px 5px rgb(0 0 0 / 25%);
-    margin-left: 9rem;
+    margin-left: 6rem;
   }
 
   .login-img img {
@@ -148,7 +137,7 @@ img {
   }
 
   .login {
-    left: -11rem;
-    bottom: 0.2rem;
+    left: -9rem;
+    bottom: -6.8rem;
   }
 }
