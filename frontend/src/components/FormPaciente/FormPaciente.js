@@ -1,8 +1,9 @@
 import React from "react";
 
-const FormPaciente = () => {
+const FormPaciente = (props) => {
     return (
         <form>
+            <input hidden defaultValue={props.id} />
             <div className="row mb-3">
                 <label
                     htmlFor="inputCPF"
@@ -11,7 +12,13 @@ const FormPaciente = () => {
                     CPF*:
                 </label>
                 <div className="col-sm-10">
-                    <input type="text" className="form-control" id="inputCPF" />
+                    <input
+                        type="text"
+                        className="form-control"
+                        id="inputCPF"
+                        disabled={props.disabled}
+                        defaultValue={props.data.cpf}
+                    />
                 </div>
             </div>
 
@@ -27,6 +34,8 @@ const FormPaciente = () => {
                         type="text"
                         className="form-control"
                         id="inputName"
+                        disabled={props.disabled}
+                        defaultValue={props.data.nome}
                     />
                 </div>
             </div>
@@ -38,8 +47,13 @@ const FormPaciente = () => {
                     Sexo*:
                 </label>
                 <div className="col-sm-10">
-                    <select className="form-select" id="selectGender">
-                        <option defaultValue>Escolha uma opção</option>
+                    <select
+                        className="form-select"
+                        id="selectGender"
+                        disabled={props.disabled}
+                        defaultValue={props.data.sexo}
+                    >
+                        <option value="">Escolha uma opção</option>
                         <option value="F">Feminino</option>
                         <option value="M">Masculino</option>
                     </select>
@@ -57,6 +71,8 @@ const FormPaciente = () => {
                         type="text"
                         className="form-control"
                         id="inputBirthDate"
+                        disabled={props.disabled}
+                        defaultValue={props.data.dataNascimento}
                     />
                 </div>
             </div>
