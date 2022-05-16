@@ -1,29 +1,29 @@
 import React from "react";
 
-const PacientesTable = () => {
+const PacientesTable = (props) => {
     //Temporary test data
     const pacientes = [
         {
             id: 1,
             cpf: "521.560.533-59",
             nome: "Emily Aline Alícia Castro",
-            sexo: "Feminino",
+            sexo: "F",
             cor: "Branco",
             dataNascimento: "09/01/1999",
         },
         {
             id: 2,
             cpf: "521.560.533-59",
-            nome: "Emily Aline Alícia Castro",
-            sexo: "Feminino",
+            nome: "EmilyCastro",
+            sexo: "M",
             cor: "Branco",
-            dataNascimento: "09/01/1999",
+            dataNascimento: "09/01/199",
         },
         {
             id: 3,
             cpf: "521.560.533-59",
             nome: "Emily Aline Alícia Castro",
-            sexo: "Feminino",
+            sexo: "F",
             cor: "Branco",
             dataNascimento: "09/01/1999",
         },
@@ -31,7 +31,7 @@ const PacientesTable = () => {
             id: 4,
             cpf: "521.560.533-59",
             nome: "Emily Aline Alícia Castro",
-            sexo: "Feminino",
+            sexo: "F",
             cor: "Branco",
             dataNascimento: "09/01/1999",
         },
@@ -39,7 +39,7 @@ const PacientesTable = () => {
             id: 5,
             cpf: "521.560.533-59",
             nome: "Emily Aline Alícia Castro",
-            sexo: "Feminino",
+            sexo: "F",
             cor: "Branco",
             dataNascimento: "09/01/1999",
         },
@@ -47,7 +47,7 @@ const PacientesTable = () => {
             id: 6,
             cpf: "521.560.533-59",
             nome: "Emily Aline Alícia Castro",
-            sexo: "Feminino",
+            sexo: "F",
             cor: "Branco",
             dataNascimento: "09/01/1999",
         },
@@ -55,7 +55,7 @@ const PacientesTable = () => {
             id: 7,
             cpf: "521.560.533-59",
             nome: "Emily Aline Alícia Castro",
-            sexo: "Feminino",
+            sexo: "F",
             cor: "Branco",
             dataNascimento: "09/01/1999",
         },
@@ -63,7 +63,7 @@ const PacientesTable = () => {
             id: 8,
             cpf: "521.560.533-59",
             nome: "Emily Aline Alícia Castro",
-            sexo: "Feminino",
+            sexo: "F",
             cor: "Branco",
             dataNascimento: "09/01/1999",
         },
@@ -71,7 +71,7 @@ const PacientesTable = () => {
             id: 9,
             cpf: "521.560.533-59",
             nome: "Emily Aline Alícia Castro",
-            sexo: "Feminino",
+            sexo: "F",
             cor: "Branco",
             dataNascimento: "09/01/1999",
         },
@@ -79,7 +79,7 @@ const PacientesTable = () => {
             id: 10,
             cpf: "521.560.533-59",
             nome: "Emily Aline Alícia Castro",
-            sexo: "Feminino",
+            sexo: "F",
             cor: "Branco",
             dataNascimento: "09/01/1999",
         },
@@ -99,10 +99,17 @@ const PacientesTable = () => {
                 </thead>
                 <tbody>
                     {pacientes.map((paciente) => (
-                        <tr key={paciente.id}>
+                        <tr
+                            onClick={() => props.openModalView(paciente)}
+                            key={paciente.id}
+                        >
                             <td>{paciente.cpf}</td>
                             <td>{paciente.nome}</td>
-                            <td>{paciente.sexo}</td>
+                            <td>
+                                {paciente.sexo === "F"
+                                    ? "Feminino"
+                                    : "Masculino"}
+                            </td>
                             <td>{paciente.cor}</td>
                             <td>{paciente.dataNascimento}</td>
                         </tr>

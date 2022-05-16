@@ -1,12 +1,17 @@
 import React from "react";
 import "./style.css";
 
-const Register = () => {
+const Register = (props) => {
     return (
         <>
-            <input class="btn btn-primary register-button mt-5" type="button" value="Cadastrar"></input>
+            <input
+                className="btn btn-primary register-button mt-5"
+                type="button"
+                value="Cadastrar"
+                onClick={() => props.openModalCreate()}
+            ></input>
         </>
-    )
-}
+    );
+};
 
 export default Register;
