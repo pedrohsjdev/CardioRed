@@ -1,37 +1,40 @@
 import React from "react";
 
-import "./Modal.css";
+import "./ModalDelete.css";
 
-const Modal = (props) => {
+const ModalDelete = (props) => {
     if (!props.show) {
         return null;
     }
 
     return (
         <div className="modal fade show">
-            <div className="modal-dialog modal-lg modal-dialog-centered">
+            <div className="modal-dialog modal-sm modal-dialog-centered modal-delete">
                 <div className="modal-content ">
                     <div className="modal-header">
-                        <h5 className="modal-title">{props.title}</h5>
+                        <h5 className="modal-title">{props.element}</h5>
                         <button
                             type="button"
                             className="btn-close"
                             onClick={() => props.setShow(false)}
                         ></button>
                     </div>
-                    <div className="modal-body">{props.children}</div>
-                    <div className="modal-footer d-flex justify-content-between">
+                    <div className="modal-body">
+                        Tem certeza que deseja remover o{" "}
+                        {props.element.toLowerCase()} selecionado?
+                    </div>
+                    <div className="modal-footer d-flex justify-content-between modal-footer-delete">
                         <button
                             type="button"
-                            className="btn btn-primary btn-modal btn-left"
+                            className="btn btn-primary btn-modal-delete btn-left"
                         >
-                            {props.leftButtonText}
+                            Não
                         </button>
                         <button
                             type="button"
-                            className="btn btn-primary btn-modal"
+                            className="btn btn-primary btn-modal-delete"
                         >
-                            {props.rightButtonText}
+                            Sim
                         </button>
                     </div>
                 </div>
@@ -40,4 +43,4 @@ const Modal = (props) => {
     );
 };
 
-export default Modal;
+export default ModalDelete;
