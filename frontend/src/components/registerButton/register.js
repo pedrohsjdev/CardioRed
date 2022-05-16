@@ -8,7 +8,7 @@ const Register = (props) => {
                 className="btn btn-primary register-button mt-5"
                 type="button"
                 value="Cadastrar"
-                onClick={() => props.setShowModal(true)}
+                onClick={() => props.openModalCreate()}
             ></input>
         </>
     );
