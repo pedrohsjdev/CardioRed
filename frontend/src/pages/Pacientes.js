@@ -8,7 +8,7 @@ import Register from "../components/registerButton/register";
 import PacientesTable from "../components/PacientesTable/table";
 import ModalCreateAndUpdate from "../components/Modal/CreateAndUpdate/ModalCreateAndUpdate";
 import ModalView from "../components/Modal/View/ModalView";
-import FormPaciente from "../components/FormPaciente/FormPaciente";
+import FormPaciente from "../components/Form/FormPaciente/FormPaciente";
 import ModalDelete from "../components/Modal/Delete/ModalDelete";
 
 const Pacientes = () => {

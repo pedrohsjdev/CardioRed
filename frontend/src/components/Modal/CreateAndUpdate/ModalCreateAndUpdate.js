@@ -24,6 +24,7 @@ const ModalCreateAndUpdate = (props) => {
                         <button
                             type="button"
                             className="btn btn-primary btn-modal btn-left"
+                            onClick={() => props.setShow(false)}
                         >
                             Cancelar
                         </button>
