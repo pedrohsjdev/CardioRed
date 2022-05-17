@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import MedicosTable from "../components/MedicosTable/table";
 import NavBar from "../components/Navbar/navbar";
 import Register from "../components/registerButton/register";
@@ -9,11 +9,11 @@ import "./style.css";
 import ModalCreateAndUpdate from "../components/Modal/CreateAndUpdate/ModalCreateAndUpdate";
 import FormMedico from "../components/Form/FormMedico/FormMedico";
 import ModalView from "../components/Modal/View/ModalView";
+import ModalDelete from "../components/Modal/Delete/ModalDelete";
 
 const Medicos = () => {
     // State variables for open and close the modals.
-    const [showModalCreateAndUpdate, setShowModalCreateAndUpdate] =
-        useState(false);
+    const [showModalCreateAndUpdate, setShowModalCreateAndUpdate] = useState(false);
     const [showModalView, setShowModalView] = useState(false);
     const [showModalDelete, setShowModalDelete] = useState(false);
 
@@ -41,7 +41,7 @@ const Medicos = () => {
     };
 
     const openModalUpdate = () => {
-        setModalTitle("Modificar Paciente");
+        setModalTitle("Modificar Médico");
         // Open modal
         setShowModalCreateAndUpdate(true);
     };
@@ -67,7 +67,7 @@ const Medicos = () => {
                 openModalDelete={openModalDelete}
                 openModalUpdate={openModalUpdate}
                 title="Médico">
-                <FormPaciente disabled={true} data={formData} />
+                <FormMedico disabled={true} data={formData} />
             </ModalView>
 
             <ModalDelete
@@ -82,7 +82,7 @@ const Medicos = () => {
                     <FormSearch criteria={"CRM"} />
                 </div>
                 <MedicosTable openModalView={openModalView} />
-                <div className="d-flex justify-content-between">
+                <div className="d-flex justify-content-between mb-3">
                     <CounterElements firstElement={"1"} lastElement={"10"} totalElements={"57"} />
                     <Pagination pagesNumber={pagesNumber} />
                 </div>

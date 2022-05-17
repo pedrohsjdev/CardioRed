@@ -1,39 +1,45 @@
 import React from "react";
 
 const PacientesTable = (props) => {
+    const pacientes =[];
 
     return (
         <>
             <table className="table table-striped table-hover mt-3">
                 <thead>
                     <tr>
-                        <th scope="col">CRM</th>
+                        <th scope="col">CPF</th>
                         <th scope="col">Nome</th>
-                        <th scope="col">Hierarquia</th>
-                        <th scope="col">Ano Residência</th>
-                        <th scope="col">Titulação</th>
+                        <th scope="col">Sexo</th>
+                        <th scope="col">Cor</th>
+                        <th scope="col">Data de Nascimento</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {medicos.map((medico) => (
+                    {pacientes.map((paciente) => (
                         <tr
-                            onClick={() => props.openModalView(medico)}
-                            key={medico.id}>
-                            <td>{medico.crm}</td>
-                            <td>{medico.name}</td>
-                            <td>{medico.doctorType}</td>
-                            <td>{medico.resindencyYear}</td>
-                            <td>{medico.titulation}</td>
+                            onClick={() => props.openModalView(paciente)}
+                            key={paciente.id}
+                        >
+                            <td>{paciente.cpf}</td>
+                            <td>{paciente.nome}</td>
+                            <td>
+                                {paciente.sexo === "F"
+                                    ? "Feminino"
+                                    : "Masculino"}
+                            </td>
+                            <td>{paciente.cor}</td>
+                            <td>{paciente.dataNascimento}</td>
                         </tr>
                     ))}
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th scope="col">CRM</th>
+                        <th scope="col">CPF</th>
                         <th scope="col">Nome</th>
-                        <th scope="col">Hierarquia</th>
-                        <th scope="col">Ano Residência</th>
-                        <th scope="col">Titulação</th>
+                        <th scope="col">Sexo</th>
+                        <th scope="col">Cor</th>
+                        <th scope="col">Data de Nascimento</th>
                     </tr>
                 </tfoot>
             </table>
