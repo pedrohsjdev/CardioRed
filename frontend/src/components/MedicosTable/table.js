@@ -1,39 +1,48 @@
 import React from "react";
 
-const MedicosTable = () => {
+const MedicosTable = (props) => {
     return (
         <>
-            <table class="table table-striped table-hover mt-3">
+            <table className="table table-striped table-hover mt-3">
                 <thead>
                     <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">First</th>
-                        <th scope="col">Last</th>
-                        <th scope="col">Handle</th>
+                        <th scope="col">CPF</th>
+                        <th scope="col">Nome</th>
+                        <th scope="col">Sexo</th>
+                        <th scope="col">Cor</th>
+                        <th scope="col">Data de Nascimento</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <th scope="row">1</th>
-                        <td>Mark</td>
-                        <td>Otto</td>
-                        <td>@mdo</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">2</th>
-                        <td>Jacob</td>
-                        <td>Thornton</td>
-                        <td>@fat</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">3</th>
-                        <td colspan="2">Larry the Bird</td>
-                        <td>@twitter</td>
-                    </tr>
+                    {pacientes.map((paciente) => (
+                        <tr
+                            onClick={() => props.openModalView(paciente)}
+                            key={paciente.id}
+                        >
+                            <td>{paciente.cpf}</td>
+                            <td>{paciente.nome}</td>
+                            <td>
+                                {paciente.sexo === "F"
+                                    ? "Feminino"
+                                    : "Masculino"}
+                            </td>
+                            <td>{paciente.cor}</td>
+                            <td>{paciente.dataNascimento}</td>
+                        </tr>
+                    ))}
                 </tbody>
+                <tfoot>
+                    <tr>
+                        <th scope="col">CPF</th>
+                        <th scope="col">Nome</th>
+                        <th scope="col">Sexo</th>
+                        <th scope="col">Cor</th>
+                        <th scope="col">Data de Nascimento</th>
+                    </tr>
+                </tfoot>
             </table>
         </>
-    )
+    );
 }
 
 export default MedicosTable;
