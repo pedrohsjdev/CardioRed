@@ -7,23 +7,13 @@ import Medicos from "./pages/Medicos";
 import Pacientes from "./pages/Pacientes";
 
 function App() {
-    let tokens = {};
-    const setTokens = (data) => {
-        tokens = data;
-    };
     return (
         <BrowserRouter>
             <Routes>
-                <Route path="/" element={<Login setTokens={setTokens} />} />
-                <Route path="/home" element={<Home setTokens={setTokens} />} />
-                <Route
-                    path="/medicos"
-                    element={<Medicos setTokens={setTokens} />}
-                />
-                <Route
-                    path="/pacientes"
-                    element={<Pacientes setTokens={setTokens} />}
-                />
+                <Route path="/" element={<Login />} />
+                <Route path="/home" element={<Home />} />
+                <Route path="/medicos" element={<Medicos />} />
+                <Route path="/pacientes" element={<Pacientes />} />
             </Routes>
         </BrowserRouter>
     );

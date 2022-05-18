@@ -30,7 +30,7 @@ function LoginContainer(props) {
     // Function to redirect the user to home page and set user tokens
     const navigate = useNavigate();
     const loginSuccessfull = (response) => {
-        props.setTokens(response.data);
+        localStorage.setItem("jwt_tokens", response.data);
         navigate("/home");
     };
 
