@@ -1,12 +1,10 @@
 package com.cardiored.cardio.security;
 
-import java.lang.invoke.VarHandle.AccessMode;
-
 import com.cardiored.cardio.filter.CustomAuthenticationFilter;
+import com.cardiored.cardio.filter.CustomAuthorizationFilter;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -15,7 +13,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import lombok.RequiredArgsConstructor;
 
@@ -35,10 +33,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http.authorizeRequests().antMatchers("/users/find").permitAll();
-        http.authorizeRequests().antMatchers(HttpMethod.GET, "/medicos").hasAnyAuthority("ROLE_ADM");
+        http.authorizeRequests().antMatchers("/users/**", "/medicos/**", "/residentes/**", "/docentes/**").hasAnyAuthority("ROLE_ADM");
+        http.authorizeRequests().antMatchers("/pacientes/**").hasAnyAuthority("ROLE_ADM", "ROLE_MEDICO", "ROLE_RESIDENTE", "ROLE_DOCENTE");
         http.authorizeRequests().anyRequest().authenticated();
         http.addFilter(new CustomAuthenticationFilter(authenticationManagerBean()));
+        http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 
     @Bean
