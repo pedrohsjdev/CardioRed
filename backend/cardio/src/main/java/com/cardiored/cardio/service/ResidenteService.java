@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@Transactional
 public class ResidenteService extends MedicoService{
     private final ResidenteRepository residenteRepository;
 
@@ -23,7 +24,6 @@ public class ResidenteService extends MedicoService{
         this.residenteRepository = residenteRepository;
     }
 
-    @Transactional
     public Residente save(ResidentePostDTO residentePostDTO) {
         // Search a Medico with the same CRM as the new Residente.
         Medico medicoSameCRM = findByCrm(residentePostDTO.getCrm());
@@ -35,7 +35,6 @@ public class ResidenteService extends MedicoService{
         return residenteRepository.save(ResidenteMapper.INSTANCE.toResidente(residentePostDTO));        
     }
 
-    @Transactional
     public void replace(ResidentePutDTO residentePutDTO) {
         findByIdOrThrowException(residentePutDTO.getId());
 

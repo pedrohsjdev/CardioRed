@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class MedicoService {
     private final MedicoRepository medicoRepository;
 
@@ -37,7 +38,6 @@ public class MedicoService {
         return medicoRepository.findById(id).orElseThrow(() -> new RuntimeException("Medico not found!"));
     }
 
-    @Transactional
     public Medico save(MedicoPostDTO medicoPostDTO) {
         // Search a Medico with the same CRM as the new Docente.
         Medico medicoFound = findByCrm(medicoPostDTO.getCrm());
@@ -52,8 +52,7 @@ public class MedicoService {
     public void delete(Integer id) {
         medicoRepository.delete(findByIdOrThrowException(id));
     }
-
-    @Transactional
+    
     public void replace(MedicoPutDTO medicoPutDTO) {
         findByIdOrThrowException(medicoPutDTO.getId());
 
