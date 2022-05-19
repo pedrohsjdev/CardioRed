@@ -1,5 +1,7 @@
 package com.cardiored.cardio.util;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.stream.Collectors;
 
@@ -12,8 +14,11 @@ import org.springframework.security.core.userdetails.User;
 import com.cardiored.cardio.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import static java.util.Arrays.stream;
 
 
 public class TokenCreator {
@@ -22,6 +27,21 @@ public class TokenCreator {
 
     @Autowired
     private static UserService userService;
+
+    public static UsernamePasswordAuthenticationToken getAuthenticationToken(DecodedJWT decodeJWT) {
+        String username = decodeJWT.getSubject();
+        String[] roles = decodeJWT.getClaim("roles").asArray(String.class);
+        Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        stream(roles).forEach(role -> {
+            authorities.add(new SimpleGrantedAuthority(role));
+        });
+        return new UsernamePasswordAuthenticationToken(username, null, authorities);
+    }
+
+    public static DecodedJWT getDecodedJWT(String authorizationHeader) {
+        String token = authorizationHeader.substring("Bearer ".length());
+        return verifier.verify(token);
+    }
 
     public static String generateAccessToken(String refresh_token, String requestUrl) {
         DecodedJWT decodeJWT = verifier.verify(refresh_token);
