@@ -31,7 +31,7 @@ const ModalCreateAndUpdate = (props) => {
                         <button
                             type="button"
                             className="btn btn-primary btn-modal"
-                        >
+                            onClick={() => props.setSaveAttempt(true)}>
                             Concluir
                         </button>
                     </div>

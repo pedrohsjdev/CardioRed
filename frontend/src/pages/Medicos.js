@@ -19,17 +19,18 @@ const Medicos = () => {
 
     const [pageInfo, setPageInfo] = useState({})
 
-
-    const getMedicos = async (pageNumber) => {
-        await axios.get(`http://localhost:8080/medicos?size=3&page=${pageNumber}&sort=name`)
-            .then((response) => {
-                setMedicos(response.data.content)
-                setPageInfo(response.data)
-                console.log(response.data.totalPages)
-            }
-            );
-    }
-
+    useEffect(() => {
+        const getMedicos = async () => {
+            await axios.get(`http://localhost:8080/medicos?size=3&page=${pageNumber}&sort=name`)
+                .then((response) => {
+                    setMedicos(response.data.content)
+                    setPageInfo(response.data)
+                    console.log(response.data.totalPages)
+                }
+                );
+        }
+        getMedicos()
+    }, [pageNumber])
     // State variables for open and close the modals.
     const [showModalCreateAndUpdate, setShowModalCreateAndUpdate] = useState(false);
     const [showModalView, setShowModalView] = useState(false);
@@ -42,6 +43,8 @@ const Medicos = () => {
 
     // Temporary test variables
     const [pageNumber, setPageNumber] = useState(0);
+
+    const [saveAttempt, setSaveAttempt] = useState(false);
 
     const updatePageNumber = (number) => {
         setPageNumber(number)
@@ -80,8 +83,9 @@ const Medicos = () => {
             <ModalCreateAndUpdate
                 show={showModalCreateAndUpdate}
                 setShow={setShowModalCreateAndUpdate}
-                title={modalTitle} >
-                <FormMedico disabled={false} data={formData} />
+                title={modalTitle}
+                setSaveAttempt={setSaveAttempt} >
+                <FormMedico data={formData} saveAttempt={saveAttempt} />
             </ModalCreateAndUpdate>
 
             <ModalView

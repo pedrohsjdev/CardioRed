@@ -1,6 +1,33 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import axios from "axios";
+import qs from "qs";
 
 const FormMedico = (props) => {
+
+    useEffect(() => {
+        const saveMedico = async () => {
+            const response = await axios
+                .post(
+                    "http://localhost:8080/medicos",
+                    qs.stringify({
+                        crm: inputs.crm,
+                        name: inputs.name,
+                        doctorType: inputs.doctorType
+                    }),
+                    {
+                        headers: {
+                            "Content-Type": "application/x-www-form-urlencoded",
+                        },
+                    }
+                )
+                .then(response => {
+                    console.log(response)
+                })
+        }
+        saveMedico()
+    }, [props.saveAttempt])
 
     const [isResidenteDisabled, setIsResidenteDisabled] = useState(false);
 
@@ -10,34 +37,15 @@ const FormMedico = (props) => {
         if (x.value == 'MEDICO') {
             setIsResidenteDisabled(true)
             setIsDocenteDisabled(true)
-        } else if (x.value == 'DOCENTE'){
+        } else if (x.value == 'DOCENTE') {
             setIsDocenteDisabled(false)
             setIsResidenteDisabled(true)
-        }else{
+        } else {
             setIsDocenteDisabled(true)
             setIsResidenteDisabled(false)
         }
+        x.inputChange()
     }
-
-    const saveMedico = async () => {
-        const response = await axios
-            .post(
-                "http://localhost:8080/medicos",
-                qs.stringify({
-                    crm: inputs.crm,
-                    name: inputs.name,
-                    doctorType: inputs.doctorType
-                }),
-                {
-                    headers: {
-                        "Content-Type": "application/x-www-form-urlencoded",
-                    },
-                }
-            )
-            .then(response => {
-                console.log(response)
-            })
-    };
 
     const [inputs, setInputs] = useState({
         crm: "",
@@ -47,6 +55,11 @@ const FormMedico = (props) => {
         titulation: "",
         password: ""
     });
+
+    const inputChange = (event) => {
+        const { name, value } = event.target;
+        setInputs({ ...inputs, [name]: value });
+    };
 
     return (
         <form>
@@ -62,6 +75,7 @@ const FormMedico = (props) => {
                         type="text"
                         className="form-control"
                         id="inputCRM"
+                        onChange={inputChange}
                         disabled={props.disabled}
                         defaultValue={props.data.crm}
                     />
@@ -80,6 +94,7 @@ const FormMedico = (props) => {
                         className="form-control"
                         id="inputName"
                         name="name"
+                        onChange={inputChange}
                         disabled={props.disabled}
                         defaultValue={props.data.nome}
                     />
@@ -118,6 +133,7 @@ const FormMedico = (props) => {
                         className="form-control"
                         id="inputResidencyYear"
                         name="residencyYear"
+                        onChange={inputChange}
                         disabled={isResidenteDisabled}
                         defaultValue={props.data.resindecyYear}
                     />
@@ -134,6 +150,7 @@ const FormMedico = (props) => {
                         className="form-control"
                         id="inputTitulation"
                         name="titulation"
+                        onChange={inputChange}
                         disabled={isDocenteDisabled}
                         defaultValue={props.data.titulation}>
                         <option value="">Escolha uma opção</option>
@@ -156,6 +173,7 @@ const FormMedico = (props) => {
                         className="form-control"
                         id="inputPassword"
                         name="password"
+                        onChange={inputChange}
                         disabled={props.disabled}
                         defaultValue={props.data.titulation}
                     />
