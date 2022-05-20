@@ -11,6 +11,7 @@ import FormMedico from "../components/Form/FormMedico/FormMedico";
 import ModalView from "../components/Modal/View/ModalView";
 import ModalDelete from "../components/Modal/Delete/ModalDelete";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 
 const Medicos = () => {
@@ -25,12 +26,33 @@ const Medicos = () => {
                 .then((response) => {
                     setMedicos(response.data.content)
                     setPageInfo(response.data)
-                    console.log(response.data.totalPages)
                 }
                 );
         }
         getMedicos()
     }, [pageNumber])
+
+    const saveMedico = async () => {
+        const response = await axios
+            .post("http://localhost:8080/medicos", newMedicoData)
+                .then(response => {
+                    console.log(response)
+                    toast.success("Medico cadastrado com sucesso!")
+                }).catch(error => {
+                    console.log(error)
+                    toast.success("Não foi possível cadastar o médico!")
+            })
+    }
+
+    const saveMedicoUser = async () =>{
+        const response = await axios.post("http://localhost:8080/users", newUserData)
+            .then(response =>{
+                
+                console.log(response)
+            }).catch(error => {
+                console.log(error)
+            })
+    }
     // State variables for open and close the modals.
     const [showModalCreateAndUpdate, setShowModalCreateAndUpdate] = useState(false);
     const [showModalView, setShowModalView] = useState(false);
@@ -44,11 +66,20 @@ const Medicos = () => {
     // Temporary test variables
     const [pageNumber, setPageNumber] = useState(0);
 
-    const [saveAttempt, setSaveAttempt] = useState(false);
+    const [newMedicoData, setNewMedicoData] = useState({});
+
+    const [newUserData, setNewUserData] = useState({});
+
+    const [medicoData, setMedicoData] = useState({});
 
     const updatePageNumber = (number) => {
         setPageNumber(number)
         getMedicos(number)
+    }
+
+    const callSaveMedico = () => {
+        saveMedicoUser()
+        saveMedico()
     }
 
     const openModalCreate = () => {
@@ -84,8 +115,10 @@ const Medicos = () => {
                 show={showModalCreateAndUpdate}
                 setShow={setShowModalCreateAndUpdate}
                 title={modalTitle}
-                setSaveAttempt={setSaveAttempt} >
-                <FormMedico data={formData} saveAttempt={saveAttempt} />
+                callSaveMedico={callSaveMedico}>
+                <FormMedico data={formData} setNewMedicoData={setNewMedicoData}
+                    newMedicoData={newMedicoData} setNewUserData={setNewUserData}
+                    newUserData={newUserData} />
             </ModalCreateAndUpdate>
 
             <ModalView

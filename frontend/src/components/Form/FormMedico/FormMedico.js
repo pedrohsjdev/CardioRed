@@ -1,33 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import axios from "axios";
-import qs from "qs";
+import React, { useState } from "react";
 
 const FormMedico = (props) => {
-
-    useEffect(() => {
-        const saveMedico = async () => {
-            const response = await axios
-                .post(
-                    "http://localhost:8080/medicos",
-                    qs.stringify({
-                        crm: inputs.crm,
-                        name: inputs.name,
-                        doctorType: inputs.doctorType
-                    }),
-                    {
-                        headers: {
-                            "Content-Type": "application/x-www-form-urlencoded",
-                        },
-                    }
-                )
-                .then(response => {
-                    console.log(response)
-                })
-        }
-        saveMedico()
-    }, [props.saveAttempt])
 
     const [isResidenteDisabled, setIsResidenteDisabled] = useState(false);
 
@@ -44,21 +17,34 @@ const FormMedico = (props) => {
             setIsDocenteDisabled(true)
             setIsResidenteDisabled(false)
         }
-        x.inputChange()
     }
 
-    const [inputs, setInputs] = useState({
-        crm: "",
-        name: "",
-        doctorType: "",
-        residencyYear: 0,
-        titulation: "",
-        password: ""
-    });
+    const userData = {
+        username: "",
+        password: "",
+        roles: []
+    }
 
     const inputChange = (event) => {
         const { name, value } = event.target;
-        setInputs({ ...inputs, [name]: value });
+        props.setNewMedicoData({ ...props.newMedicoData, [name]: value });
+        if(event.target.name == "crm"){
+            userData.username = event.target.value
+        }
+        if(event.target.name == "password"){
+            userData.password = event.target.value
+        }
+        if(event.target.name == "doctorType"){
+            if(event.target.value == "MEDICO"){
+                userData.roles.push("ROLE_MEDICO")
+            } else if(event.target.value == "DOCENTE"){
+                userData.roles.push("ROLE_DOCENTE", "ROLE_MEDICO", "ROLE_RESIDENTE")
+            }else{
+                userData.roles.push("ROLE_MEDICO", "ROLE_RESIDENTE")
+            }
+        }
+        props.setNewUserData({...props.newUserData, userData})
+        
     };
 
     return (
@@ -75,6 +61,7 @@ const FormMedico = (props) => {
                         type="text"
                         className="form-control"
                         id="inputCRM"
+                        name="crm"
                         onChange={inputChange}
                         disabled={props.disabled}
                         defaultValue={props.data.crm}
