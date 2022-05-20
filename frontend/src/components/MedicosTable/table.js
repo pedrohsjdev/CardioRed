@@ -1,11 +1,7 @@
-import React from "react";
+import React from 'react'
 
 const MedicosTable = (props) => {
-    
-    
-    const medicos = [
 
-    ];
     return (
         <>
             <table className="table table-striped table-hover mt-3">
@@ -19,10 +15,10 @@ const MedicosTable = (props) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {medicos.map((medico) => (
+                    {props.medicos.map((medico, index) => (
                         <tr
                             onClick={() => props.openModalView(medico)}
-                            key={medico.id}>
+                            key={index}>
                             <td>{medico.crm}</td>
                             <td>{medico.name}</td>
                             <td>{medico.doctorType}</td>

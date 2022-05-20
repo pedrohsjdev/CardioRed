@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import MedicosTable from "../components/MedicosTable/table";
 import NavBar from "../components/Navbar/navbar";
 import Register from "../components/registerButton/register";
@@ -10,8 +10,26 @@ import ModalCreateAndUpdate from "../components/Modal/CreateAndUpdate/ModalCreat
 import FormMedico from "../components/Form/FormMedico/FormMedico";
 import ModalView from "../components/Modal/View/ModalView";
 import ModalDelete from "../components/Modal/Delete/ModalDelete";
+import axios from "axios";
+
 
 const Medicos = () => {
+
+    const [medicos, setMedicos] = useState([{}])
+
+    const [pageInfo, setPageInfo] = useState({})
+
+
+    const getMedicos = async (pageNumber) => {
+        await axios.get(`http://localhost:8080/medicos?size=3&page=${pageNumber}&sort=name`)
+            .then((response) => {
+                setMedicos(response.data.content)
+                setPageInfo(response.data)
+                console.log(response.data.totalPages)
+            }
+            );
+    }
+
     // State variables for open and close the modals.
     const [showModalCreateAndUpdate, setShowModalCreateAndUpdate] = useState(false);
     const [showModalView, setShowModalView] = useState(false);
@@ -23,7 +41,12 @@ const Medicos = () => {
     const [modalTitle, setModalTitle] = useState("");
 
     // Temporary test variables
-    const pagesNumber = [1, 2, 3, 4, 5];
+    const [pageNumber, setPageNumber] = useState(0);
+
+    const updatePageNumber = (number) => {
+        setPageNumber(number)
+        getMedicos(number)
+    }
 
     const openModalCreate = () => {
         // Clean inputs
@@ -81,10 +104,10 @@ const Medicos = () => {
                     <Register openModalCreate={openModalCreate} />
                     <FormSearch criteria={"CRM"} />
                 </div>
-                <MedicosTable openModalView={openModalView} />
+                <MedicosTable openModalView={openModalView} medicos={medicos} pageInfo={pageInfo} />
                 <div className="d-flex justify-content-between mb-3">
                     <CounterElements firstElement={"1"} lastElement={"10"} totalElements={"57"} />
-                    <Pagination pagesNumber={pagesNumber} />
+                    <Pagination pageInfo={pageInfo} updatePageNumber={updatePageNumber} pageNumber={pageNumber} />
                 </div>
             </div>
         </>

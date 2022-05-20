@@ -1,6 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
 
 const FormMedico = (props) => {
+
+    const [isResidenteDisabled, setIsResidenteDisabled] = useState(false);
+
+    const [isDocenteDisabled, setIsDocenteDisabled] = useState(false);
+
+    const validateDoctorType = (x) => {
+        if (x.value == 'MEDICO') {
+            setIsResidenteDisabled(true)
+            setIsDocenteDisabled(true)
+        } else if (x.value == 'DOCENTE'){
+            setIsDocenteDisabled(false)
+            setIsResidenteDisabled(true)
+        }else{
+            setIsDocenteDisabled(true)
+            setIsResidenteDisabled(false)
+        }
+    }
+
     return (
         <form>
             <input hidden defaultValue={props.id} />
@@ -48,7 +66,8 @@ const FormMedico = (props) => {
                         className="form-select"
                         id="selectDoctorType"
                         disabled={props.disabled}
-                        defaultValue={props.data.doctorType}>
+                        defaultValue={props.data.doctorType}
+                        onChange={(x) => validateDoctorType(x.target)}>
                         <option value="">Escolha uma opção</option>
                         <option value="MEDICO">Médico</option>
                         <option value="RESIDENTE">Residente</option>
@@ -67,7 +86,7 @@ const FormMedico = (props) => {
                         type="date"
                         className="form-control"
                         id="inputResidencyYear"
-                        disabled={props.disabled}
+                        disabled={isResidenteDisabled}
                         defaultValue={props.data.resindecyYear}
                     />
                 </div>
@@ -82,14 +101,14 @@ const FormMedico = (props) => {
                     <select
                         className="form-control"
                         id="inputTitulation"
-                        disabled={props.disabled}
+                        disabled={isDocenteDisabled}
                         defaultValue={props.data.titulation}>
                         <option value="">Escolha uma opção</option>
                         <option value="Doutor">Docente</option>
                         <option value="Assistente">Assistente</option>
                         <option value="Livre-docente">Livre-Docente</option>
                         <option value="Titular">Titular</option>
-                    </select>    
+                    </select>
                 </div>
             </div>
             <div className="row mb-3">
