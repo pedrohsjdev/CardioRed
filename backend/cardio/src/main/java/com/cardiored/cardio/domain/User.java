@@ -1,9 +1,11 @@
 package com.cardiored.cardio.domain;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 import javax.persistence.*;
 
@@ -11,7 +13,6 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Builder
 @Table(name="`User`")
 public class User {
 
@@ -19,10 +20,10 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    private String login;
+    private String username;
 
     private String password;
 
-    @Enumerated(EnumType.STRING)
-    private UserType userType;
+    @ManyToMany(fetch = FetchType.EAGER)
+    private Collection<Role> roles = new ArrayList<>();
 }

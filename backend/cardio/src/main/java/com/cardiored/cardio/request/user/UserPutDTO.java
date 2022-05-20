@@ -1,6 +1,6 @@
 package com.cardiored.cardio.request.user;
 
-import com.cardiored.cardio.domain.UserType;
+
 import lombok.Data;
 
 import javax.validation.constraints.NotEmpty;
@@ -13,11 +13,9 @@ public class UserPutDTO {
     private Integer id;
 
     @NotEmpty(message = "login cannot be empty")
-    private String login;
+    private String username;
 
     @NotEmpty(message = "password cannot be empty")
     private String password;
 
-    @NotNull(message = "userType cannot be null")
-    private UserType userType;
 }

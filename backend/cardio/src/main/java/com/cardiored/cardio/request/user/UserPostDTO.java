@@ -1,19 +1,22 @@
 package com.cardiored.cardio.request.user;
 
-import com.cardiored.cardio.domain.UserType;
 import lombok.Data;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+
+import com.cardiored.cardio.domain.Role;
+
 
 @Data
 public class UserPostDTO {
     @NotEmpty(message = "login cannot be empty")
-    private String login;
+    private String username;
 
     @NotEmpty(message = "password cannot be empty")
     private String password;
 
-    @NotNull(message = "userType cannot be null")
-    private UserType userType;
+    private Collection<Role> roles = new ArrayList<>();
 }
