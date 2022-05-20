@@ -19,6 +19,35 @@ const FormMedico = (props) => {
         }
     }
 
+    const saveMedico = async () => {
+        const response = await axios
+            .post(
+                "http://localhost:8080/medicos",
+                qs.stringify({
+                    crm: inputs.crm,
+                    name: inputs.name,
+                    doctorType: inputs.doctorType
+                }),
+                {
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                    },
+                }
+            )
+            .then(response => {
+                console.log(response)
+            })
+    };
+
+    const [inputs, setInputs] = useState({
+        crm: "",
+        name: "",
+        doctorType: "",
+        residencyYear: 0,
+        titulation: "",
+        password: ""
+    });
+
     return (
         <form>
             <input hidden defaultValue={props.id} />
@@ -50,6 +79,7 @@ const FormMedico = (props) => {
                         type="text"
                         className="form-control"
                         id="inputName"
+                        name="name"
                         disabled={props.disabled}
                         defaultValue={props.data.nome}
                     />
@@ -67,6 +97,7 @@ const FormMedico = (props) => {
                         id="selectDoctorType"
                         disabled={props.disabled}
                         defaultValue={props.data.doctorType}
+                        name="doctorType"
                         onChange={(x) => validateDoctorType(x.target)}>
                         <option value="">Escolha uma opção</option>
                         <option value="MEDICO">Médico</option>
@@ -86,6 +117,7 @@ const FormMedico = (props) => {
                         type="date"
                         className="form-control"
                         id="inputResidencyYear"
+                        name="residencyYear"
                         disabled={isResidenteDisabled}
                         defaultValue={props.data.resindecyYear}
                     />
@@ -101,6 +133,7 @@ const FormMedico = (props) => {
                     <select
                         className="form-control"
                         id="inputTitulation"
+                        name="titulation"
                         disabled={isDocenteDisabled}
                         defaultValue={props.data.titulation}>
                         <option value="">Escolha uma opção</option>
@@ -122,6 +155,7 @@ const FormMedico = (props) => {
                         type="text"
                         className="form-control"
                         id="inputPassword"
+                        name="password"
                         disabled={props.disabled}
                         defaultValue={props.data.titulation}
                     />
