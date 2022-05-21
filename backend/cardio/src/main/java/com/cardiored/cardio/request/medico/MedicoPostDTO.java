@@ -7,9 +7,11 @@ import com.cardiored.cardio.domain.DoctorType;
 import com.cardiored.cardio.domain.User;
 
 import lombok.Data;
+import lombok.experimental.SuperBuilder;
 
 @Data
 @Inheritance
+@SuperBuilder
 public class MedicoPostDTO {
     @NotEmpty(message = "CRM cannot be empty!")
     private String crm;
