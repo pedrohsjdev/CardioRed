@@ -18,11 +18,6 @@ public class UserController {
 
     private final UserService userService;
 
-    @PostMapping(path = "/find")
-    public ResponseEntity<User> findByLoginAndPassword(User user){
-        return ResponseEntity.ok(userService.findUserByLoginAndPassword(user));
-    }
-
     @GetMapping(path = "/{id}")
     public ResponseEntity<User> findById(@PathVariable Integer id){
         return ResponseEntity.ok(userService.findById(id));

@@ -15,10 +15,6 @@ import javax.transaction.Transactional;
 public class UserService {
     private final UserRepository userRepository;
 
-    public User findUserByLoginAndPassword(User user){
-        return userRepository.findUserByLoginAndPassword(user.getLogin(), user.getPassword());
-    }
-
     public User findById(Integer id){
         return userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
