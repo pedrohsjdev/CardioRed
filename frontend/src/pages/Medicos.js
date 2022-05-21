@@ -35,24 +35,15 @@ const Medicos = () => {
     const saveMedico = async () => {
         const response = await axios
             .post("http://localhost:8080/medicos", newMedicoData)
-                .then(response => {
-                    console.log(response)
-                    toast.success("Medico cadastrado com sucesso!")
-                }).catch(error => {
-                    console.log(error)
-                    toast.success("Não foi possível cadastar o médico!")
+            .then(response => {
+                console.log(response)
+                toast.success("Medico cadastrado com sucesso!")
+            }).catch(error => {
+                console.log(error)
+                toast.success("Não foi possível cadastar o médico!")
             })
     }
 
-    const saveMedicoUser = async () =>{
-        const response = await axios.post("http://localhost:8080/users", newUserData)
-            .then(response =>{
-                
-                console.log(response)
-            }).catch(error => {
-                console.log(error)
-            })
-    }
     // State variables for open and close the modals.
     const [showModalCreateAndUpdate, setShowModalCreateAndUpdate] = useState(false);
     const [showModalView, setShowModalView] = useState(false);
@@ -68,8 +59,6 @@ const Medicos = () => {
 
     const [newMedicoData, setNewMedicoData] = useState({});
 
-    const [newUserData, setNewUserData] = useState({});
-
     const [medicoData, setMedicoData] = useState({});
 
     const updatePageNumber = (number) => {
@@ -78,7 +67,6 @@ const Medicos = () => {
     }
 
     const callSaveMedico = () => {
-        saveMedicoUser()
         saveMedico()
     }
 
@@ -117,8 +105,7 @@ const Medicos = () => {
                 title={modalTitle}
                 callSaveMedico={callSaveMedico}>
                 <FormMedico data={formData} setNewMedicoData={setNewMedicoData}
-                    newMedicoData={newMedicoData} setNewUserData={setNewUserData}
-                    newUserData={newUserData} />
+                    newMedicoData={newMedicoData}/>
             </ModalCreateAndUpdate>
 
             <ModalView

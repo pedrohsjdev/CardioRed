@@ -19,32 +19,9 @@ const FormMedico = (props) => {
         }
     }
 
-    const userData = {
-        username: "",
-        password: "",
-        roles: []
-    }
-
     const inputChange = (event) => {
         const { name, value } = event.target;
         props.setNewMedicoData({ ...props.newMedicoData, [name]: value });
-        if(event.target.name == "crm"){
-            userData.username = event.target.value
-        }
-        if(event.target.name == "password"){
-            userData.password = event.target.value
-        }
-        if(event.target.name == "doctorType"){
-            if(event.target.value == "MEDICO"){
-                userData.roles.push("ROLE_MEDICO")
-            } else if(event.target.value == "DOCENTE"){
-                userData.roles.push("ROLE_DOCENTE", "ROLE_MEDICO", "ROLE_RESIDENTE")
-            }else{
-                userData.roles.push("ROLE_MEDICO", "ROLE_RESIDENTE")
-            }
-        }
-        props.setNewUserData({...props.newUserData, userData})
-        
     };
 
     return (
