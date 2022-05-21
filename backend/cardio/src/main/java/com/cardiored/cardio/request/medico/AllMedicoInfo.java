@@ -1,18 +1,16 @@
 package com.cardiored.cardio.request.medico;
 
-import javax.persistence.Inheritance;
 import javax.validation.constraints.NotEmpty;
 
 import com.cardiored.cardio.domain.DoctorType;
-import com.cardiored.cardio.domain.User;
+import com.cardiored.cardio.domain.Titulation;
 
 import lombok.Data;
-import lombok.experimental.SuperBuilder;
 
 @Data
-@Inheritance
-@SuperBuilder
-public class MedicoPostDTO {
+public class AllMedicoInfo {  
+    private Integer id;
+      
     @NotEmpty(message = "CRM cannot be empty!")
     private String crm;
 
@@ -21,5 +19,11 @@ public class MedicoPostDTO {
 
     private DoctorType doctorType;
     
-    private User user;
+    private Integer residencyYear;
+
+    private Titulation titulation;
+
+    @NotEmpty(message = "DoctorType cannot be empty!")
+    private String password;
+    
 }
