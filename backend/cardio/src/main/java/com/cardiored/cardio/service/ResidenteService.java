@@ -4,11 +4,8 @@ import javax.transaction.Transactional;
 
 import com.cardiored.cardio.domain.Medico;
 import com.cardiored.cardio.domain.Residente;
-import com.cardiored.cardio.mapper.ResidenteMapper;
 import com.cardiored.cardio.repository.MedicoRepository;
 import com.cardiored.cardio.repository.ResidenteRepository;
-import com.cardiored.cardio.request.residente.ResidentePostDTO;
-import com.cardiored.cardio.request.residente.ResidentePutDTO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,27 +21,26 @@ public class ResidenteService extends MedicoService{
         this.residenteRepository = residenteRepository;
     }
 
-    public Residente save(ResidentePostDTO residentePostDTO) {
+    public Residente save(Residente residente) {
         // Search a Medico with the same CRM as the new Residente.
-        Medico medicoSameCRM = findByCrm(residentePostDTO.getCrm());
+        Medico medicoSameCRM = findByCrm(residente.getCrm());
         // If Medico with the same CRM was found, then...
         if(medicoSameCRM != null) {
             throw new RuntimeException("Residente already exists!");            
         }
-
-        return residenteRepository.save(ResidenteMapper.INSTANCE.toResidente(residentePostDTO));        
+        return residenteRepository.save(residente);        
     }
 
-    public void replace(ResidentePutDTO residentePutDTO) {
-        findByIdOrThrowException(residentePutDTO.getId());
+    public void replace(Residente residente) {
+        findByIdOrThrowException(residente.getId());
 
         // Search a Medico with the same CRM as the new Residente.
-        Medico medicoSameCRM = findByCrm(residentePutDTO.getCrm());
+        Medico medicoSameCRM = findByCrm(residente.getCrm());
         // If Medico with the same CRM was found and he isn't the Residente being updated, then...
-        if(medicoSameCRM != null && medicoSameCRM.getId() != residentePutDTO.getId()) {
+        if(medicoSameCRM != null && medicoSameCRM.getId() != residente.getId()) {
             throw new RuntimeException("Already exists a Medico with this CRM!");
         }
 
-        residenteRepository.save(ResidenteMapper.INSTANCE.toResidente(residentePutDTO));
+        residenteRepository.save(residente);
     }
 }

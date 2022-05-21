@@ -6,7 +6,6 @@ import com.cardiored.cardio.mapper.UserMapper;
 import com.cardiored.cardio.repository.RoleRepository;
 import com.cardiored.cardio.repository.UserRepository;
 import com.cardiored.cardio.request.user.UserPostDTO;
-import com.cardiored.cardio.request.user.UserPutDTO;
 import com.cardiored.cardio.util.TokenCreator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -44,7 +43,7 @@ public class UserService implements UserDetailsService {
         return userRepository.findByUsername(username);
     }
 
-    public User findById(Integer id){
+    public User findByIdOrThrowException(Integer id){
         return userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
@@ -55,9 +54,13 @@ public class UserService implements UserDetailsService {
         );
     }
 
-    public void save(User user){
+    public User save(User user){
+        User userFind = findByUsername(user.getUsername());
+        if(userFind != null) {
+           throw new RuntimeException("User already exists!");    
+        }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
+        return userRepository.save(user);
     }
 
     public Role saveRole(Role role) {
@@ -66,18 +69,18 @@ public class UserService implements UserDetailsService {
 
     public void addRoleToUser(String username, String roleName) {
         User user = userRepository.findByUsername(username);
+        System.out.println(user);
         Role role = roleRepository.findByName(roleName);
+        System.out.println(role);
         user.getRoles().add(role);
     }
 
     public void delete(Integer id){
-        userRepository.delete(findById(id));
+        userRepository.delete(findByIdOrThrowException(id));
     }
 
-    public void replace(UserPutDTO userPutDTO){
-        User savedUser = findById(userPutDTO.getId());
-        User user = UserMapper.INSTANCE.toUser(userPutDTO);
-        user.setId(savedUser.getId());
+    public void replace(User user){
+        findByIdOrThrowException(user.getId());
         userRepository.save(user);
     }
 
