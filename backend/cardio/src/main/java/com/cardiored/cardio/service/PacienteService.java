@@ -16,6 +16,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class PacienteService {
 
     private final PacienteRepository pacienteRepository;
@@ -37,7 +38,6 @@ public class PacienteService {
         return pacienteRepository.findByCpf(cpf);
     }
 
-    @Transactional
     public Paciente save(PacientePostDTO pacientePostDTO){
         Assert.isNull(findByCpf(pacientePostDTO.getCpf()), "cpf already exists");
         Paciente paciente = PacienteMapper.INSTANCE.toPaciente(pacientePostDTO);

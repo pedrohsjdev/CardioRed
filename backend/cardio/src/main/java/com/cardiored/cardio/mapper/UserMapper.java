@@ -3,6 +3,7 @@ package com.cardiored.cardio.mapper;
 import com.cardiored.cardio.domain.User;
 import com.cardiored.cardio.request.user.UserPostDTO;
 import com.cardiored.cardio.request.user.UserPutDTO;
+
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
