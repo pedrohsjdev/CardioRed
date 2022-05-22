@@ -1,7 +1,14 @@
 import React from "react";
 
-const ModalView = (props) => {
-    if (!props.show) {
+const ModalView = ({
+    element,
+    openModalUpdate,
+    openModalDelete,
+    show,
+    setShow,
+    children,
+}) => {
+    if (!show) {
         return null;
     }
 
@@ -10,19 +17,21 @@ const ModalView = (props) => {
             <div className="modal-dialog modal-lg modal-dialog-centered">
                 <div className="modal-content ">
                     <div className="modal-header">
-                        <h5 className="modal-title">{props.title}</h5>
+                        <h5 className="modal-title">{element}</h5>
                         <button
                             type="button"
                             className="btn-close"
-                            onClick={() => props.setShow(false)}
+                            onClick={() => setShow(false)}
                         ></button>
                     </div>
-                    <div className="modal-body">{props.children}</div>
+                    <div className="modal-body">{children}</div>
                     <div className="modal-footer d-flex justify-content-between">
                         <button
                             type="button"
                             className="btn btn-primary btn-modal btn-left"
-                            onClick={() => props.openModalDelete()}
+                            onClick={() => {
+                                openModalDelete();
+                            }}
                         >
                             Remover
                         </button>
@@ -30,8 +39,8 @@ const ModalView = (props) => {
                             type="button"
                             className="btn btn-primary btn-modal"
                             onClick={() => {
-                                props.setShow(false);
-                                props.openModalUpdate();
+                                setShow(false);
+                                openModalUpdate();
                             }}
                         >
                             Modificar
