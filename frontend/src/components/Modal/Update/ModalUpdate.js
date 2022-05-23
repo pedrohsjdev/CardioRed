@@ -1,9 +1,7 @@
 import React from "react";
 
-import "./ModalCreateAndUpdate.css";
-
-const ModalCreateAndUpdate = (props) => {
-    if (!props.show) {
+const ModalUpdate = ({ element, updatePaciente, show, setShow, children }) => {
+    if (!show) {
         return null;
     }
 
@@ -12,25 +10,26 @@ const ModalCreateAndUpdate = (props) => {
             <div className="modal-dialog modal-lg modal-dialog-centered">
                 <div className="modal-content ">
                     <div className="modal-header">
-                        <h5 className="modal-title">{props.title}</h5>
+                        <h5 className="modal-title">Modificando {element}</h5>
                         <button
                             type="button"
                             className="btn-close"
-                            onClick={() => props.setShow(false)}
+                            onClick={() => setShow(false)}
                         ></button>
                     </div>
-                    <div className="modal-body">{props.children}</div>
+                    <div className="modal-body">{children}</div>
                     <div className="modal-footer d-flex justify-content-between">
                         <button
                             type="button"
                             className="btn btn-primary btn-modal btn-left"
-                            onClick={() => props.setShow(false)}
+                            onClick={() => setShow(false)}
                         >
                             Cancelar
                         </button>
                         <button
                             type="button"
                             className="btn btn-primary btn-modal"
+                            onClick={updatePaciente}
                         >
                             Concluir
                         </button>
@@ -41,4 +40,4 @@ const ModalCreateAndUpdate = (props) => {
     );
 };
 
-export default ModalCreateAndUpdate;
+export default ModalUpdate;

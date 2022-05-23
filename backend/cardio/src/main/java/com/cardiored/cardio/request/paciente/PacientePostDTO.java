@@ -2,6 +2,10 @@ package com.cardiored.cardio.request.paciente;
 
 import com.cardiored.cardio.domain.Ethnicity;
 import com.cardiored.cardio.domain.Gender;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
 import lombok.Data;
 
 import javax.validation.constraints.NotEmpty;
@@ -23,5 +27,7 @@ public class PacientePostDTO {
     private Ethnicity ethnicity;
 
     @NotNull(message = "birthDate cannot be null")
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) 
     private LocalDate birthDate;
 }

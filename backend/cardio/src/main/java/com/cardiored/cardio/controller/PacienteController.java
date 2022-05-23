@@ -53,7 +53,7 @@ public class PacienteController {
     }
 
     @PutMapping
-    public ResponseEntity<Paciente> replace(@RequestBody PacientePutDTO pacientePutDTO){
+    public ResponseEntity<Void> replace(@RequestBody PacientePutDTO pacientePutDTO){
         pacienteService.replace(pacientePutDTO);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

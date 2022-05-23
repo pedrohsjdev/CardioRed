@@ -1,7 +1,46 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
 const PacientesTable = (props) => {
-    const pacientes =[];
+    const [pacientes, setPacientes] = useState([{}]);
+
+    useEffect(() => {
+        const findPacienteByCPF = async () => {
+            const { data } = await axios.get(
+                `http://localhost:8080/pacientes/cpf/${props.searchInput}`
+            );
+            setPacientes([formatCPF(data)]);
+        };
+
+        const fetchPacientes = async () => {
+            const { data } = await axios.get(
+                `http://localhost:8080/pacientes?page=${props.currentPage}&size=10`
+            );
+            setPacientes(data.content.map(formatCPF));
+            props.setPageData(data);
+        };
+
+        if (props.searchInput && props.searchInput.length == 11) {
+            findPacienteByCPF();
+        } else {
+            fetchPacientes();
+        }
+    }, [props.currentPage, props.searchInput]);
+
+    const formatCPF = (item) => {
+        return {
+            ...item,
+            ["cpf"]: "".concat(
+                item.cpf.slice(0, 3),
+                ".",
+                item.cpf.slice(3, 6),
+                ".",
+                item.cpf.slice(6, 9),
+                "-",
+                item.cpf.slice(9, 11)
+            ),
+        };
+    };
 
     return (
         <>
@@ -21,15 +60,15 @@ const PacientesTable = (props) => {
                             onClick={() => props.openModalView(paciente)}
                             key={paciente.id}
                         >
-                            <td>{paciente.cpf}</td>
-                            <td>{paciente.nome}</td>
+                            <td>{paciente.cpf} </td>
+                            <td>{paciente.name}</td>
                             <td>
-                                {paciente.sexo === "F"
+                                {paciente.gender === "F"
                                     ? "Feminino"
                                     : "Masculino"}
                             </td>
-                            <td>{paciente.cor}</td>
-                            <td>{paciente.dataNascimento}</td>
+                            <td>{paciente.ethnicity}</td>
+                            <td>{paciente.birthDate}</td>
                         </tr>
                     ))}
                 </tbody>

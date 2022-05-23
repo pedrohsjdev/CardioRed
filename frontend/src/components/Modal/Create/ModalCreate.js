@@ -1,13 +1,8 @@
 import React from "react";
 
-const ModalView = ({
-    element,
-    openModalUpdate,
-    openModalDelete,
-    show,
-    setShow,
-    children,
-}) => {
+import "./ModalCreate.css";
+
+const ModalCreate = ({ element, savePaciente, show, setShow, children }) => {
     if (!show) {
         return null;
     }
@@ -17,7 +12,7 @@ const ModalView = ({
             <div className="modal-dialog modal-lg modal-dialog-centered">
                 <div className="modal-content ">
                     <div className="modal-header">
-                        <h5 className="modal-title">{element}</h5>
+                        <h5 className="modal-title">Cadastrando {element}</h5>
                         <button
                             type="button"
                             className="btn-close"
@@ -29,21 +24,16 @@ const ModalView = ({
                         <button
                             type="button"
                             className="btn btn-primary btn-modal btn-left"
-                            onClick={() => {
-                                openModalDelete();
-                            }}
+                            onClick={() => setShow(false)}
                         >
-                            Remover
+                            Cancelar
                         </button>
                         <button
                             type="button"
                             className="btn btn-primary btn-modal"
-                            onClick={() => {
-                                setShow(false);
-                                openModalUpdate();
-                            }}
+                            onClick={savePaciente}
                         >
-                            Modificar
+                            Concluir
                         </button>
                     </div>
                 </div>
@@ -52,4 +42,4 @@ const ModalView = ({
     );
 };
 
-export default ModalView;
+export default ModalCreate;
