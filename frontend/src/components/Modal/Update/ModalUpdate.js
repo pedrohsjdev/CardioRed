@@ -18,22 +18,6 @@ const ModalUpdate = ({ element, updatePaciente, show, setShow, children }) => {
                         ></button>
                     </div>
                     <div className="modal-body">{children}</div>
-                    <div className="modal-footer d-flex justify-content-between">
-                        <button
-                            type="button"
-                            className="btn btn-primary btn-modal btn-left"
-                            onClick={() => setShow(false)}
-                        >
-                            Cancelar
-                        </button>
-                        <button
-                            type="button"
-                            className="btn btn-primary btn-modal"
-                            onClick={updatePaciente}
-                        >
-                            Concluir
-                        </button>
-                    </div>
                 </div>
             </div>
         </div>

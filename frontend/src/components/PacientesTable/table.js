@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import "./table.css";
 
 const PacientesTable = (props) => {
     const [pacientes, setPacientes] = useState([{}]);
@@ -44,14 +45,24 @@ const PacientesTable = (props) => {
 
     return (
         <>
-            <table className="table table-striped table-hover mt-3">
+            <table className="table table-striped table-hover mt-3 paciente-table">
                 <thead>
                     <tr>
-                        <th scope="col">CPF</th>
-                        <th scope="col">Nome</th>
-                        <th scope="col">Sexo</th>
-                        <th scope="col">Cor</th>
-                        <th scope="col">Data de Nascimento</th>
+                        <th scope="col" className="cpf">
+                            CPF
+                        </th>
+                        <th scope="col" className="name">
+                            Nome
+                        </th>
+                        <th scope="col" className="gender">
+                            Sexo
+                        </th>
+                        <th scope="col" className="ethnicity">
+                            Cor
+                        </th>
+                        <th scope="col" className="birth-date">
+                            Data de Nascimento
+                        </th>
                     </tr>
                 </thead>
                 <tbody>

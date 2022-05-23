@@ -7,6 +7,7 @@ const ModalView = ({
     show,
     setShow,
     children,
+    formatPacienteDataToUpdate,
 }) => {
     if (!show) {
         return null;
@@ -41,6 +42,7 @@ const ModalView = ({
                             onClick={() => {
                                 setShow(false);
                                 openModalUpdate();
+                                formatPacienteDataToUpdate();
                             }}
                         >
                             Modificar
