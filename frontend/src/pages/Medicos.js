@@ -6,19 +6,33 @@ import FormSearch from "../components/SearchBar/FormSearch";
 import CounterElements from "../components/TableCounter/CounterElements";
 import Pagination from "../components/Paginator/Pagination"
 import "./style.css";
-import ModalCreateAndUpdate from "../components/Modal/CreateAndUpdate/ModalCreateAndUpdate";
 import FormMedico from "../components/Form/FormMedico/FormMedico";
 import ModalView from "../components/Modal/View/ModalView";
 import ModalDelete from "../components/Modal/Delete/ModalDelete";
 import axios from "axios";
 import { toast } from "react-toastify";
+import ModalCreate from "../components/ModalMedico/ModalCreate/ModalCreate";
+import ModalUpdate from "../components/ModalMedico/ModalUpdate/ModalUpdate";
 
 
 const Medicos = () => {
 
-    const [medicos, setMedicos] = useState([{}])
+    useEffect(() => {
+        if (!userAuth()) {
+            navigate("/");
+        }
+    }, []);
 
+    const [medicos, setMedicos] = useState([{}])
     const [pageInfo, setPageInfo] = useState({})
+    const [showModalCreateAndUpdate, setShowModalCreateAndUpdate] = useState(false);
+    const [showModalView, setShowModalView] = useState(false);
+    const [showModalDelete, setShowModalDelete] = useState(false);
+    const [formData, setFormData] = useState({});
+    const [modalTitle, setModalTitle] = useState("");
+    const [pageNumber, setPageNumber] = useState(0);
+    const [newMedicoData, setNewMedicoData] = useState({});
+    const [medicoData, setMedicoData] = useState({});
 
     useEffect(() => {
         const getMedicos = async () => {
@@ -34,12 +48,7 @@ const Medicos = () => {
 
     const saveMedico = async () => {
         const response = await axios
-            .post("http://localhost:8080/medicos", newMedicoData,
-                {
-                    headers: {
-                        "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwZWRybyIsInJvbGVzIjpbIlJPTEVfQURNIl0sImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODA4MC9sb2dpbiIsImV4cCI6MTY1MzE4NTA1OX0.u5CQ_yYEqZhU51F1VeVsYO2sXTdFqjZqeqxZ-kGTeHY"
-                    }
-                })
+            .post("http://localhost:8080/medicos", newMedicoData)
             .then(response => {
                 console.log(response)
                 toast.success("Medico cadastrado com sucesso!")
@@ -51,13 +60,7 @@ const Medicos = () => {
 
     const updateMedico = async () => {
         const response = await axios
-            .put("http://localhost:8080/medicos", newMedicoData,
-                {
-                    headers:
-                    {
-                        "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJwZWRybyIsInJvbGVzIjpbIlJPTEVfQURNIl0sImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODA4MC9sb2dpbiIsImV4cCI6MTY1MzE4NTA1OX0.u5CQ_yYEqZhU51F1VeVsYO2sXTdFqjZqeqxZ-kGTeHY"
-                    }
-                })
+            .put("http://localhost:8080/medicos", newMedicoData)
             .then(response => {
                 console.log(response)
                 toast.success("Medico atualizado com sucesso!")
@@ -67,23 +70,6 @@ const Medicos = () => {
             })
     }
 
-    // State variables for open and close the modals.
-    const [showModalCreateAndUpdate, setShowModalCreateAndUpdate] = useState(false);
-    const [showModalView, setShowModalView] = useState(false);
-    const [showModalDelete, setShowModalDelete] = useState(false);
-
-    // State variable for store paciente data to be displayed on modal.
-    const [formData, setFormData] = useState({});
-
-    const [modalTitle, setModalTitle] = useState("");
-
-    // Temporary test variables
-    const [pageNumber, setPageNumber] = useState(0);
-
-    const [newMedicoData, setNewMedicoData] = useState({});
-
-    const [medicoData, setMedicoData] = useState({});
-
     const updatePageNumber = (number) => {
         setPageNumber(number)
         getMedicos(number)
@@ -91,6 +77,10 @@ const Medicos = () => {
 
     const callSaveMedico = () => {
         saveMedico()
+    }
+
+    const callUpdateMedico = () => {
+        updateMedico()
     }
 
     const openModalCreate = () => {
@@ -122,14 +112,26 @@ const Medicos = () => {
     return (
         <>
             <NavBar />
-            <ModalCreateAndUpdate
+            <ModalCreate
                 show={showModalCreateAndUpdate}
                 setShow={setShowModalCreateAndUpdate}
-                title={modalTitle}
-                callSaveMedico={callSaveMedico}>
+                element="Médico"
+                saveMedico={callSaveMedico}>
                 <FormMedico data={formData} setNewMedicoData={setNewMedicoData}
                     newMedicoData={newMedicoData} />
-            </ModalCreateAndUpdate>
+            </ModalCreate>
+
+            <ModalUpdate
+                show={showModalUpdate}
+                setShow={setShowModalUpdate}
+                element="Paciente"
+                updateMedico={callUpdateMedico}
+            >
+                <FormUpdatePaciente
+                    medicoData={medicoData}
+                    setMedicoData={setMedicoData}
+                />
+            </ModalUpdate>
 
             <ModalView
                 show={showModalView}
