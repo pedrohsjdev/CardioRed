@@ -4,7 +4,6 @@ import "./FormSearch.css";
 
 const FormSearch = ({ criteria, setSearchInput }) => {
     const placeholderText = "Buscar por " + criteria;
-    const style = {};
 
     return (
         <>
@@ -17,7 +16,6 @@ const FormSearch = ({ criteria, setSearchInput }) => {
                         placeholder={placeholderText}
                         onChange={(event) => {
                             setSearchInput(event.target.value);
-                            console.log(event.target.value);
                         }}
                     />
                 </form>

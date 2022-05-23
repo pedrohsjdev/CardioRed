@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import FormSearch from "../components/SearchBar/FormSearch";
 import CounterElements from "../components/TableCounter/CounterElements";
-import Pagination from "../components/Paginator/Pagination";
 import NavBar from "../components/Navbar/navbar";
 import "./style.css";
 import Register from "../components/registerButton/register";
@@ -15,6 +14,7 @@ import FormViewPaciente from "../components/Form/FormPaciente/View/FormViewPacie
 import ModalDelete from "../components/Modal/Delete/ModalDelete";
 import axios from "axios";
 import authToken from "../utils/authToken";
+import Paginator from "../components/Paginator/Paginator";
 
 const Pacientes = () => {
     // State variables for open and close the modals.
@@ -53,8 +53,18 @@ const Pacientes = () => {
         setShowModalDelete(true);
     };
 
+    const handleSavePacienteError = (error) => {
+        console.log(error.response);
+    };
+
+    const formatPacienteDataToUpdate = () => {
+        setPacienteData({
+            ...pacienteData,
+            ["cpf"]: pacienteData.cpf.replaceAll(".", "").replace("-", ""),
+        });
+    };
+
     const savePaciente = () => {
-        console.log(newPacienteData);
         axios
             .post("http://localhost:8080/pacientes", newPacienteData)
             .then(() => {
@@ -62,12 +72,11 @@ const Pacientes = () => {
                 setShowModalCreate(false);
             })
             .catch((error) => {
-                console.error(error);
+                handleSavePacienteError(error);
             });
     };
 
     const updatePaciente = () => {
-        console.log(pacienteData);
         axios
             .put("http://localhost:8080/pacientes", pacienteData)
             .then(() => {
@@ -98,11 +107,12 @@ const Pacientes = () => {
                 show={showModalCreate}
                 setShow={setShowModalCreate}
                 element="Paciente"
-                savePaciente={savePaciente}
             >
                 <FormCreatePaciente
+                    setShow={setShowModalCreate}
                     newPacienteData={newPacienteData}
                     setNewPacienteData={setNewPacienteData}
+                    savePaciente={savePaciente}
                 />
             </ModalCreate>
 
@@ -110,11 +120,12 @@ const Pacientes = () => {
                 show={showModalUpdate}
                 setShow={setShowModalUpdate}
                 element="Paciente"
-                updatePaciente={updatePaciente}
             >
                 <FormUpdatePaciente
+                    setShow={setShowModalUpdate}
                     pacienteData={pacienteData}
                     setPacienteData={setPacienteData}
+                    updatePaciente={updatePaciente}
                 />
             </ModalUpdate>
 
@@ -124,6 +135,7 @@ const Pacientes = () => {
                 openModalDelete={openModalDelete}
                 openModalUpdate={openModalUpdate}
                 element="Paciente"
+                formatPacienteDataToUpdate={formatPacienteDataToUpdate}
             >
                 <FormViewPaciente pacienteData={pacienteData} />
             </ModalView>
@@ -131,6 +143,7 @@ const Pacientes = () => {
             <ModalDelete
                 show={showModalDelete}
                 setShow={setShowModalDelete}
+                setShowModalView={setShowModalView}
                 element="Paciente"
                 deletePaciente={deletePaciente}
             />
@@ -162,7 +175,8 @@ const Pacientes = () => {
                         totalElements={pageData.totalElements}
                     />
 
-                    <Pagination
+                    <Paginator
+                        currentPage={currentPage}
                         totalPages={pageData.totalPages}
                         setCurrentPage={setCurrentPage}
                     />
