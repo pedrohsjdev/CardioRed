@@ -1,97 +1,84 @@
-import React from "react";
-
+import React, { useState } from "react";
+import Form from "react-bootstrap/Form";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 const FormViewPaciente = ({ pacienteData }) => {
+    console.log(pacienteData);
     return (
-        <form>
-            <div className="row mb-3">
-                <label
-                    htmlFor="inputCPF"
-                    className="col-sm-2 col-form-label col-form-label-lg"
-                >
+        <Form>
+            <Form.Control hidden defaultValue={pacienteData.id} />
+            <Form.Group as={Row} className="mb-3">
+                <Form.Label column sm={2}>
                     CPF*:
-                </label>
-                <div className="col-sm-10">
-                    <input
-                        type="text"
-                        className="form-control"
-                        id="inputCPF"
+                </Form.Label>
+                <Col sm={10}>
+                    <Form.Control
                         disabled
                         defaultValue={pacienteData.cpf}
-                    />
-                </div>
-            </div>
-
-            <div className="row mb-3">
-                <label
-                    htmlFor="inputName"
-                    className="col-sm-2 col-form-label col-form-label-lg"
-                >
-                    Nome*:
-                </label>
-                <div className="col-sm-10">
-                    <input
                         type="text"
-                        className="form-control"
-                        id="inputName"
+                    />
+                </Col>
+            </Form.Group>
+            <Form.Group as={Row} className="mb-3">
+                <Form.Label column sm={2}>
+                    Nome*:
+                </Form.Label>
+                <Col sm={10}>
+                    <Form.Control
                         disabled
                         defaultValue={pacienteData.name}
+                        type="text"
                     />
-                </div>
-            </div>
-            <div className="row mb-3">
-                <label
-                    htmlFor="selectGender"
-                    className="col-sm-2 col-form-label col-form-label-lg"
-                >
+                </Col>
+            </Form.Group>
+            <Form.Group as={Row} className="mb-3">
+                <Form.Label column sm={2}>
                     Sexo*:
-                </label>
-                <div className="col-sm-10">
-                    <select
-                        className="form-select"
-                        id="selectGender"
+                </Form.Label>
+                <Col sm={10}>
+                    <Form.Select
                         disabled
                         defaultValue={pacienteData.gender}
+                        type="text"
                     >
                         <option value="">Escolha uma opção</option>
                         <option value="F">Feminino</option>
                         <option value="M">Masculino</option>
-                    </select>
-                </div>
-            </div>
-            <div className="row mb-3">
-                <label
-                    htmlFor="inputEthnicity"
-                    className="col-sm-2 col-form-label col-form-label-lg"
-                >
+                    </Form.Select>
+                </Col>
+            </Form.Group>
+            <Form.Group as={Row} className="mb-3">
+                <Form.Label column sm={2}>
                     Cor*:
-                </label>
-                <div className="col-sm-10">
-                    <input
-                        className="form-select"
-                        id="inputEthnicity"
+                </Form.Label>
+                <Col sm={10}>
+                    <Form.Select
                         disabled
-                        defaultValue={pacienteData.ethnicity}
-                    ></input>
-                </div>
-            </div>
-            <div className="row mb-3">
-                <label
-                    htmlFor="inputBirthDate"
-                    className="col-sm-4 col-form-label col-form-label-lg"
-                >
-                    Data de Nascimento*:
-                </label>
-                <div className="col-sm-8">
-                    <input
                         type="text"
-                        className="form-control"
-                        id="inputBirthDate"
+                        defaultValue={pacienteData.ethnicity}
+                    >
+                        <option value="">Escolha uma opção</option>
+                        <option value="Branco">Branco</option>
+                        <option value="Preto">Preto</option>
+                        <option value="Pardo">Pardo</option>
+                        <option value="Amarelo">Amarelo</option>
+                        <option value="Indígena">Indígena</option>
+                    </Form.Select>
+                </Col>
+            </Form.Group>
+            <Form.Group as={Row} className="mb-3">
+                <Form.Label column sm={4}>
+                    Data de Nascimento*:
+                </Form.Label>
+                <Col sm={8}>
+                    <Form.Control
                         disabled
                         defaultValue={pacienteData.birthDate}
+                        type="text"
                     />
-                </div>
-            </div>
-        </form>
+                </Col>
+            </Form.Group>
+        </Form>
     );
 };
 
