@@ -6,45 +6,46 @@ import NavBar from "../components/Navbar/navbar";
 import "./style.css";
 import Register from "../components/registerButton/register";
 import PacientesTable from "../components/PacientesTable/table";
-import ModalCreateAndUpdate from "../components/Modal/CreateAndUpdate/ModalCreateAndUpdate";
+import ModalCreate from "../components/Modal/Create/ModalCreate";
+import ModalUpdate from "../components/Modal/Update/ModalUpdate";
 import ModalView from "../components/Modal/View/ModalView";
-import FormPaciente from "../components/Form/FormPaciente/FormPaciente";
+import FormCreatePaciente from "../components/Form/FormPaciente/Create/FormCreatePaciente";
+import FormUpdatePaciente from "../components/Form/FormPaciente/Update/FormUpdatePaciente";
+import FormViewPaciente from "../components/Form/FormPaciente/View/FormViewPaciente";
 import ModalDelete from "../components/Modal/Delete/ModalDelete";
+import axios from "axios";
+import authToken from "../utils/authToken";
 
 const Pacientes = () => {
     // State variables for open and close the modals.
-    const [showModalCreateAndUpdate, setShowModalCreateAndUpdate] =
-        useState(false);
+    const [showModalCreate, setShowModalCreate] = useState(false);
+    const [showModalUpdate, setShowModalUpdate] = useState(false);
     const [showModalView, setShowModalView] = useState(false);
     const [showModalDelete, setShowModalDelete] = useState(false);
 
-    // State variable for store paciente data to be displayed on modal.
-    const [formData, setFormData] = useState({});
+    const [searchInput, setSearchInput] = useState("");
 
-    const [modalTitle, setModalTitle] = useState("");
-
-    // Temporary test variables
-    const pagesNumber = [1, 2, 3, 4, 5];
+    const [newPacienteData, setNewPacienteData] = useState({});
+    const [pacienteData, setPacienteData] = useState({});
+    const [pageData, setPageData] = useState({});
+    const [currentPage, setCurrentPage] = useState(0);
 
     const openModalCreate = () => {
-        // Clean inputs
-        setFormData({});
-        setModalTitle("Cadastrar Paciente");
         // Open modal
-        setShowModalCreateAndUpdate(true);
+        setShowModalCreate(true);
     };
 
     const openModalView = (data) => {
         // Set clicked cell data to form inputs
-        setFormData(data);
+        setPacienteData(data);
+        console.log(pacienteData);
         // Open modal
         setShowModalView(true);
     };
 
     const openModalUpdate = () => {
-        setModalTitle("Modificar Paciente");
         // Open modal
-        setShowModalCreateAndUpdate(true);
+        setShowModalUpdate(true);
     };
 
     const openModalDelete = () => {
@@ -52,50 +53,119 @@ const Pacientes = () => {
         setShowModalDelete(true);
     };
 
+    const savePaciente = () => {
+        console.log(newPacienteData);
+        axios
+            .post("http://localhost:8080/pacientes", newPacienteData)
+            .then(() => {
+                setNewPacienteData({});
+                setShowModalCreate(false);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    };
+
+    const updatePaciente = () => {
+        console.log(pacienteData);
+        axios
+            .put("http://localhost:8080/pacientes", pacienteData)
+            .then(() => {
+                setShowModalUpdate(false);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    };
+
+    const deletePaciente = () => {
+        axios
+            .delete(`http://localhost:8080/pacientes/${pacienteData.id}`)
+            .then(() => {
+                setShowModalDelete(false);
+                setShowModalView(false);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    };
+
     return (
         <>
             <NavBar />
 
-            <ModalCreateAndUpdate
-                show={showModalCreateAndUpdate}
-                setShow={setShowModalCreateAndUpdate}
-                title={modalTitle}
+            <ModalCreate
+                show={showModalCreate}
+                setShow={setShowModalCreate}
+                element="Paciente"
+                savePaciente={savePaciente}
             >
-                <FormPaciente disabled={false} data={formData} />
-            </ModalCreateAndUpdate>
+                <FormCreatePaciente
+                    newPacienteData={newPacienteData}
+                    setNewPacienteData={setNewPacienteData}
+                />
+            </ModalCreate>
+
+            <ModalUpdate
+                show={showModalUpdate}
+                setShow={setShowModalUpdate}
+                element="Paciente"
+                updatePaciente={updatePaciente}
+            >
+                <FormUpdatePaciente
+                    pacienteData={pacienteData}
+                    setPacienteData={setPacienteData}
+                />
+            </ModalUpdate>
 
             <ModalView
                 show={showModalView}
                 setShow={setShowModalView}
                 openModalDelete={openModalDelete}
                 openModalUpdate={openModalUpdate}
-                title="Paciente"
+                element="Paciente"
             >
-                <FormPaciente disabled={true} data={formData} />
+                <FormViewPaciente pacienteData={pacienteData} />
             </ModalView>
 
             <ModalDelete
                 show={showModalDelete}
                 setShow={setShowModalDelete}
                 element="Paciente"
+                deletePaciente={deletePaciente}
             />
 
             <div className="page-container">
                 <h1>Listagem de Pacientes</h1>
                 <div className="d-flex justify-content-between">
                     <Register openModalCreate={openModalCreate} />
-                    <FormSearch criteria="CPF" />
+                    <FormSearch
+                        setSearchInput={setSearchInput}
+                        criteria="CPF"
+                    />
                 </div>
 
-                <PacientesTable openModalView={openModalView} />
+                <PacientesTable
+                    setPageData={setPageData}
+                    openModalView={openModalView}
+                    currentPage={currentPage}
+                    searchInput={searchInput}
+                />
                 <div className="d-flex justify-content-between">
                     <CounterElements
-                        firstElement={"1"}
-                        lastElement={"10"}
-                        totalElements={"57"}
+                        firstElement={pageData.empty === true ? 0 : 1}
+                        lastElement={
+                            pageData.empty === true
+                                ? 0
+                                : pageData.numberOfElements
+                        }
+                        totalElements={pageData.totalElements}
                     />
 
-                    <Pagination pagesNumber={pagesNumber} />
+                    <Pagination
+                        totalPages={pageData.totalPages}
+                        setCurrentPage={setCurrentPage}
+                    />
                 </div>
             </div>
         </>

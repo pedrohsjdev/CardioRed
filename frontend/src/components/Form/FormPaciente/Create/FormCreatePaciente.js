@@ -1,9 +1,15 @@
 import React from "react";
 
-const FormPaciente = (props) => {
+const FormCreatePaciente = ({ newPacienteData, setNewPacienteData }) => {
+    const pacienteChange = (event) => {
+        setNewPacienteData({
+            ...newPacienteData,
+            [event.target.name]: event.target.value,
+        });
+    };
+
     return (
         <form>
-            <input hidden defaultValue={props.id} />
             <div className="row mb-3">
                 <label
                     htmlFor="inputCPF"
@@ -16,8 +22,8 @@ const FormPaciente = (props) => {
                         type="text"
                         className="form-control"
                         id="inputCPF"
-                        disabled={props.disabled}
-                        defaultValue={props.data.cpf}
+                        name="cpf"
+                        onChange={pacienteChange}
                     />
                 </div>
             </div>
@@ -34,8 +40,8 @@ const FormPaciente = (props) => {
                         type="text"
                         className="form-control"
                         id="inputName"
-                        disabled={props.disabled}
-                        defaultValue={props.data.nome}
+                        name="name"
+                        onChange={pacienteChange}
                     />
                 </div>
             </div>
@@ -50,13 +56,29 @@ const FormPaciente = (props) => {
                     <select
                         className="form-select"
                         id="selectGender"
-                        disabled={props.disabled}
-                        defaultValue={props.data.sexo}
+                        name="gender"
+                        onChange={pacienteChange}
                     >
                         <option value="">Escolha uma opção</option>
                         <option value="F">Feminino</option>
                         <option value="M">Masculino</option>
                     </select>
+                </div>
+            </div>
+            <div className="row mb-3">
+                <label
+                    htmlFor="inputEthnicity"
+                    className="col-sm-2 col-form-label col-form-label-lg"
+                >
+                    Cor*:
+                </label>
+                <div className="col-sm-10">
+                    <input
+                        className="form-select"
+                        id="inputEthnicity"
+                        name="ethnicity"
+                        onChange={pacienteChange}
+                    ></input>
                 </div>
             </div>
             <div className="row mb-3">
@@ -71,8 +93,8 @@ const FormPaciente = (props) => {
                         type="text"
                         className="form-control"
                         id="inputBirthDate"
-                        disabled={props.disabled}
-                        defaultValue={props.data.dataNascimento}
+                        name="birthDate"
+                        onChange={pacienteChange}
                     />
                 </div>
             </div>
@@ -80,4 +102,4 @@ const FormPaciente = (props) => {
     );
 };
 
-export default FormPaciente;
+export default FormCreatePaciente;
