@@ -1,13 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./LoginContainer.css";
 import Logo from "../../assets/logo.svg";
 import LoginImg from "../../assets/img-login.svg";
 import qs from "qs";
 import { useNavigate } from "react-router-dom";
-
 import axios from "axios";
+import userAuth from "../../utils/userAuth";
+import authToken from "../../utils/authToken";
 
 function LoginContainer(props) {
+    const navigate = useNavigate();
+    useEffect(() => {
+        if (userAuth()) {
+            navigate("/home");
+        }
+    }, []);
+
     // Request post to authenticate user
     const loginAttempt = async () => {
         const response = await axios
@@ -28,9 +36,9 @@ function LoginContainer(props) {
     };
 
     // Function to redirect the user to home page and set user tokens
-    const navigate = useNavigate();
     const loginSuccessfull = (response) => {
-        localStorage.setItem("jwt_tokens", response.data);
+        localStorage.setItem("access_token", response.data.access_token);
+        authToken(response.data.access_token);
         navigate("/home");
     };
 
