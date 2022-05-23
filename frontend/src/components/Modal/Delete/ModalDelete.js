@@ -2,7 +2,13 @@ import React from "react";
 
 import "./ModalDelete.css";
 
-const ModalDelete = ({ element, show, setShow, deletePaciente }) => {
+const ModalDelete = ({
+    element,
+    show,
+    setShow,
+    setShowModalView,
+    deletePaciente,
+}) => {
     if (!show) {
         return null;
     }
@@ -27,13 +33,18 @@ const ModalDelete = ({ element, show, setShow, deletePaciente }) => {
                         <button
                             type="button"
                             className="btn btn-primary btn-modal-delete btn-left"
+                            onClick={() => setShow(false)}
                         >
                             Não
                         </button>
                         <button
                             type="button"
                             className="btn btn-primary btn-modal-delete"
-                            onClick={deletePaciente}
+                            onClick={() => {
+                                deletePaciente();
+                                setShow(false);
+                                setShowModalView(false);
+                            }}
                         >
                             Sim
                         </button>
