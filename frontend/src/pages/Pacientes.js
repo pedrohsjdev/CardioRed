@@ -13,9 +13,9 @@ import FormUpdatePaciente from "../components/Form/FormPaciente/Update/FormUpdat
 import FormViewPaciente from "../components/Form/FormPaciente/View/FormViewPaciente";
 import ModalDelete from "../components/Modal/Delete/ModalDelete";
 import axios from "axios";
-import authToken from "../utils/authToken";
 import Paginator from "../components/Paginator/Paginator";
 import userAuth from "../utils/userAuth";
+import { Notify } from "notiflix/build/notiflix-notify-aio";
 
 const Pacientes = () => {
     useEffect(() => {
@@ -61,10 +61,6 @@ const Pacientes = () => {
         setShowModalDelete(true);
     };
 
-    const handleSavePacienteError = (error) => {
-        console.log(error.response);
-    };
-
     const formatPacienteDataToUpdate = () => {
         setPacienteData({
             ...pacienteData,
@@ -86,9 +82,11 @@ const Pacientes = () => {
             .then(() => {
                 setShowModalCreate(false);
                 flushPacienteTable();
+                Notify.success("Paciente cadastrado com sucesso!");
             })
             .catch((error) => {
-                handleSavePacienteError(error);
+                Notify.failure("Não foi possível cadastrar o paciente.");
+                console.log(error);
             });
     };
 
@@ -98,8 +96,14 @@ const Pacientes = () => {
             .then(() => {
                 setShowModalUpdate(false);
                 flushPacienteTable();
+                Notify.success(
+                    "As informações do paciente foram atualizadas com sucesso!"
+                );
             })
             .catch((error) => {
+                Notify.failure(
+                    "Não foi possível atualizar as informações do paciente."
+                );
                 console.error(error);
             });
     };
@@ -111,8 +115,10 @@ const Pacientes = () => {
                 setShowModalDelete(false);
                 setShowModalView(false);
                 flushPacienteTable();
+                Notify.success("Paciente removido com sucesso!");
             })
             .catch((error) => {
+                Notify.success("Não foi possível remover o paciente.");
                 console.error(error);
             });
     };
