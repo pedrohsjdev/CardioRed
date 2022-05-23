@@ -1,104 +1,142 @@
-import React from "react";
+import React, { useState } from "react";
+import Form from "react-bootstrap/Form";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import "./FormCreatePaciente.css";
+import moment from "moment";
 
-const FormCreatePaciente = ({ newPacienteData, setNewPacienteData }) => {
+const FormCreatePaciente = ({
+    newPacienteData,
+    setNewPacienteData,
+    savePaciente,
+    setShow,
+}) => {
     const pacienteChange = (event) => {
-        setNewPacienteData({
-            ...newPacienteData,
-            [event.target.name]: event.target.value,
-        });
+        if (event.target.name === "birthDate") {
+            setNewPacienteData({
+                ...newPacienteData,
+                [event.target.name]: moment(event.target.value).format(
+                    "DD/MM/yyyy"
+                ),
+            });
+        } else {
+            setNewPacienteData({
+                ...newPacienteData,
+                [event.target.name]: event.target.value,
+            });
+        }
+    };
+
+    const [validated, setValidated] = useState(false);
+    const handleSubmit = (event) => {
+        const form = event.currentTarget;
+        event.preventDefault();
+
+        setValidated(true);
+
+        if (!/^[0-9]+$/.test(newPacienteData.cpf)) {
+            return;
+        }
+
+        if (form.checkValidity() === true) {
+            savePaciente();
+            setPageData({});
+        }
     };
 
     return (
-        <form>
-            <div className="row mb-3">
-                <label
-                    htmlFor="inputCPF"
-                    className="col-sm-2 col-form-label col-form-label-lg"
-                >
+        <Form noValidate validated={validated} onSubmit={handleSubmit}>
+            <Form.Group as={Row} className="mb-3">
+                <Form.Label column sm={2}>
                     CPF*:
-                </label>
-                <div className="col-sm-10">
-                    <input
+                </Form.Label>
+                <Col sm={10}>
+                    <Form.Control
+                        required
                         type="text"
-                        className="form-control"
-                        id="inputCPF"
                         name="cpf"
+                        maxLength="11"
                         onChange={pacienteChange}
+                        isInvalid={!/^[0-9]+$/.test(newPacienteData.cpf)}
                     />
-                </div>
-            </div>
-
-            <div className="row mb-3">
-                <label
-                    htmlFor="inputName"
-                    className="col-sm-2 col-form-label col-form-label-lg"
-                >
+                </Col>
+            </Form.Group>
+            <Form.Group as={Row} className="mb-3">
+                <Form.Label column sm={2}>
                     Nome*:
-                </label>
-                <div className="col-sm-10">
-                    <input
+                </Form.Label>
+                <Col sm={10}>
+                    <Form.Control
+                        required
                         type="text"
-                        className="form-control"
-                        id="inputName"
                         name="name"
                         onChange={pacienteChange}
                     />
-                </div>
-            </div>
-            <div className="row mb-3">
-                <label
-                    htmlFor="selectGender"
-                    className="col-sm-2 col-form-label col-form-label-lg"
-                >
+                </Col>
+            </Form.Group>
+            <Form.Group as={Row} className="mb-3">
+                <Form.Label column sm={2}>
                     Sexo*:
-                </label>
-                <div className="col-sm-10">
-                    <select
-                        className="form-select"
-                        id="selectGender"
+                </Form.Label>
+                <Col sm={10}>
+                    <Form.Select
+                        required
+                        type="text"
                         name="gender"
                         onChange={pacienteChange}
                     >
                         <option value="">Escolha uma opção</option>
                         <option value="F">Feminino</option>
                         <option value="M">Masculino</option>
-                    </select>
-                </div>
-            </div>
-            <div className="row mb-3">
-                <label
-                    htmlFor="inputEthnicity"
-                    className="col-sm-2 col-form-label col-form-label-lg"
-                >
+                    </Form.Select>
+                </Col>
+            </Form.Group>
+            <Form.Group as={Row} className="mb-3">
+                <Form.Label column sm={2}>
                     Cor*:
-                </label>
-                <div className="col-sm-10">
-                    <input
-                        className="form-select"
-                        id="inputEthnicity"
+                </Form.Label>
+                <Col sm={10}>
+                    <Form.Select
+                        required
+                        type="text"
                         name="ethnicity"
                         onChange={pacienteChange}
-                    ></input>
-                </div>
-            </div>
-            <div className="row mb-3">
-                <label
-                    htmlFor="inputBirthDate"
-                    className="col-sm-4 col-form-label col-form-label-lg"
-                >
+                    >
+                        <option value="">Escolha uma opção</option>
+                        <option value="Branco">Branco</option>
+                        <option value="Preto">Preto</option>
+                        <option value="Pardo">Pardo</option>
+                        <option value="Amarelo">Amarelo</option>
+                        <option value="Indígena">Indígena</option>
+                    </Form.Select>
+                </Col>
+            </Form.Group>
+            <Form.Group as={Row} className="mb-3">
+                <Form.Label column sm={4}>
                     Data de Nascimento*:
-                </label>
-                <div className="col-sm-8">
-                    <input
-                        type="text"
-                        className="form-control"
-                        id="inputBirthDate"
+                </Form.Label>
+                <Col sm={8}>
+                    <Form.Control
+                        required
+                        type="date"
                         name="birthDate"
                         onChange={pacienteChange}
                     />
-                </div>
+                </Col>
+            </Form.Group>
+            <div className="modal-footer d-flex justify-content-between">
+                <button
+                    type="button"
+                    className="btn btn-primary btn-modal btn-left"
+                    onClick={() => setShow(false)}
+                >
+                    Cancelar
+                </button>
+                <button type="submit" className="btn btn-primary btn-modal">
+                    Concluir
+                </button>
             </div>
-        </form>
+        </Form>
     );
 };
 

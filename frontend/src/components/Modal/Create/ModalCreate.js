@@ -2,10 +2,14 @@ import React from "react";
 
 import "./ModalCreate.css";
 
-const ModalCreate = ({ element, savePaciente, show, setShow, children }) => {
+const ModalCreate = ({ element, show, setShow, children }) => {
     if (!show) {
         return null;
     }
+
+    const submitCreatePaciente = () => {
+        document.getElementByName("createPaciente").submit();
+    };
 
     return (
         <div className="modal fade show">
@@ -20,22 +24,6 @@ const ModalCreate = ({ element, savePaciente, show, setShow, children }) => {
                         ></button>
                     </div>
                     <div className="modal-body">{children}</div>
-                    <div className="modal-footer d-flex justify-content-between">
-                        <button
-                            type="button"
-                            className="btn btn-primary btn-modal btn-left"
-                            onClick={() => setShow(false)}
-                        >
-                            Cancelar
-                        </button>
-                        <button
-                            type="button"
-                            className="btn btn-primary btn-modal"
-                            onClick={savePaciente}
-                        >
-                            Concluir
-                        </button>
-                    </div>
                 </div>
             </div>
         </div>
