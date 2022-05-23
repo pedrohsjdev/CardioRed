@@ -2,7 +2,6 @@ package com.cardiored.cardio.controller;
 
 import com.cardiored.cardio.domain.User;
 import com.cardiored.cardio.request.user.UserPostDTO;
-import com.cardiored.cardio.request.user.UserPutDTO;
 import com.cardiored.cardio.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,7 +19,7 @@ public class UserController {
 
     @GetMapping(path = "/{id}")
     public ResponseEntity<User> findById(@PathVariable Integer id){
-        return ResponseEntity.ok(userService.findById(id));
+        return ResponseEntity.ok(userService.findByIdOrThrowException(id));
     }
 
     @PostMapping
@@ -36,8 +35,8 @@ public class UserController {
     }
 
     @PutMapping
-    public ResponseEntity<Void> replace(@RequestBody UserPutDTO userPutDTO){
-        userService.replace(userPutDTO);
+    public ResponseEntity<Void> replace(@RequestBody User user){
+        userService.replace(user);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

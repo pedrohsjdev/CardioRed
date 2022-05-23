@@ -1,10 +1,5 @@
 package com.cardiored.cardio;
 
-import com.cardiored.cardio.domain.Role;
-import com.cardiored.cardio.service.PacienteService;
-import com.cardiored.cardio.service.UserService;
-
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -23,13 +18,4 @@ public class CardioApplication {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    CommandLineRunner run(UserService userService, PacienteService pacienteService) {
-        return args -> {
-            userService.saveRole(new Role(null, "ROLE_ADM"));
-            userService.saveRole(new Role(null, "ROLE_MEDICO"));
-            userService.saveRole(new Role(null, "ROLE_RESIDENTE"));
-            userService.saveRole(new Role(null, "ROLE_DOCENTE"));
-        };
-    }
 }
