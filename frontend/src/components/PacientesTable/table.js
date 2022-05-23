@@ -26,7 +26,7 @@ const PacientesTable = (props) => {
         } else {
             fetchPacientes();
         }
-    }, [props.currentPage, props.searchInput]);
+    }, [props.currentPage, props.searchInput, props.refreshPacienteTable]);
 
     const formatCPF = (item) => {
         return {
