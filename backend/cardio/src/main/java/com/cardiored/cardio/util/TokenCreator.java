@@ -20,9 +20,11 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import static java.util.Arrays.stream;
 
+import java.nio.charset.StandardCharsets;
+
 
 public class TokenCreator {
-    private static final Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
+    private static final Algorithm algorithm = Algorithm.HMAC256("SECRET_KEY".getBytes(StandardCharsets.UTF_8));
     private static final JWTVerifier verifier = JWT.require(algorithm).build();
 
     @Autowired
@@ -50,7 +52,7 @@ public class TokenCreator {
 
         return JWT.create()
                     .withSubject(user.getUsername())
-                    .withExpiresAt(new Date(System.currentTimeMillis() + 10 * 60 * 1000))
+                    .withExpiresAt(new Date(System.currentTimeMillis() + 100 * 60 * 1000))
                     .withIssuer(requestUrl)
                     .withClaim("roles", user.getRoles().stream().map(Role::getName).collect(Collectors.toList()))
                     .sign(algorithm);
@@ -61,7 +63,7 @@ public class TokenCreator {
 
         return JWT.create()
                     .withSubject(user.getUsername())
-                    .withExpiresAt(new Date(System.currentTimeMillis() + 10 * 60 * 1000))
+                    .withExpiresAt(new Date(System.currentTimeMillis() + 1000 * 60 * 1000))
                     .withIssuer(requestUrl)
                     .withClaim("roles", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
                     .sign(algorithm);

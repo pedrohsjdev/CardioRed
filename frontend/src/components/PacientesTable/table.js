@@ -15,7 +15,7 @@ const PacientesTable = (props) => {
 
         const fetchPacientes = async () => {
             const { data } = await axios.get(
-                `http://localhost:8080/pacientes?page=${props.currentPage}&size=10`
+                `http://localhost:8080/pacientes?page=${props.currentPage}&size=10&sort=name`
             );
             setPacientes(data.content.map(formatCPF));
             props.setPageData(data);
@@ -26,7 +26,7 @@ const PacientesTable = (props) => {
         } else {
             fetchPacientes();
         }
-    }, [props.currentPage, props.searchInput]);
+    }, [props.currentPage, props.searchInput, props.refreshPacienteTable]);
 
     const formatCPF = (item) => {
         return {

@@ -59,6 +59,7 @@ const Paginator = ({ currentPage, totalPages, setCurrentPage }) => {
                                 "page-item " +
                                 (currentPage + 1 == number ? "active" : "")
                             }
+                            key={number}
                         >
                             <a
                                 className="page-link"
