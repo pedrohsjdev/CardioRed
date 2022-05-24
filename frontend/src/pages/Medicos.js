@@ -17,6 +17,7 @@ import FormViewMedico from "../components/Form/FormMedico/View/FormViewMedico";
 import { Notify } from "notiflix/build/notiflix-notify-aio";
 import userAuth from "../utils/userAuth";
 import { useNavigate } from "react-router-dom";
+import { BASE_URL } from "../utils/requests";
 
 
 const Medicos = () => {
@@ -41,7 +42,7 @@ const Medicos = () => {
 
     const saveMedico = async () => {
         const response = await axios
-            .post("http://localhost:8080/medicos", newMedicoData)
+            .post(`${BASE_URL}/medicos`, newMedicoData)
             .then(response => {
                 console.log(response)
                 Notify.success("Medico cadastrado com sucesso!")
