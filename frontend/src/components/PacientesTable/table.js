@@ -66,10 +66,10 @@ const PacientesTable = (props) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {pacientes.map((paciente) => (
+                    {pacientes.map((paciente, index) => (
                         <tr
                             onClick={() => props.openModalView(paciente)}
-                            key={paciente.id}
+                            key={index}
                         >
                             <td>{paciente.cpf} </td>
                             <td>{paciente.name}</td>

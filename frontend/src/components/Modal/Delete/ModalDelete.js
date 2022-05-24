@@ -7,7 +7,7 @@ const ModalDelete = ({
     show,
     setShow,
     setShowModalView,
-    deletePaciente,
+    deleteElement,
 }) => {
     if (!show) {
         return null;
@@ -41,7 +41,7 @@ const ModalDelete = ({
                             type="button"
                             className="btn btn-primary btn-modal-delete"
                             onClick={() => {
-                                deletePaciente();
+                                deleteElement();
                                 setShow(false);
                                 setShowModalView(false);
                             }}

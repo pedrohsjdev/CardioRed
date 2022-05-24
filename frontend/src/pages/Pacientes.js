@@ -16,8 +16,11 @@ import axios from "axios";
 import Paginator from "../components/Paginator/Paginator";
 import userAuth from "../utils/userAuth";
 import { Notify } from "notiflix/build/notiflix-notify-aio";
+import { useNavigate } from "react-router-dom";
 
 const Pacientes = () => {
+
+    const navigate = useNavigate();
     useEffect(() => {
         if (!userAuth()) {
             navigate("/");
@@ -169,7 +172,7 @@ const Pacientes = () => {
                 setShow={setShowModalDelete}
                 setShowModalView={setShowModalView}
                 element="Paciente"
-                deletePaciente={deletePaciente}
+                deleteElement={deletePaciente}
             />
 
             <div className="page-container">

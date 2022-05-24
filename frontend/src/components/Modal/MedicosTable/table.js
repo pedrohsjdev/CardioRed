@@ -1,6 +1,31 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
+import axios from 'axios';
 
 const MedicosTable = (props) => {
+    const [medicos, setMedicos] = useState([{}]);
+
+    useEffect(() => {
+        const findMedicosByCRM = async () => {
+            const { data } = await axios.get(
+                `http://localhost:8080/medicos/find/crm/${props.searchInput}`
+            );
+            setMedicos([data.content]);
+        };
+
+        const fetchMedicos = async () => {
+            const { data } = await axios.get(
+                `http://localhost:8080/medicos?page=${props.currentPage}&size=10&sort=name`
+            );
+            setMedicos(data.content);
+            props.setPageData(data);
+        };
+        console.log(props.searchInput)
+        if (props.searchInput == "") {
+            fetchMedicos();
+        } else {
+            findMedicosByCRM();
+        }
+    }, [props.currentPage, props.searchInput, props.refreshMedicoTable]);
 
     return (
         <>
@@ -15,7 +40,7 @@ const MedicosTable = (props) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {props.medicos.map((medico, index) => (
+                    {medicos.map((medico, index) => (
                         <tr
                             onClick={() => props.openModalView(medico)}
                             key={index}>
