@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import userAuth from "../../utils/userAuth";
 import authToken from "../../utils/authToken";
+import { BASE_URL } from "../../utils/Consts";
 
 function LoginContainer(props) {
     const navigate = useNavigate();
@@ -20,7 +21,7 @@ function LoginContainer(props) {
     const loginAttempt = async () => {
         const response = await axios
             .post(
-                "http://localhost:8080/login",
+                `${BASE_URL}/login`,
                 qs.stringify({
                     username: inputs.username,
                     password: inputs.password,

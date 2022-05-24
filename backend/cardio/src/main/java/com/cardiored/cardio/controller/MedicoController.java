@@ -116,7 +116,9 @@ public class MedicoController {
             case DOCENTE:          
                 user = docenteService.findByIdOrThrowException(allMedicoInfo.getId()).getUser();
                 user.setUsername(allMedicoInfo.getCrm());
-                user.setPassword(passwordEncoder.encode(allMedicoInfo.getPassword()));
+                if(allMedicoInfo.getPassword() != null) {    
+                    user.setPassword(passwordEncoder.encode(allMedicoInfo.getPassword()));
+                }               
                 user.setRoles(new ArrayList<>());
                 userService.replace(user);
                 userService.addRoleToUser(allMedicoInfo.getCrm(), "ROLE_DOCENTE");
@@ -134,7 +136,9 @@ public class MedicoController {
             case RESIDENTE:
                 user = residenteService.findByIdOrThrowException(allMedicoInfo.getId()).getUser();
                 user.setUsername(allMedicoInfo.getCrm());
-                user.setPassword(passwordEncoder.encode(allMedicoInfo.getPassword()));
+                if(allMedicoInfo.getPassword() != null) {    
+                    user.setPassword(passwordEncoder.encode(allMedicoInfo.getPassword()));
+                }               
                 user.setRoles(new ArrayList<>());
                 userService.addRoleToUser(allMedicoInfo.getCrm(), "ROLE_RESIDENTE");
                 userService.addRoleToUser(allMedicoInfo.getCrm(), "ROLE_MEDICO");
@@ -151,7 +155,9 @@ public class MedicoController {
             case MEDICO:
                 user = residenteService.findByIdOrThrowException(allMedicoInfo.getId()).getUser();
                 user.setUsername(allMedicoInfo.getCrm());
-                user.setPassword(passwordEncoder.encode(allMedicoInfo.getPassword()));
+                if(allMedicoInfo.getPassword() != null) {    
+                    user.setPassword(passwordEncoder.encode(allMedicoInfo.getPassword()));
+                }               
                 user.setRoles(new ArrayList<>());
                 userService.addRoleToUser(allMedicoInfo.getCrm(), "ROLE_MEDICO");
 
@@ -169,8 +175,10 @@ public class MedicoController {
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> delete(@RequestParam(required = true) Integer id) {
+    public ResponseEntity<Void> delete(@RequestParam(required = true) Integer id) {        
+        Integer userId = medicoService.findByIdOrThrowException(id).getUser().getId();
         medicoService.delete(id);
+        userService.delete(userId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

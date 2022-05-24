@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import MedicosTable from "../components/Modal/MedicosTable/table";
+import MedicosTable from "../components/MedicosTable/table";
 import NavBar from "../components/Navbar/navbar";
 import Register from "../components/registerButton/register";
 import FormSearch from "../components/SearchBar/FormSearch";
@@ -21,7 +21,6 @@ import { BASE_URL } from "../utils/requests";
 
 
 const Medicos = () => {
-
     const navigate = useNavigate();
     useEffect(() => {
         if (!userAuth()) {
@@ -40,34 +39,45 @@ const Medicos = () => {
     const [refreshMedicoTable, setRefreshMedicoTable] = useState(false);
     const [currentPage, setCurrentPage] = useState(0);
 
+    const flushMedicoTable = () => {
+        if (refreshMedicoTable) {
+            setRefreshMedicoTable(false);
+        } else {
+            setRefreshMedicoTable(true);
+        }
+    };
+
     const saveMedico = async () => {
         const response = await axios
             .post(`${BASE_URL}/medicos`, newMedicoData)
-            .then(response => {
-                console.log(response)
-                Notify.success("Medico cadastrado com sucesso!")
-            }).catch(error => {
-                console.log(error)
-                Notify.failure("Não foi possível cadastar o médico!")
+            .then((response) => {
+                setShowModalCreate(false);
+                flushMedicoTable();
+                Notify.success("Medico cadastrado com sucesso!");
             })
-    }
+            .catch((error) => {
+                console.log(error);
+                Notify.failure("Não foi possível cadastrar o médico!");
+            });
+    };
 
     const updateMedico = async () => {
-        console.log("dados do medico" + medicoData.password)
         const response = await axios
-            .put("http://localhost:8080/medicos", medicoData)
+            .put(`${BASE_URL}/medicos`, medicoData)
             .then(() => {
-                Notify.success("Medico atualizado com sucesso!")
+                setShowModalUpdate(false);
                 flushMedicoTable();
-            }).catch(error => {
-                console.log(error)
-                Notify.failure("Não foi possível modificar o médico!")
+                Notify.success("Medico atualizado com sucesso!");
             })
-    }
+            .catch((error) => {
+                console.log(error);
+                Notify.failure("Não foi possível modificar o médico!");
+            });
+    };
 
     const deleteMedico = () => {
         axios
-            .delete(`http://localhost:8080/medicos?id=${medicoData.id}`)
+            .delete(`${BASE_URL}/medicos?id=${medicoData.id}`)
             .then(() => {
                 setShowModalDelete(false);
                 setShowModalView(false);
@@ -96,14 +106,6 @@ const Medicos = () => {
     const openModalDelete = () => {
         // Open modal
         setShowModalDelete(true);
-    };
-
-    const flushMedicoTable = () => {
-        if (refreshMedicoTable) {
-            setRefreshMedicoTable(false);
-        } else {
-            setRefreshMedicoTable(true);
-        }
     };
 
     return (
@@ -154,16 +156,21 @@ const Medicos = () => {
             />
 
             <div className="page-container">
-                <h1>Listagem de Médicos</h1>
+                <h1 className="title-element">Listagem de Médicos</h1>
                 <div className="d-flex justify-content-between">
                     <Register openModalCreate={openModalCreate} />
-                    <FormSearch criteria={"CRM"} />
+                    <FormSearch
+                        setSearchInput={setSearchInput}
+                        criteria={"CRM"}
+                    />
                 </div>
-                <MedicosTable setPageData={setPageData}
+                <MedicosTable
+                    setPageData={setPageData}
                     openModalView={openModalView}
                     currentPage={currentPage}
                     searchInput={searchInput}
-                    refreshMedicoTable={refreshMedicoTable} />
+                    refreshMedicoTable={refreshMedicoTable}
+                />
                 <div className="d-flex justify-content-between mb-3">
                     <CounterElements
                         firstElement={pageData.empty === true ? 0 : 1}

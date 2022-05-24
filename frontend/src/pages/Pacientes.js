@@ -17,9 +17,9 @@ import Paginator from "../components/Paginator/Paginator";
 import userAuth from "../utils/userAuth";
 import { Notify } from "notiflix/build/notiflix-notify-aio";
 import { useNavigate } from "react-router-dom";
+import { BASE_URL } from "../utils/Consts";
 
 const Pacientes = () => {
-
     const navigate = useNavigate();
     useEffect(() => {
         if (!userAuth()) {
@@ -81,7 +81,7 @@ const Pacientes = () => {
 
     const savePaciente = () => {
         axios
-            .post("http://localhost:8080/pacientes", newPacienteData)
+            .post(`${BASE_URL}/pacientes`, newPacienteData)
             .then(() => {
                 setShowModalCreate(false);
                 flushPacienteTable();
@@ -95,7 +95,7 @@ const Pacientes = () => {
 
     const updatePaciente = () => {
         axios
-            .put("http://localhost:8080/pacientes", pacienteData)
+            .put(`${BASE_URL}/pacientes`, pacienteData)
             .then(() => {
                 setShowModalUpdate(false);
                 flushPacienteTable();
@@ -113,7 +113,7 @@ const Pacientes = () => {
 
     const deletePaciente = () => {
         axios
-            .delete(`http://localhost:8080/pacientes/${pacienteData.id}`)
+            .delete(`${BASE_URL}/pacientes/${pacienteData.id}`)
             .then(() => {
                 setShowModalDelete(false);
                 setShowModalView(false);
@@ -162,7 +162,7 @@ const Pacientes = () => {
                 openModalDelete={openModalDelete}
                 openModalUpdate={openModalUpdate}
                 element="Paciente"
-                formatPacienteDataToUpdate={formatPacienteDataToUpdate}
+                formatDataToUpdate={formatPacienteDataToUpdate}
             >
                 <FormViewPaciente pacienteData={pacienteData} />
             </ModalView>
@@ -176,7 +176,7 @@ const Pacientes = () => {
             />
 
             <div className="page-container">
-                <h1>Listagem de Pacientes</h1>
+                <h1 className="title-element">Listagem de Pacientes</h1>
                 <div className="d-flex justify-content-between">
                     <Register openModalCreate={openModalCreate} />
                     <FormSearch

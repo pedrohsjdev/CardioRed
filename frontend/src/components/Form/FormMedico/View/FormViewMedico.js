@@ -49,10 +49,10 @@ const FormViewMedico = ({ medicoData }) => {
                 </Col>
             </Form.Group>
             <Form.Group as={Row} className="mb-3">
-                <Form.Label column sm={2}>
+                <Form.Label column sm={4}>
                     Ano de Residência*:
                 </Form.Label>
-                <Col sm={10}>
+                <Col sm={8}>
                     <Form.Control
                         disabled
                         type="number"
@@ -61,11 +61,11 @@ const FormViewMedico = ({ medicoData }) => {
                 </Col>
             </Form.Group>
             <Form.Group as={Row} className="mb-3">
-                <Form.Label column sm={4}>
+                <Form.Label column sm={2}>
                     Titulação*:
                 </Form.Label>
-                <Col sm={8}>
-                <Form.Select
+                <Col sm={10}>
+                    <Form.Select
                         disabled
                         defaultValue={medicoData.titulation}
                         type="text"
@@ -79,11 +79,11 @@ const FormViewMedico = ({ medicoData }) => {
                 </Col>
             </Form.Group>
             <Form.Group as={Row} className="mb-3">
-                <Form.Label column sm={4}>
+                <Form.Label column sm={2}>
                     Senha*:
                 </Form.Label>
-                <Col sm={8}>
-                <Form.Control
+                <Col sm={10}>
+                    <Form.Control
                         disabled
                         defaultValue={medicoData.password}
                         type="text"

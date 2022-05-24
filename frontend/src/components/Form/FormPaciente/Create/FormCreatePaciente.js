@@ -40,7 +40,6 @@ const FormCreatePaciente = ({
 
         if (form.checkValidity() === true) {
             savePaciente();
-            setPageData({});
         }
     };
 

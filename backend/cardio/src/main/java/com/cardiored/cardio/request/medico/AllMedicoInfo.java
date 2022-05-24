@@ -22,8 +22,7 @@ public class AllMedicoInfo {
     private Integer residencyYear;
 
     private Titulation titulation;
-
-    @NotEmpty(message = "DoctorType cannot be empty!")
+    
     private String password;
     
 }
