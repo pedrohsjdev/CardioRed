@@ -7,10 +7,6 @@ const ModalCreate = ({ element, show, setShow, children }) => {
         return null;
     }
 
-    const submitCreatePaciente = () => {
-        document.getElementByName("createPaciente").submit();
-    };
-
     return (
         <div className="modal fade show">
             <div className="modal-dialog modal-lg modal-dialog-centered">

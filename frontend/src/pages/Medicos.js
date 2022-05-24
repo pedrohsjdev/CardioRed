@@ -25,7 +25,8 @@ const Medicos = () => {
 
     const [medicos, setMedicos] = useState([{}])
     const [pageInfo, setPageInfo] = useState({})
-    const [showModalCreateAndUpdate, setShowModalCreateAndUpdate] = useState(false);
+    const [showModalCreate, setShowModalCreate] = useState(false);
+    const [showModalUpdate, setShowModalUpdate] = useState(false);
     const [showModalView, setShowModalView] = useState(false);
     const [showModalDelete, setShowModalDelete] = useState(false);
     const [formData, setFormData] = useState({});
@@ -113,8 +114,8 @@ const Medicos = () => {
         <>
             <NavBar />
             <ModalCreate
-                show={showModalCreateAndUpdate}
-                setShow={setShowModalCreateAndUpdate}
+                show={showModalCreate}
+                setShow={setShowModalCreate}
                 element="Médico"
                 saveMedico={callSaveMedico}>
                 <FormMedico data={formData} setNewMedicoData={setNewMedicoData}
