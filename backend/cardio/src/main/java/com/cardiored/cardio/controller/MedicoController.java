@@ -169,8 +169,10 @@ public class MedicoController {
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> delete(@RequestParam(required = true) Integer id) {
+    public ResponseEntity<Void> delete(@RequestParam(required = true) Integer id) {        
+        Integer userId = medicoService.findByIdOrThrowException(id).getUser().getId();
         medicoService.delete(id);
+        userService.delete(userId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
