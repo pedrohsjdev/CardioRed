@@ -176,7 +176,7 @@ const Pacientes = () => {
             />
 
             <div className="page-container">
-                <h1>Listagem de Pacientes</h1>
+                <h1 className="title-element">Listagem de Pacientes</h1>
                 <div className="d-flex justify-content-between">
                     <Register openModalCreate={openModalCreate} />
                     <FormSearch
