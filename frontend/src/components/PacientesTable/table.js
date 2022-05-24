@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./table.css";
+import { BASE_URL } from "../../utils/Consts";
 
 const PacientesTable = (props) => {
     const [pacientes, setPacientes] = useState([{}]);
@@ -8,14 +9,14 @@ const PacientesTable = (props) => {
     useEffect(() => {
         const findPacienteByCPF = async () => {
             const { data } = await axios.get(
-                `http://localhost:8080/pacientes/cpf/${props.searchInput}`
+                `${BASE_URL}/pacientes/cpf/${props.searchInput}`
             );
             setPacientes([formatCPF(data)]);
         };
 
         const fetchPacientes = async () => {
             const { data } = await axios.get(
-                `http://localhost:8080/pacientes?page=${props.currentPage}&size=10&sort=name`
+                `${BASE_URL}/pacientes?page=${props.currentPage}&size=10&sort=name`
             );
             setPacientes(data.content.map(formatCPF));
             props.setPageData(data);
@@ -66,10 +67,10 @@ const PacientesTable = (props) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {pacientes.map((paciente) => (
+                    {pacientes.map((paciente, index) => (
                         <tr
                             onClick={() => props.openModalView(paciente)}
-                            key={paciente.id}
+                            key={index}
                         >
                             <td>{paciente.cpf} </td>
                             <td>{paciente.name}</td>

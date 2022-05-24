@@ -1,0 +1,13 @@
+.medico-table {
+  text-align: center;
+}
+
+.medico-table .crm,
+.medico-table .doctor-type,
+.medico-table .titulation {
+  width: 11rem;
+}
+
+.medico-table .gender {
+  width: 10rem;
+}

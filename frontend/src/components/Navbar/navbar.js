@@ -36,7 +36,7 @@ function NavBar() {
                             <li className="nav-item ms-5">
                                 <a
                                     className="nav-link"
-                                    href="http://localhost:8080/pacientes"
+                                    href="http://localhost:3000/pacientes"
                                 >
                                     Pacientes
                                 </a>
@@ -44,7 +44,7 @@ function NavBar() {
                             <li className="nav-item ms-5">
                                 <a
                                     className="nav-link"
-                                    href="http://localhost:8080/medicos"
+                                    href="http://localhost:3000/medicos"
                                 >
                                     Médicos
                                 </a>

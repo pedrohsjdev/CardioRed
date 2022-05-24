@@ -2,44 +2,44 @@ import React, { useState } from "react";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import "./FormCreatePaciente.css";
+import "./FormCreateMedico.css";
 import moment from "moment";
 
-const FormCreatePaciente = ({
-    newPacienteData,
-    setNewPacienteData,
-    savePaciente,
+const FormCreateMedico = ({
+    newMedicoData,
+    setNewMedicoData,
+    saveMedico,
     setShow,
 }) => {
-    const pacienteChange = (event) => {
-        if (event.target.name === "birthDate") {
-            setNewPacienteData({
-                ...newPacienteData,
-                [event.target.name]: moment(event.target.value).format(
-                    "DD/MM/yyyy"
-                ),
-            });
-        } else {
-            setNewPacienteData({
-                ...newPacienteData,
-                [event.target.name]: event.target.value,
-            });
+    const medicoChange = (event) => {
+        if (event.target.value == "Médico") {
+            setIsResidenteDisabled(true);
+            setIsDocenteDisabled(true);
+        } else if (event.target.value == "Docente") {
+            setIsDocenteDisabled(false);
+            setIsResidenteDisabled(true);
+        } else if (event.target.value == "Residente") {
+            setIsDocenteDisabled(true);
+            setIsResidenteDisabled(false);
         }
+        setNewMedicoData({
+            ...newMedicoData,
+            [event.target.name]: event.target.value,
+        });
     };
 
+    const [isResidenteDisabled, setIsResidenteDisabled] = useState(false);
+    const [isDocenteDisabled, setIsDocenteDisabled] = useState(false);
     const [validated, setValidated] = useState(false);
+
     const handleSubmit = (event) => {
         const form = event.currentTarget;
         event.preventDefault();
 
         setValidated(true);
 
-        if (!/^[0-9]+$/.test(newPacienteData.cpf)) {
-            return;
-        }
-
         if (form.checkValidity() === true) {
-            savePaciente();
+            saveMedico();
         }
     };
 
@@ -47,16 +47,15 @@ const FormCreatePaciente = ({
         <Form noValidate validated={validated} onSubmit={handleSubmit}>
             <Form.Group as={Row} className="mb-3">
                 <Form.Label column sm={2}>
-                    CPF*:
+                    CRM*:
                 </Form.Label>
                 <Col sm={10}>
                     <Form.Control
                         required
+                        maxLength={11}
+                        name="crm"
+                        onChange={medicoChange}
                         type="text"
-                        name="cpf"
-                        maxLength="11"
-                        onChange={pacienteChange}
-                        isInvalid={!/^[0-9]+$/.test(newPacienteData.cpf)}
                     />
                 </Col>
             </Form.Group>
@@ -67,59 +66,74 @@ const FormCreatePaciente = ({
                 <Col sm={10}>
                     <Form.Control
                         required
-                        type="text"
                         name="name"
-                        onChange={pacienteChange}
+                        onChange={medicoChange}
+                        type="text"
                     />
                 </Col>
             </Form.Group>
             <Form.Group as={Row} className="mb-3">
                 <Form.Label column sm={2}>
-                    Sexo*:
+                    Hierarquia*:
                 </Form.Label>
                 <Col sm={10}>
                     <Form.Select
                         required
+                        name="doctorType"
+                        onChange={medicoChange}
                         type="text"
-                        name="gender"
-                        onChange={pacienteChange}
                     >
                         <option value="">Escolha uma opção</option>
-                        <option value="F">Feminino</option>
-                        <option value="M">Masculino</option>
-                    </Form.Select>
-                </Col>
-            </Form.Group>
-            <Form.Group as={Row} className="mb-3">
-                <Form.Label column sm={2}>
-                    Cor*:
-                </Form.Label>
-                <Col sm={10}>
-                    <Form.Select
-                        required
-                        type="text"
-                        name="ethnicity"
-                        onChange={pacienteChange}
-                    >
-                        <option value="">Escolha uma opção</option>
-                        <option value="Branco">Branco</option>
-                        <option value="Preto">Preto</option>
-                        <option value="Pardo">Pardo</option>
-                        <option value="Amarelo">Amarelo</option>
-                        <option value="Indígena">Indígena</option>
+                        <option value="Médico">Médico</option>
+                        <option value="Docente">Docente</option>
+                        <option value="Residente">Residente</option>
                     </Form.Select>
                 </Col>
             </Form.Group>
             <Form.Group as={Row} className="mb-3">
                 <Form.Label column sm={4}>
-                    Data de Nascimento*:
+                    Ano de Residência*:
                 </Form.Label>
                 <Col sm={8}>
                     <Form.Control
+                        required={isResidenteDisabled}
+                        disabled={isResidenteDisabled}
+                        name="residencyYear"
+                        type="number"
+                        onChange={medicoChange}
+                    />
+                </Col>
+            </Form.Group>
+            <Form.Group as={Row} className="mb-3">
+                <Form.Label column sm={2}>
+                    Titulação*:
+                </Form.Label>
+                <Col sm={10}>
+                    <Form.Select
+                        onChange={medicoChange}
+                        required={isDocenteDisabled}
+                        disabled={isDocenteDisabled}
+                        name="titulation"
+                        type="text"
+                    >
+                        <option value="">Escolha uma opção</option>
+                        <option value="Doutor">Doutor</option>
+                        <option value="Assistente">Assistente</option>
+                        <option value="Livre-docente">Livre-docente</option>
+                        <option value="Titular">Titular</option>
+                    </Form.Select>
+                </Col>
+            </Form.Group>
+            <Form.Group as={Row} className="mb-3">
+                <Form.Label column sm={2}>
+                    Senha*:
+                </Form.Label>
+                <Col sm={10}>
+                    <Form.Control
+                        onChange={medicoChange}
                         required
-                        type="date"
-                        name="birthDate"
-                        onChange={pacienteChange}
+                        name="password"
+                        type="text"
                     />
                 </Col>
             </Form.Group>
@@ -139,4 +153,4 @@ const FormCreatePaciente = ({
     );
 };
 
-export default FormCreatePaciente;
+export default FormCreateMedico;
