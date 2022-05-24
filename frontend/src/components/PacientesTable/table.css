@@ -1,0 +1,13 @@
+.paciente-table {
+  text-align: center;
+}
+
+.paciente-table .cpf,
+.paciente-table .ethnicity,
+.paciente-table .birth-date {
+  width: 11rem;
+}
+
+.paciente-table .gender {
+  width: 10rem;
+}
