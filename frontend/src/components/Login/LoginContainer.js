@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import userAuth from "../../utils/userAuth";
 import authToken from "../../utils/authToken";
-import { BASE_URL } from "../../utils/Consts";
+import { BASE_URL } from "../../utils/requests";
 
 function LoginContainer(props) {
     const navigate = useNavigate();
