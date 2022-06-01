@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./table.css";
-import { BASE_URL } from "../../utils/Consts";
+import { BASE_URL } from "../../utils/requests";
 
 const PacientesTable = (props) => {
     const [pacientes, setPacientes] = useState([{}]);

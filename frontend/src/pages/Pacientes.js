@@ -17,7 +17,7 @@ import Paginator from "../components/Paginator/Paginator";
 import userAuth from "../utils/userAuth";
 import { Notify } from "notiflix/build/notiflix-notify-aio";
 import { useNavigate } from "react-router-dom";
-import { BASE_URL } from "../utils/Consts";
+import { BASE_URL } from "../utils/requests";
 
 const Pacientes = () => {
     const navigate = useNavigate();

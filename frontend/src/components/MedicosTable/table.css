@@ -11,3 +11,7 @@
 .medico-table .gender {
   width: 10rem;
 }
+
+tr:hover{
+  cursor: pointer;
+}
