@@ -17,8 +17,7 @@ import FormViewMedico from "../components/Form/FormMedico/View/FormViewMedico";
 import { Notify } from "notiflix/build/notiflix-notify-aio";
 import userAuth from "../utils/userAuth";
 import { useNavigate } from "react-router-dom";
-import { BASE_URL } from "../utils/Consts";
-
+import { BASE_URL } from "../utils/requests";
 
 const Medicos = () => {
     const navigate = useNavigate();
