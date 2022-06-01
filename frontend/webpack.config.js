@@ -41,5 +41,8 @@ module.exports = {
         new webpack.ProvidePlugin({
             process: "process/browser",
         }),
+        new EnvironmentPlugin({
+            REACT_APP_BACKEND_URL: process.env.REACT_APP_BACKEND_URL,
+        }),
     ],
 };
