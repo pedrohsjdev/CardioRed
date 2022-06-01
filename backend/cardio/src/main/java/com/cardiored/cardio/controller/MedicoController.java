@@ -115,6 +115,7 @@ public class MedicoController {
         switch(allMedicoInfo.getDoctorType()) {            
             case DOCENTE:          
                 user = docenteService.findByIdOrThrowException(allMedicoInfo.getId()).getUser();
+                docenteService.delete(allMedicoInfo.getId());
                 user.setUsername(allMedicoInfo.getCrm());
                 if(allMedicoInfo.getPassword() != null) {    
                     user.setPassword(passwordEncoder.encode(allMedicoInfo.getPassword()));
@@ -124,7 +125,7 @@ public class MedicoController {
                 userService.addRoleToUser(allMedicoInfo.getCrm(), "ROLE_DOCENTE");
                 userService.addRoleToUser(allMedicoInfo.getCrm(), "ROLE_MEDICO");
                
-                docenteService.replace(Docente.builder()
+                docenteService.save(Docente.builder()
                                                 .id(allMedicoInfo.getId())
                                                 .crm(allMedicoInfo.getCrm())
                                                 .name(allMedicoInfo.getName())
@@ -135,6 +136,7 @@ public class MedicoController {
                 break;
             case RESIDENTE:
                 user = residenteService.findByIdOrThrowException(allMedicoInfo.getId()).getUser();
+                residenteService.delete(allMedicoInfo.getId());
                 user.setUsername(allMedicoInfo.getCrm());
                 if(allMedicoInfo.getPassword() != null) {    
                     user.setPassword(passwordEncoder.encode(allMedicoInfo.getPassword()));
@@ -142,8 +144,9 @@ public class MedicoController {
                 user.setRoles(new ArrayList<>());
                 userService.addRoleToUser(allMedicoInfo.getCrm(), "ROLE_RESIDENTE");
                 userService.addRoleToUser(allMedicoInfo.getCrm(), "ROLE_MEDICO");
+                
 
-                residenteService.replace(Residente.builder()
+                residenteService.save(Residente.builder()
                                                 .id(allMedicoInfo.getId())
                                                 .crm(allMedicoInfo.getCrm())
                                                 .name(allMedicoInfo.getName())
@@ -153,7 +156,8 @@ public class MedicoController {
                                                 .build());
                 break;
             case MEDICO:
-                user = residenteService.findByIdOrThrowException(allMedicoInfo.getId()).getUser();
+                user = medicoService.findByIdOrThrowException(allMedicoInfo.getId()).getUser();
+                medicoService.delete(allMedicoInfo.getId());                
                 user.setUsername(allMedicoInfo.getCrm());
                 if(allMedicoInfo.getPassword() != null) {    
                     user.setPassword(passwordEncoder.encode(allMedicoInfo.getPassword()));
@@ -161,7 +165,7 @@ public class MedicoController {
                 user.setRoles(new ArrayList<>());
                 userService.addRoleToUser(allMedicoInfo.getCrm(), "ROLE_MEDICO");
 
-                medicoService.replace(Medico.builder()
+                medicoService.save(Medico.builder()
                                                 .id(allMedicoInfo.getId())
                                                 .crm(allMedicoInfo.getCrm())
                                                 .name(allMedicoInfo.getName())
