@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { BASE_URL } from "../../utils/Consts";
+import { BASE_URL } from "../../utils/requests";
 import "./table.css";
 
 const MedicosTable = (props) => {
