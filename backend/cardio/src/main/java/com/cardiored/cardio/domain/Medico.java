@@ -1,5 +1,8 @@
 package com.cardiored.cardio.domain;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -10,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 
@@ -28,9 +32,11 @@ public class Medico {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
     @Column(length = 11)
     @NotNull
     private String crm;
+    
     @NotNull
     private String name;
 
@@ -42,4 +48,7 @@ public class Medico {
     @JoinColumn(name="userId")
     @NotNull
     private User user;
+
+    @OneToMany(cascade=CascadeType.ALL, mappedBy="medico")
+    private List<Consulta> consultas;
 }

@@ -17,8 +17,5 @@ public enum ExamType {
 
     public String getType() {
         return type;
-    }
-
-
-    
+    }    
 }
