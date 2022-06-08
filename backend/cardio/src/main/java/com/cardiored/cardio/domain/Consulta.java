@@ -47,15 +47,9 @@ public class Consulta {
 
     @NotNull
     @ManyToOne
-    @JoinColumn(name="medicoId")
     private Medico medico;
 
     @NotNull
     @ManyToOne
-    @JoinColumn(name="pacienteId")
-    private Paciente paciente;
-    
-
-
-
+    private Paciente paciente;  
 }
