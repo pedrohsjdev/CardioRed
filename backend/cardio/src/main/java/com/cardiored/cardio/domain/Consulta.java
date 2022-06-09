@@ -1,6 +1,6 @@
 package com.cardiored.cardio.domain;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,6 +10,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -33,12 +35,17 @@ public class Consulta {
 
     @NotNull
     @JsonFormat(pattern = "dd/MM/yyyy - HH:mm:ss")
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) 
-    private LocalDateTime dateTime;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date dateTime;
 
     @NotNull
     @Enumerated(EnumType.STRING)
     private ExamType examType;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private ConsultaStatus status;
 
     @NotNull
     @Column(length = 20)
@@ -50,5 +57,5 @@ public class Consulta {
 
     @NotNull
     @ManyToOne
-    private Paciente paciente;  
+    private Paciente paciente;
 }
