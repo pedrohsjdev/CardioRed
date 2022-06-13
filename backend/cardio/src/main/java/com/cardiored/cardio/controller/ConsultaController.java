@@ -1,7 +1,5 @@
 package com.cardiored.cardio.controller;
 
-import java.util.List;
-
 import javax.validation.Valid;
 
 import org.springframework.data.domain.Page;
@@ -29,18 +27,18 @@ public class ConsultaController {
     private final ConsultaService consultaService;
 
     @GetMapping
-    public ResponseEntity<Page<Consulta>> page(Pageable pageable){
+    public ResponseEntity<Page<Consulta>> page(Pageable pageable) {
         return ResponseEntity.ok(consultaService.pageAll(pageable));
     }
 
     @GetMapping(path = "find/id/{id}")
-    public ResponseEntity<Consulta> findById(@PathVariable Integer id){
+    public ResponseEntity<Consulta> findById(@PathVariable Integer id) {
         return ResponseEntity.ok(consultaService.findByIdOrThrowException(id));
     }
 
     @GetMapping(path = "/find/name/{name}")
-    public ResponseEntity<Page<Consulta>> findByName(@PathVariable String name, Pageable pageable){
-        return ResponseEntity.ok(consultaService.findAllByPacienteName(name,pageable));
+    public ResponseEntity<Page<Consulta>> findByName(@PathVariable String name, Pageable pageable) {
+        return ResponseEntity.ok(consultaService.findAllByPacienteName(name, pageable));
     }
 
     @GetMapping(path = "/find/cpf/{cpf}")
@@ -49,23 +47,21 @@ public class ConsultaController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> save(@RequestBody @Valid Consulta consulta){
+    public ResponseEntity<Void> save(@RequestBody @Valid Consulta consulta) {
         consultaService.save(consulta);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @DeleteMapping(path = "/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Integer id){
+    public ResponseEntity<Void> delete(@PathVariable Integer id) {
         consultaService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PutMapping
-    public ResponseEntity<Void> replace(@RequestBody Consulta consulta){
+    public ResponseEntity<Void> replace(@RequestBody Consulta consulta) {
         consultaService.replace(consulta);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-
-    
 }
