@@ -17,6 +17,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -36,19 +38,20 @@ public class Medico {
     @Column(length = 11)
     @NotNull
     private String crm;
-    
+
     @NotNull
     private String name;
 
     @Enumerated(EnumType.STRING)
     @NotNull
     private DoctorType doctorType;
-    
+
     @OneToOne
-    @JoinColumn(name="userId")
+    @JoinColumn(name = "userId")
     @NotNull
     private User user;
 
-    @OneToMany(cascade=CascadeType.ALL, mappedBy="medico")
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "medico")
     private List<Consulta> consultas;
 }
