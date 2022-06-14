@@ -40,6 +40,9 @@ public class ConsultaService {
         // [Business rule] Verify if a consulta with the same exam type already
         // exists.
         Assert.isTrue(!consultaRepository.existsByPacienteCpfAndExamTypeAndStatus(
+                consulta.getPaciente().getCpf(),
+                consulta.getExamType().getName(),
+                ConsultaStatus.ATIVO.getStatus()),
                 pacienteService.findById(consulta.getPaciente().getId()).getCpf(),
                 consulta.getExamType(),
                 ConsultaStatus.ATIVO),
@@ -55,6 +58,9 @@ public class ConsultaService {
         // [Business rule] Verify if a consulta with the same exam type and different
         // from the Consulta being replaced already exists.
         Assert.isTrue(!consultaRepository.existsByPacienteCpfAndExamTypeAndStatusAndIdNot(
+                consulta.getPaciente().getCpf(),
+                consulta.getExamType().getName(),
+                ConsultaStatus.ATIVO.getStatus(),
                 pacienteService.findById(consulta.getPaciente().getId()).getCpf(),
                 consulta.getExamType(),
                 ConsultaStatus.ATIVO,
