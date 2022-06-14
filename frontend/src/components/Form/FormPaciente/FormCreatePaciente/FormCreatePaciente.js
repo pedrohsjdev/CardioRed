@@ -2,29 +2,22 @@ import React, { useState } from "react";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import "./FormCreatePaciente.css";
 import moment from "moment";
 
-const FormCreatePaciente = ({
-    newPacienteData,
-    setNewPacienteData,
-    savePaciente,
-    setShow,
-}) => {
+const FormCreatePaciente = ({ newPacienteData, setNewPacienteData, savePaciente, setShow }) => {
     const pacienteChange = (event) => {
         if (event.target.name === "birthDate") {
             setNewPacienteData({
                 ...newPacienteData,
-                [event.target.name]: moment(event.target.value).format(
-                    "DD/MM/yyyy"
-                ),
+                [event.target.name]: moment(event.target.value).format("DD/MM/yyyy"),
             });
-        } else {
-            setNewPacienteData({
-                ...newPacienteData,
-                [event.target.name]: event.target.value,
-            });
+            return;
         }
+
+        setNewPacienteData({
+            ...newPacienteData,
+            [event.target.name]: event.target.value,
+        });
     };
 
     const [validated, setValidated] = useState(false);
@@ -65,12 +58,7 @@ const FormCreatePaciente = ({
                     Nome*:
                 </Form.Label>
                 <Col sm={10}>
-                    <Form.Control
-                        required
-                        type="text"
-                        name="name"
-                        onChange={pacienteChange}
-                    />
+                    <Form.Control required type="text" name="name" onChange={pacienteChange} />
                 </Col>
             </Form.Group>
             <Form.Group as={Row} className="mb-3">
@@ -78,12 +66,7 @@ const FormCreatePaciente = ({
                     Sexo*:
                 </Form.Label>
                 <Col sm={10}>
-                    <Form.Select
-                        required
-                        type="text"
-                        name="gender"
-                        onChange={pacienteChange}
-                    >
+                    <Form.Select required type="text" name="gender" onChange={pacienteChange}>
                         <option value="">Escolha uma opção</option>
                         <option value="F">Feminino</option>
                         <option value="M">Masculino</option>
@@ -95,12 +78,7 @@ const FormCreatePaciente = ({
                     Cor*:
                 </Form.Label>
                 <Col sm={10}>
-                    <Form.Select
-                        required
-                        type="text"
-                        name="ethnicity"
-                        onChange={pacienteChange}
-                    >
+                    <Form.Select required type="text" name="ethnicity" onChange={pacienteChange}>
                         <option value="">Escolha uma opção</option>
                         <option value="Branco">Branco</option>
                         <option value="Preto">Preto</option>
@@ -115,20 +93,11 @@ const FormCreatePaciente = ({
                     Data de Nascimento*:
                 </Form.Label>
                 <Col sm={8}>
-                    <Form.Control
-                        required
-                        type="date"
-                        name="birthDate"
-                        onChange={pacienteChange}
-                    />
+                    <Form.Control required type="date" name="birthDate" onChange={pacienteChange} />
                 </Col>
             </Form.Group>
             <div className="modal-footer d-flex justify-content-between">
-                <button
-                    type="button"
-                    className="btn btn-primary btn-modal btn-left"
-                    onClick={() => setShow(false)}
-                >
+                <button type="button" className="btn btn-primary btn-modal btn-left" onClick={() => setShow(false)}>
                     Cancelar
                 </button>
                 <button type="submit" className="btn btn-primary btn-modal">

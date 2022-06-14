@@ -2,10 +2,42 @@ import React, { useState } from "react";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-const FormViewPaciente = ({ pacienteData }) => {
-    console.log(pacienteData);
+import moment from "moment";
+
+const FormUpdatePaciente = ({ pacienteData, setPacienteData, updatePaciente, setShow }) => {
+    const pacienteChange = (event) => {
+        if (event.target.name === "birthDate") {
+            setPacienteData({
+                ...pacienteData,
+                [event.target.name]: moment(event.target.value).format("DD/MM/yyyy"),
+            });
+            return;
+        }
+
+        setPacienteData({
+            ...pacienteData,
+            [event.target.name]: event.target.value,
+        });
+    };
+
+    const [validated, setValidated] = useState(false);
+    const handleSubmit = (event) => {
+        const form = event.currentTarget;
+        event.preventDefault();
+
+        setValidated(true);
+
+        if (!/^[0-9]+$/.test(pacienteData.cpf)) {
+            return;
+        }
+
+        if (form.checkValidity() === true) {
+            updatePaciente();
+        }
+    };
+
     return (
-        <Form>
+        <Form noValidate validated={validated} onSubmit={handleSubmit}>
             <Form.Control hidden defaultValue={pacienteData.id} />
             <Form.Group as={Row} className="mb-3">
                 <Form.Label column sm={2}>
@@ -13,9 +45,13 @@ const FormViewPaciente = ({ pacienteData }) => {
                 </Form.Label>
                 <Col sm={10}>
                     <Form.Control
-                        disabled
-                        defaultValue={pacienteData.cpf}
+                        required
+                        value={pacienteData.cpf}
                         type="text"
+                        name="cpf"
+                        maxLength="11"
+                        onChange={pacienteChange}
+                        isInvalid={!/^[0-9]+$/.test(pacienteData.cpf)}
                     />
                 </Col>
             </Form.Group>
@@ -25,9 +61,11 @@ const FormViewPaciente = ({ pacienteData }) => {
                 </Form.Label>
                 <Col sm={10}>
                     <Form.Control
-                        disabled
+                        required
                         defaultValue={pacienteData.name}
                         type="text"
+                        name="name"
+                        onChange={pacienteChange}
                     />
                 </Col>
             </Form.Group>
@@ -37,9 +75,11 @@ const FormViewPaciente = ({ pacienteData }) => {
                 </Form.Label>
                 <Col sm={10}>
                     <Form.Select
-                        disabled
+                        required
                         defaultValue={pacienteData.gender}
                         type="text"
+                        name="gender"
+                        onChange={pacienteChange}
                     >
                         <option value="">Escolha uma opção</option>
                         <option value="F">Feminino</option>
@@ -53,8 +93,10 @@ const FormViewPaciente = ({ pacienteData }) => {
                 </Form.Label>
                 <Col sm={10}>
                     <Form.Select
-                        disabled
+                        required
                         type="text"
+                        name="ethnicity"
+                        onChange={pacienteChange}
                         defaultValue={pacienteData.ethnicity}
                     >
                         <option value="">Escolha uma opção</option>
@@ -72,14 +114,30 @@ const FormViewPaciente = ({ pacienteData }) => {
                 </Form.Label>
                 <Col sm={8}>
                     <Form.Control
-                        disabled
-                        defaultValue={pacienteData.birthDate}
-                        type="text"
+                        required
+                        defaultValue={"".concat(
+                            pacienteData.birthDate.slice(6, 10),
+                            "-",
+                            pacienteData.birthDate.slice(3, 5),
+                            "-",
+                            pacienteData.birthDate.slice(0, 2)
+                        )}
+                        type="date"
+                        name="birthDate"
+                        onChange={pacienteChange}
                     />
                 </Col>
             </Form.Group>
+            <div className="modal-footer d-flex justify-content-between">
+                <button type="button" className="btn btn-primary btn-modal btn-left" onClick={() => setShow(false)}>
+                    Cancelar
+                </button>
+                <button type="submit" className="btn btn-primary btn-modal">
+                    Concluir
+                </button>
+            </div>
         </Form>
     );
 };
 
-export default FormViewPaciente;
+export default FormUpdatePaciente;
