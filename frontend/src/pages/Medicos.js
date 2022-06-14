@@ -12,7 +12,7 @@ import ModalUpdate from "../components/Modal/ModalUpdate/ModalUpdate";
 import ModalDelete from "../components/Modal/ModalDelete/ModalDelete";
 import FormCreateMedico from "../components/Form/FormMedico/FormCreateMedico/FormCreateMedico";
 import FormUpdateMedico from "../components/Form/FormMedico/FormUpdateMedico/FormUpdateMedico";
-import FormViewMedico from "../components/Form/FormMedico/FormUpdateMedico/FormUpdateMedico";
+import FormViewMedico from "../components/Form/FormMedico/FormViewMedico/FormViewMedico";
 import { Notify } from "notiflix/build/notiflix-notify-aio";
 import { userIsAuthenticated } from "../services/Login/LoginService";
 import { useNavigate } from "react-router-dom";
@@ -30,10 +30,10 @@ const Medicos = () => {
     const [showModalUpdate, setShowModalUpdate] = useState(false);
     const [showModalView, setShowModalView] = useState(false);
     const [showModalDelete, setShowModalDelete] = useState(false);
+    const [searchInput, setSearchInput] = useState("");
     const [newMedicoData, setNewMedicoData] = useState({});
     const [medicoData, setMedicoData] = useState({});
     const [pageData, setPageData] = useState({});
-    const [searchInput, setSearchInput] = useState("");
     const [refreshMedicoTable, setRefreshMedicoTable] = useState(false);
     const [currentPage, setCurrentPage] = useState(0);
 
