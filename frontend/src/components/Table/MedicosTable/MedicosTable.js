@@ -1,33 +1,33 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { BASE_URL } from "../../utils/requests";
-import "./table.css";
+import "./MedicosTable.css";
+import { findAllMedicos, findMedicosByCRM } from "../../../services/Medico/MedicoService";
 
-const MedicosTable = (props) => {
+const MedicosTable = ({ currentPage, searchInput, refreshMedicoTable, openModalView, setPageData }) => {
     const [medicos, setMedicos] = useState([{}]);
 
     useEffect(() => {
-        const findMedicosByCRM = async () => {
-            const { data } = await axios.get(
-                `${BASE_URL}/medicos/find/crm/${props.searchInput}`
-            );
-            setMedicos([data]);
+        const getMedicos = async () => {
+            const response = await findAllMedicos(currentPage);
+            if (response.content) {
+                setMedicos(response.content);
+            } else {
+                setMedicos([{}]);
+            }
+            setPageData(response);
         };
 
-        const fetchMedicos = async () => {
-            const { data } = await axios.get(
-                `${BASE_URL}/medicos?page=${props.currentPage}&size=10&sort=name`
-            );
-            setMedicos(data.content);
-            props.setPageData(data);
+        const getMedicosByCRM = async () => {
+            const response = await findMedicosByCRM(searchInput);
+            setMedicos(response);
+            setPageData(response);
         };
 
-        if (props.searchInput == "") {
-            fetchMedicos();
+        if (searchInput == "") {
+            getMedicos();
         } else {
-            findMedicosByCRM();
+            getMedicosByCRM();
         }
-    }, [props.currentPage, props.searchInput, props.refreshMedicoTable]);
+    }, [currentPage, searchInput, refreshMedicoTable]);
 
     return (
         <>
@@ -53,10 +53,7 @@ const MedicosTable = (props) => {
                 </thead>
                 <tbody>
                     {medicos.map((medico, index) => (
-                        <tr
-                            onClick={() => props.openModalView(medico)}
-                            key={index}
-                        >
+                        <tr onClick={() => openModalView(medico)} key={index}>
                             <td>{medico.crm}</td>
                             <td>{medico.name}</td>
                             <td>{medico.doctorType}</td>
