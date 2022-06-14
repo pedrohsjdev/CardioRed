@@ -32,7 +32,7 @@ const Paginator = ({ currentPage, totalPages, setCurrentPage }) => {
         return list.slice(trimStart, trimEnd);
     };
 
-    const numbers = numberList(currentPage, totalPages);
+    const numbers = numberList();
 
     return (
         <>
@@ -54,19 +54,11 @@ const Paginator = ({ currentPage, totalPages, setCurrentPage }) => {
                         </a>
                     </li>
                     {numbers.map((number) => (
-                        <li
-                            className={
-                                "page-item " +
-                                (currentPage + 1 == number ? "active" : "")
-                            }
-                            key={number}
-                        >
+                        <li className={"page-item " + (currentPage + 1 == number ? "active" : "")} key={number}>
                             <a
                                 className="page-link"
                                 onClick={(event) => {
-                                    setCurrentPage(
-                                        Number(event.target.text) - 1
-                                    );
+                                    setCurrentPage(Number(event.target.text) - 1);
                                 }}
                                 href="#"
                             >

@@ -1,8 +1,8 @@
 import React from "react";
 
-import "./FormSearch.css";
+import "./TableSearch.css";
 
-const FormSearch = ({ criteria, setSearchInput }) => {
+const TableSearch = ({ criteria, setSearchInput }) => {
     const placeholderText = "Buscar por " + criteria;
 
     return (
@@ -24,4 +24,4 @@ const FormSearch = ({ criteria, setSearchInput }) => {
     );
 };
 
-export default FormSearch;
+export default TableSearch;
