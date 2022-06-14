@@ -12,12 +12,11 @@ import FormCreatePaciente from "../components/Form/FormPaciente/FormCreatePacien
 import FormUpdatePaciente from "../components/Form/FormPaciente/FormUpdatePaciente/FormUpdatePaciente";
 import FormViewPaciente from "../components/Form/FormPaciente/FormViewPaciente/FormViewPaciente";
 import ModalDelete from "../components/Modal/ModalDelete/ModalDelete";
-import axios from "axios";
 import TablePaginator from "../components/Table/TablePaginator/TablePaginator";
 import { userIsAuthenticated } from "../services/Login/LoginService";
 import { Notify } from "notiflix/build/notiflix-notify-aio";
 import { useNavigate } from "react-router-dom";
-import { BASE_URL } from "../utils/Consts";
+import { savePaciente, updatePaciente, deletePaciente } from "../services/Paciente/PacienteService";
 
 const Pacientes = () => {
     const navigate = useNavigate();
@@ -26,20 +25,72 @@ const Pacientes = () => {
             navigate("/");
         }
     }, []);
-    // State variables for open and close the modals.
+
     const [showModalCreate, setShowModalCreate] = useState(false);
     const [showModalUpdate, setShowModalUpdate] = useState(false);
     const [showModalView, setShowModalView] = useState(false);
     const [showModalDelete, setShowModalDelete] = useState(false);
-
     const [searchInput, setSearchInput] = useState("");
-
     const [newPacienteData, setNewPacienteData] = useState({});
     const [pacienteData, setPacienteData] = useState({});
     const [pageData, setPageData] = useState({});
+    const [refreshPacienteTable, setRefreshPacienteTable] = useState(false);
     const [currentPage, setCurrentPage] = useState(0);
 
-    const [refreshPacienteTable, setRefreshPacienteTable] = useState(false);
+    const flushPacienteTable = () => {
+        if (refreshPacienteTable) {
+            setRefreshPacienteTable(false);
+        } else {
+            setRefreshPacienteTable(true);
+        }
+    };
+
+    const savePacienteData = async () => {
+        const response = await savePaciente(newPacienteData);
+
+        if (response.status == 201) {
+            setShowModalCreate(false);
+            flushPacienteTable();
+            Notify.success("Paciente cadastrado com sucesso!");
+        } else {
+            Notify.failure("Não foi possível cadastrar o paciente.");
+            console.error(response);
+        }
+    };
+
+    const updatePacienteData = async () => {
+        const response = await updatePaciente(pacienteData);
+
+        if (response.status == 204) {
+            setShowModalUpdate(false);
+            flushPacienteTable();
+            Notify.success("As informações do paciente foram atualizadas com sucesso!");
+        } else {
+            Notify.failure("Não foi possível atualizar as informações do paciente.");
+            console.error(response);
+        }
+    };
+
+    const deletePacienteData = async () => {
+        const response = await deletePaciente(pacienteData.id);
+
+        if (response.status == 204) {
+            setShowModalDelete(false);
+            setShowModalView(false);
+            flushPacienteTable();
+            Notify.success("Paciente removido com sucesso!");
+        } else {
+            Notify.success("Não foi possível remover o paciente.");
+            console.error(response);
+        }
+    };
+
+    const formatPacienteDataToUpdate = () => {
+        setPacienteData({
+            ...pacienteData,
+            ["cpf"]: pacienteData.cpf.replaceAll(".", "").replace("-", ""),
+        });
+    };
 
     const openModalCreate = () => {
         // Open modal
@@ -64,64 +115,6 @@ const Pacientes = () => {
         setShowModalDelete(true);
     };
 
-    const formatPacienteDataToUpdate = () => {
-        setPacienteData({
-            ...pacienteData,
-            ["cpf"]: pacienteData.cpf.replaceAll(".", "").replace("-", ""),
-        });
-    };
-
-    const flushPacienteTable = () => {
-        if (refreshPacienteTable) {
-            setRefreshPacienteTable(false);
-        } else {
-            setRefreshPacienteTable(true);
-        }
-    };
-
-    const savePaciente = () => {
-        axios
-            .post(`${BASE_URL}/pacientes`, newPacienteData)
-            .then(() => {
-                setShowModalCreate(false);
-                flushPacienteTable();
-                Notify.success("Paciente cadastrado com sucesso!");
-            })
-            .catch((error) => {
-                Notify.failure("Não foi possível cadastrar o paciente.");
-                console.log(error);
-            });
-    };
-
-    const updatePaciente = () => {
-        axios
-            .put(`${BASE_URL}/pacientes`, pacienteData)
-            .then(() => {
-                setShowModalUpdate(false);
-                flushPacienteTable();
-                Notify.success("As informações do paciente foram atualizadas com sucesso!");
-            })
-            .catch((error) => {
-                Notify.failure("Não foi possível atualizar as informações do paciente.");
-                console.error(error);
-            });
-    };
-
-    const deletePaciente = () => {
-        axios
-            .delete(`${BASE_URL}/pacientes/${pacienteData.id}`)
-            .then(() => {
-                setShowModalDelete(false);
-                setShowModalView(false);
-                flushPacienteTable();
-                Notify.success("Paciente removido com sucesso!");
-            })
-            .catch((error) => {
-                Notify.success("Não foi possível remover o paciente.");
-                console.error(error);
-            });
-    };
-
     return (
         <>
             <NavBar />
@@ -131,7 +124,7 @@ const Pacientes = () => {
                     setShow={setShowModalCreate}
                     newPacienteData={newPacienteData}
                     setNewPacienteData={setNewPacienteData}
-                    savePaciente={savePaciente}
+                    savePaciente={savePacienteData}
                 />
             </ModalCreate>
 
@@ -140,7 +133,7 @@ const Pacientes = () => {
                     setShow={setShowModalUpdate}
                     pacienteData={pacienteData}
                     setPacienteData={setPacienteData}
-                    updatePaciente={updatePaciente}
+                    updatePaciente={updatePacienteData}
                 />
             </ModalUpdate>
 
@@ -160,7 +153,7 @@ const Pacientes = () => {
                 setShow={setShowModalDelete}
                 setShowModalView={setShowModalView}
                 element="Paciente"
-                deleteElement={deletePaciente}
+                deleteElement={deletePacienteData}
             />
 
             <div className="page-container">

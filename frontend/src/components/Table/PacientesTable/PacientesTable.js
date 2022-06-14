@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./PacientesTable.css";
 import { findAllPacientes, findPacienteByCPF } from "../../../services/Paciente/PacienteService";
 
-const PacientesTable = ({ searchInput, currentPage, refreshPacienteTable, setPageData }) => {
+const PacientesTable = ({ searchInput, currentPage, refreshPacienteTable, setPageData, openModalView }) => {
     const [pacientes, setPacientes] = useState([{}]);
 
     useEffect(() => {
@@ -68,7 +68,7 @@ const PacientesTable = ({ searchInput, currentPage, refreshPacienteTable, setPag
                 </thead>
                 <tbody>
                     {pacientes.map((paciente, index) => (
-                        <tr onClick={() => props.openModalView(paciente)} key={index}>
+                        <tr onClick={() => openModalView(paciente)} key={index}>
                             <td>{paciente.cpf} </td>
                             <td>{paciente.name}</td>
                             <td>{paciente.gender === "F" ? "Feminino" : "Masculino"}</td>

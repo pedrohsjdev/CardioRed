@@ -18,3 +18,31 @@ export const findAllPacientes = async (currentPage) => {
         return [{}];
     }
 };
+
+export const savePaciente = async (pacienteData) => {
+    try {
+        console.log(pacienteData);
+        const response = await axios.post(`${BASE_URL}/pacientes`, pacienteData);
+        return response;
+    } catch (error) {
+        return error.response;
+    }
+};
+
+export const updatePaciente = async (pacienteData) => {
+    try {
+        const response = await axios.put(`${BASE_URL}/pacientes`, pacienteData);
+        return response;
+    } catch (error) {
+        return error.response;
+    }
+};
+
+export const deletePaciente = async (id) => {
+    try {
+        const response = await axios.delete(`${BASE_URL}/pacientes/${id}`);
+        return response;
+    } catch (error) {
+        return error.response;
+    }
+};
