@@ -8,13 +8,14 @@ public enum ExamType {
     MAPA("Mapa"),
     HOLTER("Holter");
 
-    private final String name;
+    @JsonValue
+    private final String type;
 
-    ExamType(String name) {
-        this.name = name;
+    ExamType(String type) {
+        this.type = type;
     }
 
-    public String getName() {
-        return name;
+    public String getType() {
+        return type;
     }
 }

@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cardiored.cardio.domain.Consulta;
+import com.cardiored.cardio.mapper.ConsultaMapper;
+import com.cardiored.cardio.request.consulta.ConsultaPostDTO;
+import com.cardiored.cardio.request.consulta.ConsultaPutDTO;
 import com.cardiored.cardio.service.ConsultaService;
 
 import lombok.RequiredArgsConstructor;
@@ -47,8 +50,8 @@ public class ConsultaController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> save(@RequestBody @Valid Consulta consulta) {
-        consultaService.save(consulta);
+    public ResponseEntity<Void> save(@RequestBody @Valid ConsultaPostDTO consultaPostDTO) {
+        consultaService.save(ConsultaMapper.INSTANCE.toConsulta(consultaPostDTO));
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -59,8 +62,8 @@ public class ConsultaController {
     }
 
     @PutMapping
-    public ResponseEntity<Void> replace(@RequestBody Consulta consulta) {
-        consultaService.replace(consulta);
+    public ResponseEntity<Void> replace(@RequestBody ConsultaPutDTO consultaPutDTO) {
+        consultaService.replace(ConsultaMapper.INSTANCE.toConsulta(consultaPutDTO));
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

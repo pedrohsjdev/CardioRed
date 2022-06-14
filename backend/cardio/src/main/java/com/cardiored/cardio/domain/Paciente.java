@@ -16,7 +16,6 @@ import java.time.LocalDate;
 import java.util.Set;
 import java.util.List;
 
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -51,6 +50,7 @@ public class Paciente {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "paciente")
     private List<Consulta> consultas;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "paciente")
     private Set<Laudo> laudo;
 
