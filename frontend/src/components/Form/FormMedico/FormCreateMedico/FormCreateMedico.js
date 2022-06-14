@@ -1,43 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
-const FormUpdateMedico = ({
-    medicoData,
-    setMedicoData,
-    updateMedico,
-    setShow,
-}) => {
-    useEffect(() => {
-        verifyDoctorType(medicoData.doctorType);
-    }, []);
-
-    const verifyDoctorType = (doctorType) => {
-        if (doctorType == "Médico") {
-            setIsResidenteDisabled(true);
-            setIsDocenteDisabled(true);
-        } else if (doctorType == "Docente") {
-            setIsDocenteDisabled(false);
-            setIsResidenteDisabled(true);
-        } else if (doctorType == "Residente") {
-            setIsDocenteDisabled(true);
-            setIsResidenteDisabled(false);
-        }
-    };
-
+const FormCreateMedico = ({ newMedicoData, setNewMedicoData, saveMedico, setShow }) => {
     const medicoChange = (event) => {
-        if (event.target.name == "doctorType") {
-            verifyDoctorType(event.target.value);
-        }
-        setMedicoData({
-            ...medicoData,
+        setNewMedicoData({
+            ...newMedicoData,
             [event.target.name]: event.target.value,
         });
     };
 
-    const [isResidenteDisabled, setIsResidenteDisabled] = useState(false);
-    const [isDocenteDisabled, setIsDocenteDisabled] = useState(false);
     const [validated, setValidated] = useState(false);
     const handleSubmit = (event) => {
         const form = event.currentTarget;
@@ -46,26 +19,18 @@ const FormUpdateMedico = ({
         setValidated(true);
 
         if (form.checkValidity() === true) {
-            updateMedico();
+            saveMedico();
         }
     };
 
     return (
         <Form noValidate validated={validated} onSubmit={handleSubmit}>
-            <Form.Control hidden defaultValue={medicoData.id} />
             <Form.Group as={Row} className="mb-3">
                 <Form.Label column sm={2}>
                     CRM*:
                 </Form.Label>
                 <Col sm={10}>
-                    <Form.Control
-                        required
-                        maxLength={11}
-                        name="crm"
-                        onChange={medicoChange}
-                        defaultValue={medicoData.crm}
-                        type="text"
-                    />
+                    <Form.Control required maxLength={11} name="crm" onChange={medicoChange} type="text" />
                 </Col>
             </Form.Group>
             <Form.Group as={Row} className="mb-3">
@@ -74,8 +39,8 @@ const FormUpdateMedico = ({
                 </Form.Label>
                 <Col sm={10}>
                     <Form.Control
+                        defaultValue={newMedicoData.doctorType}
                         required
-                        defaultValue={medicoData.name}
                         name="name"
                         onChange={medicoChange}
                         type="text"
@@ -87,13 +52,7 @@ const FormUpdateMedico = ({
                     Hierarquia*:
                 </Form.Label>
                 <Col sm={10}>
-                    <Form.Select
-                        required
-                        name="doctorType"
-                        onChange={medicoChange}
-                        defaultValue={medicoData.doctorType}
-                        type="text"
-                    >
+                    <Form.Select required name="doctorType" onChange={medicoChange} type="text">
                         <option value="">Escolha uma opção</option>
                         <option value="Médico">Médico</option>
                         <option value="Docente">Docente</option>
@@ -107,12 +66,11 @@ const FormUpdateMedico = ({
                 </Form.Label>
                 <Col sm={8}>
                     <Form.Control
-                        required={isResidenteDisabled}
-                        disabled={isResidenteDisabled}
+                        required={!(newMedicoData.doctorType === "Residente")}
+                        disabled={!(newMedicoData.doctorType === "Residente")}
                         name="residencyYear"
                         type="number"
                         onChange={medicoChange}
-                        defaultValue={medicoData.residencyYear}
                     />
                 </Col>
             </Form.Group>
@@ -123,10 +81,9 @@ const FormUpdateMedico = ({
                 <Col sm={10}>
                     <Form.Select
                         onChange={medicoChange}
-                        required={isDocenteDisabled}
-                        disabled={isDocenteDisabled}
+                        required={!(newMedicoData.doctorType === "Docente")}
+                        disabled={!(newMedicoData.doctorType === "Docente")}
                         name="titulation"
-                        defaultValue={medicoData.titulation}
                         type="text"
                     >
                         <option value="">Escolha uma opção</option>
@@ -142,20 +99,11 @@ const FormUpdateMedico = ({
                     Senha*:
                 </Form.Label>
                 <Col sm={10}>
-                    <Form.Control
-                        onChange={medicoChange}
-                        name="password"
-                        defaultValue={medicoData.password}
-                        type="text"
-                    />
+                    <Form.Control onChange={medicoChange} required name="password" type="text" />
                 </Col>
             </Form.Group>
             <div className="modal-footer d-flex justify-content-between">
-                <button
-                    type="button"
-                    className="btn btn-primary btn-modal btn-left"
-                    onClick={() => setShow(false)}
-                >
+                <button type="button" className="btn btn-primary btn-modal btn-left" onClick={() => setShow(false)}>
                     Cancelar
                 </button>
                 <button type="submit" className="btn btn-primary btn-modal">
@@ -166,4 +114,4 @@ const FormUpdateMedico = ({
     );
 };
 
-export default FormUpdateMedico;
+export default FormCreateMedico;

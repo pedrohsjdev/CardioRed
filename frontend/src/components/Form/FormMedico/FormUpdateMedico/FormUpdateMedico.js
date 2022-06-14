@@ -1,11 +1,30 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-const FormViewMedico = ({ medicoData }) => {
-    console.log(medicoData);
+
+const FormUpdateMedico = ({ medicoData, setMedicoData, updateMedico, setShow }) => {
+    const medicoChange = (event) => {
+        setMedicoData({
+            ...medicoData,
+            [event.target.name]: event.target.value,
+        });
+    };
+
+    const [validated, setValidated] = useState(false);
+    const handleSubmit = (event) => {
+        const form = event.currentTarget;
+        event.preventDefault();
+
+        setValidated(true);
+
+        if (form.checkValidity() === true) {
+            updateMedico();
+        }
+    };
+
     return (
-        <Form>
+        <Form noValidate validated={validated} onSubmit={handleSubmit}>
             <Form.Control hidden defaultValue={medicoData.id} />
             <Form.Group as={Row} className="mb-3">
                 <Form.Label column sm={2}>
@@ -13,7 +32,10 @@ const FormViewMedico = ({ medicoData }) => {
                 </Form.Label>
                 <Col sm={10}>
                     <Form.Control
-                        disabled
+                        required
+                        maxLength={11}
+                        name="crm"
+                        onChange={medicoChange}
                         defaultValue={medicoData.crm}
                         type="text"
                     />
@@ -25,8 +47,10 @@ const FormViewMedico = ({ medicoData }) => {
                 </Form.Label>
                 <Col sm={10}>
                     <Form.Control
-                        disabled
+                        required
                         defaultValue={medicoData.name}
+                        name="name"
+                        onChange={medicoChange}
                         type="text"
                     />
                 </Col>
@@ -37,7 +61,9 @@ const FormViewMedico = ({ medicoData }) => {
                 </Form.Label>
                 <Col sm={10}>
                     <Form.Select
-                        disabled
+                        required
+                        name="doctorType"
+                        onChange={medicoChange}
                         defaultValue={medicoData.doctorType}
                         type="text"
                     >
@@ -54,8 +80,11 @@ const FormViewMedico = ({ medicoData }) => {
                 </Form.Label>
                 <Col sm={8}>
                     <Form.Control
-                        disabled
+                        required={!(medicoData.doctorType === "Residente")}
+                        disabled={!(medicoData.doctorType === "Residente")}
+                        name="residencyYear"
                         type="number"
+                        onChange={medicoChange}
                         defaultValue={medicoData.residencyYear}
                     />
                 </Col>
@@ -66,7 +95,10 @@ const FormViewMedico = ({ medicoData }) => {
                 </Form.Label>
                 <Col sm={10}>
                     <Form.Select
-                        disabled
+                        onChange={medicoChange}
+                        required={!(medicoData.doctorType === "Docente")}
+                        disabled={!(medicoData.doctorType === "Docente")}
+                        name="titulation"
                         defaultValue={medicoData.titulation}
                         type="text"
                     >
@@ -84,14 +116,23 @@ const FormViewMedico = ({ medicoData }) => {
                 </Form.Label>
                 <Col sm={10}>
                     <Form.Control
-                        disabled
+                        onChange={medicoChange}
+                        name="password"
                         defaultValue={medicoData.password}
                         type="text"
                     />
                 </Col>
             </Form.Group>
+            <div className="modal-footer d-flex justify-content-between">
+                <button type="button" className="btn btn-primary btn-modal btn-left" onClick={() => setShow(false)}>
+                    Cancelar
+                </button>
+                <button type="submit" className="btn btn-primary btn-modal">
+                    Concluir
+                </button>
+            </div>
         </Form>
     );
 };
 
-export default FormViewMedico;
+export default FormUpdateMedico;
