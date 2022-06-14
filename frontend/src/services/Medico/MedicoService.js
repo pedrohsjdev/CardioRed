@@ -18,3 +18,31 @@ export const findAllMedicos = async (currentPage) => {
         return [{}];
     }
 };
+
+export const saveMedico = async (medicoData) => {
+    try {
+        console.log(medicoData);
+        const response = await axios.post(`${BASE_URL}/medicos`, medicoData);
+        return response;
+    } catch (error) {
+        return error.response;
+    }
+};
+
+export const updateMedico = async (medicoData) => {
+    try {
+        const response = await axios.put(`${BASE_URL}/medicos`, medicoData);
+        return response;
+    } catch (error) {
+        return error.response;
+    }
+};
+
+export const deleteMedico = async (id) => {
+    try {
+        const response = await axios.delete(`${BASE_URL}/medicos?id=${id}`);
+        return response;
+    } catch (error) {
+        return error.response;
+    }
+};
