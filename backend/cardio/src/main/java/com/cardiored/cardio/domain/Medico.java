@@ -59,6 +59,7 @@ public class Medico {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "medico")
     private Set<Laudo> laudo;
 
-    @OneToMany(cascade=CascadeType.ALL, mappedBy="medico")
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "medico")
     private List<Consulta> consultas;
 }
