@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 @Transactional
 public class ConsultaService {
     private final ConsultaRepository consultaRepository;
+    private final PacienteService pacienteService;
 
     public Page<Consulta> pageAll(Pageable pageable) {
         return consultaRepository.findAll(pageable);
@@ -36,11 +37,12 @@ public class ConsultaService {
     }
 
     public Consulta save(Consulta consulta) {
-        // [Business rule] Verify if a consulta with the same exam type already exists.
+        // [Business rule] Verify if a consulta with the same exam type already
+        // exists.
         Assert.isTrue(!consultaRepository.existsByPacienteCpfAndExamTypeAndStatus(
-                consulta.getPaciente().getCpf(),
-                consulta.getExamType().getType(),
-                ConsultaStatus.ATIVO.getStatus()),
+                pacienteService.findById(consulta.getPaciente().getId()).getCpf(),
+                consulta.getExamType(),
+                ConsultaStatus.ATIVO),
                 "A Consulta with this same exam type already exists!");
 
         return consultaRepository.save(consulta);
@@ -53,9 +55,9 @@ public class ConsultaService {
         // [Business rule] Verify if a consulta with the same exam type and different
         // from the Consulta being replaced already exists.
         Assert.isTrue(!consultaRepository.existsByPacienteCpfAndExamTypeAndStatusAndIdNot(
-                consulta.getPaciente().getCpf(),
-                consulta.getExamType().getType(),
-                ConsultaStatus.ATIVO.getStatus(),
+                pacienteService.findById(consulta.getPaciente().getId()).getCpf(),
+                consulta.getExamType(),
+                ConsultaStatus.ATIVO,
                 consulta.getId()),
                 "A Consulta with this same exam type already exists!");
 
