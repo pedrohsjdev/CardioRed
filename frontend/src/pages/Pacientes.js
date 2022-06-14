@@ -1,28 +1,28 @@
 import React, { useState, useEffect } from "react";
-import FormSearch from "../components/SearchBar/FormSearch";
-import CounterElements from "../components/TableCounter/CounterElements";
-import NavBar from "../components/Navbar/navbar";
-import "./style.css";
-import Register from "../components/registerButton/register";
-import PacientesTable from "../components/PacientesTable/table";
-import ModalCreate from "../components/Modal/Create/ModalCreate";
-import ModalUpdate from "../components/Modal/Update/ModalUpdate";
-import ModalView from "../components/Modal/View/ModalView";
-import FormCreatePaciente from "../components/Form/FormPaciente/Create/FormCreatePaciente";
-import FormUpdatePaciente from "../components/Form/FormPaciente/Update/FormUpdatePaciente";
-import FormViewPaciente from "../components/Form/FormPaciente/View/FormViewPaciente";
-import ModalDelete from "../components/Modal/Delete/ModalDelete";
+import TableSearch from "../components/Table/TableSearch/TableSearch";
+import TableCounter from "../components/Table/TableCounter/TableCounter";
+import NavBar from "../components/NavBar/NavBar";
+import "./Pages.css";
+import Button from "../components/Button/Button";
+import PacientesTable from "../components/Table/PacientesTable/PacientesTable";
+import ModalCreate from "../components/Modal/ModalCreate/ModalCreate";
+import ModalUpdate from "../components/Modal/ModalUpdate/ModalUpdate";
+import ModalView from "../components/Modal/ModalView/ModalView";
+import FormCreatePaciente from "../components/Form/FormPaciente/FormCreatePaciente/FormCreatePaciente";
+import FormUpdatePaciente from "../components/Form/FormPaciente/FormUpdatePaciente/FormUpdatePaciente";
+import FormViewPaciente from "../components/Form/FormPaciente/FormViewPaciente/FormViewPaciente";
+import ModalDelete from "../components/Modal/ModalDelete/ModalDelete";
 import axios from "axios";
-import Paginator from "../components/Paginator/Paginator";
-import userAuth from "../utils/userAuth";
+import TablePaginator from "../components/Table/TablePaginator/TablePaginator";
+import { userIsAuthenticated } from "../services/Login/LoginService";
 import { Notify } from "notiflix/build/notiflix-notify-aio";
 import { useNavigate } from "react-router-dom";
-import { BASE_URL } from "../utils/requests";
+import { BASE_URL } from "../utils/Consts";
 
 const Pacientes = () => {
     const navigate = useNavigate();
     useEffect(() => {
-        if (!userAuth()) {
+        if (!userIsAuthenticated()) {
             navigate("/");
         }
     }, []);
@@ -99,14 +99,10 @@ const Pacientes = () => {
             .then(() => {
                 setShowModalUpdate(false);
                 flushPacienteTable();
-                Notify.success(
-                    "As informações do paciente foram atualizadas com sucesso!"
-                );
+                Notify.success("As informações do paciente foram atualizadas com sucesso!");
             })
             .catch((error) => {
-                Notify.failure(
-                    "Não foi possível atualizar as informações do paciente."
-                );
+                Notify.failure("Não foi possível atualizar as informações do paciente.");
                 console.error(error);
             });
     };
@@ -130,11 +126,7 @@ const Pacientes = () => {
         <>
             <NavBar />
 
-            <ModalCreate
-                show={showModalCreate}
-                setShow={setShowModalCreate}
-                element="Paciente"
-            >
+            <ModalCreate show={showModalCreate} setShow={setShowModalCreate} element="Paciente">
                 <FormCreatePaciente
                     setShow={setShowModalCreate}
                     newPacienteData={newPacienteData}
@@ -143,11 +135,7 @@ const Pacientes = () => {
                 />
             </ModalCreate>
 
-            <ModalUpdate
-                show={showModalUpdate}
-                setShow={setShowModalUpdate}
-                element="Paciente"
-            >
+            <ModalUpdate show={showModalUpdate} setShow={setShowModalUpdate} element="Paciente">
                 <FormUpdatePaciente
                     setShow={setShowModalUpdate}
                     pacienteData={pacienteData}
@@ -178,11 +166,8 @@ const Pacientes = () => {
             <div className="page-container">
                 <h1 className="title-element">Listagem de Pacientes</h1>
                 <div className="d-flex justify-content-between">
-                    <Register openModalCreate={openModalCreate} />
-                    <FormSearch
-                        setSearchInput={setSearchInput}
-                        criteria="CPF"
-                    />
+                    <Button value="Cadastrar" action={openModalCreate} />
+                    <TableSearch setSearchInput={setSearchInput} criteria="CPF" />
                 </div>
 
                 <PacientesTable
@@ -193,17 +178,13 @@ const Pacientes = () => {
                     refreshPacienteTable={refreshPacienteTable}
                 />
                 <div className="d-flex justify-content-between">
-                    <CounterElements
+                    <TableCounter
                         firstElement={pageData.empty === true ? 0 : 1}
-                        lastElement={
-                            pageData.empty === true
-                                ? 0
-                                : pageData.numberOfElements
-                        }
+                        lastElement={pageData.empty === true ? 0 : pageData.numberOfElements}
                         totalElements={pageData.totalElements}
                     />
 
-                    <Paginator
+                    <TablePaginator
                         currentPage={currentPage}
                         totalPages={pageData.totalPages}
                         setCurrentPage={setCurrentPage}

@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import Navbar from "../components/Navbar/Navbar";
+import NavBar from "../components/NavBar/NavBar";
 import HomeContent from "../components/HomeContent/HomeContent";
 import Footer from "../components/Footer/footer";
 import { useNavigate } from "react-router-dom";
@@ -15,7 +15,7 @@ function Home() {
 
     return (
         <>
-            <Navbar />
+            <NavBar />
             <HomeContent />
             <Footer />
         </>
