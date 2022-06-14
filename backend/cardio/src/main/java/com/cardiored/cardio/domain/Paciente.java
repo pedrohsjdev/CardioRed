@@ -12,9 +12,10 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import org.springframework.format.annotation.DateTimeFormat;
-
 import java.time.LocalDate;
+import java.util.Set;
 import java.util.List;
+
 
 @Data
 @AllArgsConstructor
@@ -49,5 +50,8 @@ public class Paciente {
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "paciente")
     private List<Consulta> consultas;
+
+    @OneToMany(mappedBy = "paciente")
+    private Set<Laudo> laudo;
 
 }

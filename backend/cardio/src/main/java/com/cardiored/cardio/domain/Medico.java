@@ -1,5 +1,7 @@
 package com.cardiored.cardio.domain;
 
+import javax.persistence.*;
+
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -23,6 +25,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -53,5 +57,8 @@ public class Medico {
 
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "medico")
+    private Set<Laudo> laudo;
+
+    @OneToMany(cascade=CascadeType.ALL, mappedBy="medico")
     private List<Consulta> consultas;
 }
