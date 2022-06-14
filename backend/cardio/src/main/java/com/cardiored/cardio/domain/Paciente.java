@@ -1,5 +1,5 @@
 package com.cardiored.cardio.domain;
- 
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,6 +9,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import java.time.LocalDate;
@@ -33,9 +34,9 @@ public class Paciente {
     @NotNull
     private String name;
 
-    @NotNull   
+    @NotNull
     @JsonFormat(pattern = "dd/MM/yyyy")
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) 
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDate birthDate;
 
     @NotNull
@@ -45,8 +46,9 @@ public class Paciente {
     @NotNull
     @Enumerated(EnumType.STRING)
     private Gender gender;
-    
-    @OneToMany(cascade=CascadeType.ALL, mappedBy="paciente")
+
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "paciente")
     private List<Consulta> consultas;
 
     @OneToMany(mappedBy = "paciente")
