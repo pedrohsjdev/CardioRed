@@ -1,8 +1,8 @@
 import React from "react";
-import "./style.css";
+import "./NavBar.css";
 import Logo from "../../assets/logo-navbar.svg";
 
-function NavBar() {
+const NavBar = () => {
     return (
         <header>
             <nav className="navbar navbar-expand-lg navbar-light navbar-shadow">
@@ -34,18 +34,12 @@ function NavBar() {
                                 </a>
                             </li>
                             <li className="nav-item ms-5">
-                                <a
-                                    className="nav-link"
-                                    href="http://localhost:3000/pacientes"
-                                >
+                                <a className="nav-link" href="http://localhost:3000/pacientes">
                                     Pacientes
                                 </a>
                             </li>
                             <li className="nav-item ms-5">
-                                <a
-                                    className="nav-link"
-                                    href="http://localhost:3000/medicos"
-                                >
+                                <a className="nav-link" href="http://localhost:3000/medicos">
                                     Médicos
                                 </a>
                             </li>
@@ -55,6 +49,6 @@ function NavBar() {
             </nav>
         </header>
     );
-}
+};
 
 export default NavBar;
