@@ -1,46 +1,30 @@
 import React, { useState, useEffect } from "react";
-import "./LoginContainer.css";
-import Logo from "../../assets/logo.svg";
-import LoginImg from "../../assets/img-login.svg";
-import qs from "qs";
+import "./LoginContent.css";
+import Logo from "../../assets/Logo.svg";
+import LoginImg from "../../assets/Login-img.svg";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import userAuth from "../../utils/userAuth";
-import authToken from "../../utils/authToken";
-import { BASE_URL } from "../../utils/requests";
+import { userIsAuthenticated, saveTokens, loginRequest } from "../../services/Login/LoginService";
+import { Notify } from "notiflix";
 
-function LoginContainer(props) {
+const LoginContent = () => {
     const navigate = useNavigate();
     useEffect(() => {
-        if (userAuth()) {
+        if (userIsAuthenticated()) {
             navigate("/home");
         }
     }, []);
 
-    // Request post to authenticate user
-    const loginAttempt = async () => {
-        const response = await axios
-            .post(
-                `${BASE_URL}/login`,
-                qs.stringify({
-                    username: inputs.username,
-                    password: inputs.password,
-                }),
-                {
-                    headers: {
-                        "Content-Type": "application/x-www-form-urlencoded",
-                    },
-                }
-            )
-            .then(loginSuccessfull)
-            .catch((error) => console.error(error));
-    };
+    const attemptLogin = async () => {
+        const response = await loginRequest(inputs);
 
-    // Function to redirect the user to home page and set user tokens
-    const loginSuccessfull = (response) => {
-        localStorage.setItem("access_token", response.data.access_token);
-        authToken(response.data.access_token);
-        navigate("/home");
+        if (response.status == 200) {
+            Notify.success("Login efetuado com sucesso!");
+            saveTokens(response.data);
+            setTimeout(navigate("/home"), 5000);
+        } else {
+            Notify.failure("Não foi possível efetuar o login.");
+            console.error(response);
+        }
     };
 
     const [inputs, setInputs] = useState({
@@ -92,11 +76,7 @@ function LoginContainer(props) {
                                     />
                                 </div>
 
-                                <a
-                                    href="#"
-                                    className="login-button"
-                                    onClick={loginAttempt}
-                                >
+                                <a href="#" className="login-button" onClick={attemptLogin}>
                                     Entrar
                                 </a>
                             </form>
@@ -106,6 +86,6 @@ function LoginContainer(props) {
             </div>
         </>
     );
-}
+};
 
-export default LoginContainer;
+export default LoginContent;
