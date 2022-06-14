@@ -13,11 +13,7 @@ const ModalCreate = ({ element, show, setShow, children }) => {
                 <div className="modal-content ">
                     <div className="modal-header">
                         <h5 className="modal-title">Cadastrando {element}</h5>
-                        <button
-                            type="button"
-                            className="btn-close"
-                            onClick={() => setShow(false)}
-                        ></button>
+                        <button type="button" className="btn-close" onClick={() => setShow(false)}></button>
                     </div>
                     <div className="modal-body">{children}</div>
                 </div>

@@ -11,11 +11,7 @@ const ModalUpdate = ({ element, updatePaciente, show, setShow, children }) => {
                 <div className="modal-content ">
                     <div className="modal-header">
                         <h5 className="modal-title">Modificando {element}</h5>
-                        <button
-                            type="button"
-                            className="btn-close"
-                            onClick={() => setShow(false)}
-                        ></button>
+                        <button type="button" className="btn-close" onClick={() => setShow(false)}></button>
                     </div>
                     <div className="modal-body">{children}</div>
                 </div>

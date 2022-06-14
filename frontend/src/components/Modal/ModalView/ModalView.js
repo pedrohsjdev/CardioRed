@@ -1,14 +1,6 @@
 import React from "react";
 
-const ModalView = ({
-    element,
-    openModalUpdate,
-    openModalDelete,
-    show,
-    setShow,
-    children,
-    formatDataToUpdate,
-}) => {
+const ModalView = ({ element, openModalUpdate, openModalDelete, show, setShow, children, formatDataToUpdate }) => {
     if (!show) {
         return null;
     }
@@ -19,11 +11,7 @@ const ModalView = ({
                 <div className="modal-content ">
                     <div className="modal-header">
                         <h5 className="modal-title">{element}</h5>
-                        <button
-                            type="button"
-                            className="btn-close"
-                            onClick={() => setShow(false)}
-                        ></button>
+                        <button type="button" className="btn-close" onClick={() => setShow(false)}></button>
                     </div>
                     <div className="modal-body">{children}</div>
                     <div className="modal-footer d-flex justify-content-between">
@@ -40,10 +28,9 @@ const ModalView = ({
                             type="button"
                             className="btn btn-primary btn-modal"
                             onClick={() => {
-                                
                                 setShow(false);
                                 openModalUpdate();
-                                if(element == "Paciente"){
+                                if (element == "Paciente") {
                                     formatDataToUpdate();
                                 }
                             }}
