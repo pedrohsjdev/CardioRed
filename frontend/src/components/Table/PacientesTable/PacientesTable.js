@@ -1,33 +1,33 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
-import "./table.css";
-import { BASE_URL } from "../../utils/requests";
+import "./PacientesTable.css";
+import { findAllPacientes, findPacienteByCPF } from "../../../services/Paciente/PacienteService";
 
-const PacientesTable = (props) => {
+const PacientesTable = ({ searchInput, currentPage, refreshPacienteTable, setPageData }) => {
     const [pacientes, setPacientes] = useState([{}]);
 
     useEffect(() => {
-        const findPacienteByCPF = async () => {
-            const { data } = await axios.get(
-                `${BASE_URL}/pacientes/cpf/${props.searchInput}`
-            );
-            setPacientes([formatCPF(data)]);
+        const getPacientes = async () => {
+            const response = await findAllPacientes(currentPage);
+            if (response.content) {
+                setPacientes(response.content.map(formatCPF));
+            } else {
+                setPacientes([{}]);
+            }
+            setPageData(response);
         };
 
-        const fetchPacientes = async () => {
-            const { data } = await axios.get(
-                `${BASE_URL}/pacientes?page=${props.currentPage}&size=10&sort=name`
-            );
-            setPacientes(data.content.map(formatCPF));
-            props.setPageData(data);
+        const getPacientesByCPF = async () => {
+            const response = await findPacienteByCPF(searchInput);
+            setPacientes(response.map(formatCPF));
+            setPageData(response);
         };
 
-        if (props.searchInput && props.searchInput.length == 11) {
-            findPacienteByCPF();
+        if (searchInput == "") {
+            getPacientes();
         } else {
-            fetchPacientes();
+            getPacientesByCPF();
         }
-    }, [props.currentPage, props.searchInput, props.refreshPacienteTable]);
+    }, [currentPage, searchInput, refreshPacienteTable]);
 
     const formatCPF = (item) => {
         return {
@@ -68,17 +68,10 @@ const PacientesTable = (props) => {
                 </thead>
                 <tbody>
                     {pacientes.map((paciente, index) => (
-                        <tr
-                            onClick={() => props.openModalView(paciente)}
-                            key={index}
-                        >
+                        <tr onClick={() => props.openModalView(paciente)} key={index}>
                             <td>{paciente.cpf} </td>
                             <td>{paciente.name}</td>
-                            <td>
-                                {paciente.gender === "F"
-                                    ? "Feminino"
-                                    : "Masculino"}
-                            </td>
+                            <td>{paciente.gender === "F" ? "Feminino" : "Masculino"}</td>
                             <td>{paciente.ethnicity}</td>
                             <td>{paciente.birthDate}</td>
                         </tr>
