@@ -1,20 +1,21 @@
 import React, { useEffect } from "react";
-import NavBar from "../components/Navbar/navbar";
-import HomeContent from "../components/HomePage/HomeContent";
+import Navbar from "../components/Navbar/Navbar";
+import HomeContent from "../components/HomeContent/HomeContent";
 import Footer from "../components/Footer/footer";
-import userAuth from "../utils/userAuth";
 import { useNavigate } from "react-router-dom";
+import { userIsAuthenticated } from "../services/Login/LoginService";
 
 function Home() {
     const navigate = useNavigate();
     useEffect(() => {
-        if (!userAuth()) {
+        if (!userIsAuthenticated()) {
             navigate("/");
         }
     }, []);
+
     return (
         <>
-            <NavBar />
+            <Navbar />
             <HomeContent />
             <Footer />
         </>
