@@ -43,7 +43,7 @@ module.exports = {
             process: "process/browser",
         }),
         new EnvironmentPlugin({
-            REACT_APP_BACKEND_URL: process.env.REACT_APP_BACKEND_URL,
+            REACT_APP_BACKEND_URL: "http://localhost:8080",
         }),
     ],
 };
