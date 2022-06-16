@@ -1,0 +1,15 @@
+.paciente-table {
+  text-align: left;
+}
+
+.paciente-table .id {
+  width: 9rem;
+}
+
+.paciente-table .paciente {
+  padding-left: 3rem;
+}
+
+.paciente-table .center {
+  text-align: center;
+}

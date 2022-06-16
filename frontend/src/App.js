@@ -5,6 +5,7 @@ import Login from "./pages/Login";
 import Home from "./pages/Home";
 import Medicos from "./pages/Medicos";
 import Pacientes from "./pages/Pacientes";
+import Consultas from "./pages/Consultas";
 
 function App() {
     return (
@@ -14,6 +15,7 @@ function App() {
                 <Route path="/home" element={<Home />} />
                 <Route path="/medicos" element={<Medicos />} />
                 <Route path="/pacientes" element={<Pacientes />} />
+                <Route path="/consultas" element={<Consultas />} />
             </Routes>
         </BrowserRouter>
     );
