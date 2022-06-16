@@ -6,13 +6,13 @@ import TableSearch from "../components/Table/TableSearch/TableSearch";
 import TableCounter from "../components/Table/TableCounter/TableCounter";
 import TablePaginator from "../components/Table/TablePaginator/TablePaginator";
 import "./Pages.css";
-// import ModalView from "../components/Modal/ModalView/ModalView";
-// import ModalCreate from "../components/Modal/ModalCreate/ModalCreate";
-// import ModalUpdate from "../components/Modal/ModalUpdate/ModalUpdate";
-// import ModalDelete from "../components/Modal/ModalDelete/ModalDelete";
-// import FormCreateConsulta from "../components/Form/FormConsulta/FormCreateConsulta/FormCreateConsulta";
-// import FormUpdateConsulta from "../components/Form/FormConsulta/FormUpdateConsulta/FormUpdateConsulta";
-// import FormViewConsulta from "../components/Form/FormConsulta/FormViewConsulta/FormViewConsulta";
+import ModalView from "../components/Modal/ModalView/ModalView";
+import ModalCreate from "../components/Modal/ModalCreate/ModalCreate";
+import ModalUpdate from "../components/Modal/ModalUpdate/ModalUpdate";
+import ModalDelete from "../components/Modal/ModalDelete/ModalDelete";
+import FormCreateConsulta from "../components/Form/FormConsulta/FormCreateConsulta/FormCreateConsulta";
+import FormUpdateConsulta from "../components/Form/FormConsulta/FormUpdateConsulta/FormUpdateConsulta";
+import FormViewConsulta from "../components/Form/FormConsulta/FormViewConsulta/FormViewConsulta";
 import { Notify } from "notiflix/build/notiflix-notify-aio";
 import { userIsAuthenticated } from "../services/Login/LoginService";
 import { useNavigate } from "react-router-dom";
@@ -106,11 +106,43 @@ const Consultas = () => {
     return (
         <>
             <NavBar /> 
+            <ModalCreate show={showModalCreate} setShow={setShowModalCreate} element="Consulta">
+                <FormCreateConsulta
+                    setShow={setShowModalCreate}
+                    newConsultaData={newConsultaData}
+                    setNewConsultaData={setNewConsultaData}
+                    saveConsulta={saveConsultaData}
+                />
+            </ModalCreate>
+            <ModalUpdate show={showModalUpdate} setShow={setShowModalUpdate} element="Consulta">
+                <FormUpdateConsulta
+                    setShow={setShowModalUpdate}
+                    consultaData={consultaData}
+                    setConsultaData={setConsultaData}
+                    updateConsulta={updateConsultaData}
+                />
+            </ModalUpdate>
+            <ModalView
+                show={showModalView}
+                setShow={setShowModalView}
+                openModalDelete={openModalDelete}
+                openModalUpdate={openModalUpdate}
+                element="Consulta"
+            >
+                <FormViewConsulta consultaData={consultaData} />
+            </ModalView>
+            <ModalDelete
+                show={showModalDelete}
+                setShow={setShowModalDelete}
+                setShowModalView={setShowModalView}
+                element="Consulta"
+                deleteElement={deleteConsultaData}
+            />
             <div className="page-container">
                 <h1 className="title-element">Listagem de Consultas</h1>
                 <div className="d-flex justify-content-between">
                     <Button value="Cadastrar" action={openModalCreate} />
-                    <TableSearch setSearchInput={setSearchInput} criteria={"CPF"} />
+                    <TableSearch setSearchInput={setSearchInput} criteria={"CPF do paciente"} />
                 </div>
                 <ConsultasTable
                     setPageData={setPageData}
