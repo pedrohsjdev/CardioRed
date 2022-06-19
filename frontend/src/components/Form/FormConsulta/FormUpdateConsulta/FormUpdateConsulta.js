@@ -1,13 +1,26 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import { AsyncTypeahead } from "react-bootstrap-typeahead";
+import { findPacientesByName } from "../../../../services/Paciente/PacienteService";
 
 const FormUpdateConsulta = ({ consultaData, setConsultaData, updateConsulta, setShow }) => {
     const consultaChange = (event) => {
         setConsultaData({
             ...consultaData,
             [event.target.name]: event.target.value,
+        });
+    };
+
+    const [isLoading, setIsLoading] = useState(false);
+    const [options, setOptions] = useState([consultaData.paciente]);
+    const handleSearch = (query) => {
+        setIsLoading(true);
+
+        findPacientesByName(query).then((response) => {
+            setOptions(response.data);
+            setIsLoading(false);
         });
     };
 
@@ -30,7 +43,13 @@ const FormUpdateConsulta = ({ consultaData, setConsultaData, updateConsulta, set
                     Identificador*:
                 </Form.Label>
                 <Col sm={3}>
-                    <Form.Control defaultValue={consultaData.id} disabled name="id" onChange={consultaChange} type="number" />
+                    <Form.Control
+                        defaultValue={consultaData.id}
+                        disabled
+                        name="id"
+                        onChange={consultaChange}
+                        type="number"
+                    />
                 </Col>
             </Form.Group>
             <Form.Group as={Row} className="mb-3">
@@ -38,13 +57,23 @@ const FormUpdateConsulta = ({ consultaData, setConsultaData, updateConsulta, set
                     Paciente*:
                 </Form.Label>
                 <Col sm={10}>
-                    <Form.Control
-                        defaultValue={consultaData.paciente?consultaData.paciente.name:""}
-                        required
-                        name="paciente"
-                        onChange={consultaChange}
-                        type="text"
-                        placeholder="Buscar pacientes..."
+                    <AsyncTypeahead
+                        defaultInputValue={consultaData.paciente.name}
+                        id="async-pacientes-selection"
+                        isLoading={isLoading}
+                        labelKey="name"
+                        onSearch={handleSearch}
+                        options={options}
+                        minLength={1}
+                        promptText="Buscar pacientes..."
+                        searchText="Buscando..."
+                        emptyLabel="Nenhum paciente encontrado."
+                        onChange={(option) => setConsultaData({ ...consultaData, paciente: option })}
+                        renderMenuItemChildren={(option) => (
+                            <span>
+                                {option.name} ({option.cpf})
+                            </span>
+                        )}
                     />
                 </Col>
             </Form.Group>
@@ -86,7 +115,13 @@ const FormUpdateConsulta = ({ consultaData, setConsultaData, updateConsulta, set
                     Hipótese diagnóstica*:
                 </Form.Label>
                 <Col sm={8}>
-                    <Form.Control defaultValue={consultaData.diagnosticAssumption} onChange={consultaChange} required name="diagnosticAssumption" type="text" />
+                    <Form.Control
+                        defaultValue={consultaData.diagnosticAssumption}
+                        onChange={consultaChange}
+                        required
+                        name="diagnosticAssumption"
+                        type="text"
+                    />
                 </Col>
             </Form.Group>
             <div className="modal-footer d-flex justify-content-between">

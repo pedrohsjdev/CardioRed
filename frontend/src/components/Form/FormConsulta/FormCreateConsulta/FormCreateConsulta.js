@@ -2,12 +2,26 @@ import React, { useState } from "react";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import { AsyncTypeahead } from "react-bootstrap-typeahead";
+import { findPacientesByName } from "../../../../services/Paciente/PacienteService";
+import "./FormCreateConsulta.css";
 
 const FormCreateConsulta = ({ newConsultaData, setNewConsultaData, saveConsulta, setShow }) => {
     const consultaChange = (event) => {
         setNewConsultaData({
             ...newConsultaData,
             [event.target.name]: event.target.value,
+        });
+    };
+
+    const [isLoading, setIsLoading] = useState(false);
+    const [options, setOptions] = useState([]);
+    const handleSearch = (query) => {
+        setIsLoading(true);
+
+        findPacientesByName(query).then((response) => {
+            setOptions(response.data);
+            setIsLoading(false);
         });
     };
 
@@ -38,12 +52,22 @@ const FormCreateConsulta = ({ newConsultaData, setNewConsultaData, saveConsulta,
                     Paciente*:
                 </Form.Label>
                 <Col sm={10}>
-                    <Form.Control
-                        required
-                        name="paciente"
-                        onChange={consultaChange}
-                        type="text"
-                        placeholder="Buscar pacientes..."
+                    <AsyncTypeahead
+                        id="async-pacientes-selection"
+                        isLoading={isLoading}
+                        labelKey="name"
+                        onSearch={handleSearch}
+                        options={options}
+                        minLength={1}
+                        promptText="Buscar pacientes..."
+                        searchText="Buscando..."
+                        emptyLabel="Nenhum paciente encontrado."
+                        onChange={(option) => setNewConsultaData({ ...newConsultaData, paciente: option })}
+                        renderMenuItemChildren={(option) => (
+                            <span>
+                                {option.name} ({option.cpf})
+                            </span>
+                        )}
                     />
                 </Col>
             </Form.Group>
@@ -52,12 +76,7 @@ const FormCreateConsulta = ({ newConsultaData, setNewConsultaData, saveConsulta,
                     Data e Hora*:
                 </Form.Label>
                 <Col sm={9}>
-                    <Form.Control
-                        required
-                        name="dateTime"
-                        type="localDateTime"
-                        onChange={consultaChange}
-                    />
+                    <Form.Control required name="dateTime" type="localDateTime" onChange={consultaChange} />
                 </Col>
             </Form.Group>
             <Form.Group as={Row} className="mb-3">
@@ -65,11 +84,7 @@ const FormCreateConsulta = ({ newConsultaData, setNewConsultaData, saveConsulta,
                     Exame*:
                 </Form.Label>
                 <Col sm={10}>
-                    <Form.Select
-                        onChange={consultaChange}
-                        required
-                        name="examType"
-                    >
+                    <Form.Select onChange={consultaChange} required name="examType">
                         <option value="">Escolha uma opção</option>
                         <option value="Ecocardiograma">Ecocardiograma</option>
                         <option value="Eletrocardiograma">Eletrocardiograma</option>
