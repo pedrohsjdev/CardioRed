@@ -24,7 +24,7 @@ const NavBar = () => {
                     <div className="d-flex" id="navbarNav">
                         <ul className="navbar-nav">
                             <li className="nav-item ms-5">
-                                <a className="nav-link" href="#">
+                                <a className="nav-link" href="http://localhost:3000/laudos">
                                     Laudos
                                 </a>
                             </li>
