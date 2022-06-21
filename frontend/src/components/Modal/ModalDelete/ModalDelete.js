@@ -7,6 +7,8 @@ const ModalDelete = ({ element, show, setShow, setShowModalView, deleteElement }
         return null;
     }
 
+    const article = element === "Consulta" ? "a" : "o";
+
     return (
         <div className="modal fade show">
             <div className="modal-dialog modal-sm modal-dialog-centered modal-delete">
@@ -16,7 +18,7 @@ const ModalDelete = ({ element, show, setShow, setShowModalView, deleteElement }
                         <button type="button" className="btn-close" onClick={() => setShow(false)}></button>
                     </div>
                     <div className="modal-body">
-                        Tem certeza que deseja remover o {element.toLowerCase()} selecionado?
+                        Tem certeza que deseja remover {article} {element.toLowerCase()} selecionad{article}?
                     </div>
                     <div className="modal-footer d-flex justify-content-between modal-footer-delete">
                         <button

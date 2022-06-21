@@ -9,10 +9,8 @@ const ConsultasTable = ({ searchInput, currentPage, refreshConsultaTable, setPag
         const getConsultas = async () => {
             const response = await findAllConsultas(currentPage);
             if (response.content) {
-                console.log(response);
                 setConsultas(response.content);
             } else {
-                console.log("teste");
                 setConsultas([{}]);
             }
             setPageData(response);
@@ -54,7 +52,9 @@ const ConsultasTable = ({ searchInput, currentPage, refreshConsultaTable, setPag
                     {consultas.map((consulta, index) => (
                         <tr onClick={() => openModalView(consulta)} key={index}>
                             <td className="center">{consulta.id} </td>
-                            <td className="paciente">{consulta.paciente?consulta.paciente.name:consulta.paciente}</td>
+                            <td className="paciente">
+                                {consulta.paciente ? consulta.paciente.name : consulta.paciente}
+                            </td>
                             <td>{consulta.examType}</td>
                             <td>{consulta.dateTime}</td>
                         </tr>
@@ -62,8 +62,12 @@ const ConsultasTable = ({ searchInput, currentPage, refreshConsultaTable, setPag
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th scope="col" className="center">Identificador</th>
-                        <th scope="col" className="paciente">Paciente</th>
+                        <th scope="col" className="center">
+                            Identificador
+                        </th>
+                        <th scope="col" className="paciente">
+                            Paciente
+                        </th>
                         <th scope="col">Exame</th>
                         <th scope="col">Data</th>
                     </tr>

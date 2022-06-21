@@ -1,0 +1,10 @@
+.rbt-aux {
+  align-items: center;
+  display: flex;
+  bottom: 0;
+  justify-content: center;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 34px;
+}
