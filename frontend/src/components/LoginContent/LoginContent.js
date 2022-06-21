@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./LoginContent.css";
-import Logo from "../../assets/Logo.svg";
-import LoginImg from "../../assets/Login-img.svg";
+import Logo from "../../assets/logo.svg";
+import LoginImg from "../../assets/login-img.svg";
 import { useNavigate } from "react-router-dom";
 import { userIsAuthenticated, saveTokens, loginRequest } from "../../services/Login/LoginService";
 import { Notify } from "notiflix";
