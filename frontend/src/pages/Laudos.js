@@ -11,8 +11,8 @@ import ModalCreate from "../components/Modal/ModalCreate/ModalCreate";
 import ModalUpdate from "../components/Modal/ModalUpdate/ModalUpdate";
 import ModalDelete from "../components/Modal/ModalDelete/ModalDelete";
 import FormCreateLaudo from "../components/Form/FormLaudo/FormCreateLaudo/FormCreateLaudo";
-// import FormUpdateLaudo from "../components/Form/FormLaudo/FormUpdateLaudo/FormUpdateLaudo";
-// import FormViewLaudo from "../components/Form/FormLaudo/FormViewLaudo/FormViewLaudo";
+import FormUpdateLaudo from "../components/Form/FormLaudo/FormUpdateLaudo/FormUpdateLaudo";
+import FormViewLaudo from "../components/Form/FormLaudo/FormViewLaudo/FormViewLaudo";
 import { Notify } from "notiflix/build/notiflix-notify-aio";
 import { userIsAuthenticated } from "../services/Login/LoginService";
 import { useNavigate } from "react-router-dom";
@@ -32,7 +32,7 @@ const Laudos = () => {
     const [showModalDelete, setShowModalDelete] = useState(false);
     const [searchInput, setSearchInput] = useState("");
     const [newLaudoData, setNewLaudoData] = useState({});
-    const [LaudoData, setLaudoData] = useState({});
+    const [laudoData, setLaudoData] = useState({});
     const [pageData, setPageData] = useState({});
     const [refreshLaudoTable, setRefreshLaudoTable] = useState(false);
     const [currentPage, setCurrentPage] = useState(0);
@@ -114,6 +114,30 @@ const Laudos = () => {
                     saveLaudo={saveLaudoData}
                 />
             </ModalCreate>
+            <ModalUpdate show={showModalUpdate} setShow={setShowModalUpdate} element="Laudo">
+                <FormUpdateLaudo
+                    setShow={setShowModalUpdate}
+                    laudoData={laudoData}
+                    setLaudoData={setLaudoData}
+                    updateLaudo={updateLaudoData}
+                />
+            </ModalUpdate>
+            <ModalView
+                show={showModalView}
+                setShow={setShowModalView}
+                openModalDelete={openModalDelete}
+                openModalUpdate={openModalUpdate}
+                element="Laudo"
+            >
+                <FormViewLaudo laudoData={laudoData} />
+            </ModalView>
+            <ModalDelete
+                show={showModalDelete}
+                setShow={setShowModalDelete}
+                setShowModalView={setShowModalView}
+                element="Laudo"
+                deleteElement={deleteLaudoData}
+            />
             <div className="page-container">
                 <h1 className="title-element">Listagem de Laudos</h1>
                 <div className="d-flex justify-content-between">
