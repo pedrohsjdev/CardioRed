@@ -80,7 +80,7 @@ const Pacientes = () => {
             flushPacienteTable();
             Notify.success("Paciente removido com sucesso!");
         } else {
-            Notify.success("Não foi possível remover o paciente.");
+            Notify.failure("Não foi possível remover o paciente.");
             console.error(response);
         }
     };
