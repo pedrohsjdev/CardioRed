@@ -1,5 +1,7 @@
 .title-element {
   margin-top: 8vh;
+  font-family: var(--body-font);
+  font-weight: 500;
 }
 
 .page-container {
