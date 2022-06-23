@@ -6,11 +6,11 @@ import TableSearch from "../components/Table/TableSearch/TableSearch";
 import TableCounter from "../components/Table/TableCounter/TableCounter";
 import TablePaginator from "../components/Table/TablePaginator/TablePaginator";
 import "./Pages.css";
-// import ModalView from "../components/Modal/ModalView/ModalView";
-// import ModalCreate from "../components/Modal/ModalCreate/ModalCreate";
-// import ModalUpdate from "../components/Modal/ModalUpdate/ModalUpdate";
-// import ModalDelete from "../components/Modal/ModalDelete/ModalDelete";
-// import FormCreateLaudo from "../components/Form/FormLaudo/FormCreateLaudo/FormCreateLaudo";
+import ModalView from "../components/Modal/ModalView/ModalView";
+import ModalCreate from "../components/Modal/ModalCreate/ModalCreate";
+import ModalUpdate from "../components/Modal/ModalUpdate/ModalUpdate";
+import ModalDelete from "../components/Modal/ModalDelete/ModalDelete";
+import FormCreateLaudo from "../components/Form/FormLaudo/FormCreateLaudo/FormCreateLaudo";
 // import FormUpdateLaudo from "../components/Form/FormLaudo/FormUpdateLaudo/FormUpdateLaudo";
 // import FormViewLaudo from "../components/Form/FormLaudo/FormViewLaudo/FormViewLaudo";
 import { Notify } from "notiflix/build/notiflix-notify-aio";
@@ -106,6 +106,14 @@ const Laudos = () => {
     return (
         <>
             <NavBar /> 
+            <ModalCreate show={showModalCreate} setShow={setShowModalCreate} element="Laudo">
+                <FormCreateLaudo
+                    setShow={setShowModalCreate}
+                    newLaudoData={newLaudoData}
+                    setNewLaudoData={setNewLaudoData}
+                    saveLaudo={saveLaudoData}
+                />
+            </ModalCreate>
             <div className="page-container">
                 <h1 className="title-element">Listagem de Laudos</h1>
                 <div className="d-flex justify-content-between">
