@@ -65,20 +65,6 @@ const FormCreateLaudo = ({ newLaudoData, setNewLaudoData, saveLaudo, setShow }) 
                 </Col>
             </Form.Group>
             <Form.Group as={Row} className="mb-3">
-                <Form.Label column sm={4}>
-                    Ano de Residência*:
-                </Form.Label>
-                <Col sm={8}>
-                    <Form.Control
-                        required={!(newLaudoData.doctorType === "Residente")}
-                        disabled={!(newLaudoData.doctorType === "Residente")}
-                        name="residencyYear"
-                        type="number"
-                        onChange={laudoChange}
-                    />
-                </Col>
-            </Form.Group>
-            <Form.Group as={Row} className="mb-3">
                 <Form.Label column sm={2}>
                     Paciente*:
                 </Form.Label>
