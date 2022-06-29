@@ -36,6 +36,10 @@ public class ConsultaService {
         return consultaRepository.findById(id).orElseThrow(() -> new RuntimeException("Consulta not found!"));
     }
 
+    public Integer getLastId() {
+        return consultaRepository.findTopByOrderByIdDesc().getId();
+    }
+
     public Consulta save(Consulta consulta) {
         // [Business rule] Verify if a consulta with the same exam type already
         // exists.
