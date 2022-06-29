@@ -34,7 +34,7 @@ public class Consulta {
     private Integer id;
 
     @NotNull
-    @JsonFormat(pattern = "dd/MM/yyyy - HH:mm:ss")
+    @JsonFormat(pattern = "dd/MM/yyyy - HH:mm")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateTime;

@@ -22,7 +22,7 @@ import lombok.Data;
 @Data
 public class ConsultaPostDTO {
     @NotNull(message = "DateTime cannot be null.")
-    @JsonFormat(pattern = "dd/MM/yyyy - HH:mm:ss")
+    @JsonFormat(pattern = "dd/MM/yyyy - HH:mm")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateTime;
@@ -31,7 +31,7 @@ public class ConsultaPostDTO {
     @Enumerated(EnumType.STRING)
     private ExamType examType;
 
-    @NotNull(message = "ConsultaStatus cannot be null.")
+    @NotNull(message = "Consulta status cannot be null.")
     @Enumerated(EnumType.STRING)
     private ConsultaStatus status;
 
@@ -39,7 +39,7 @@ public class ConsultaPostDTO {
     @NotNull(message = "DiagnosticAssumption cannot be empty.")
     private String diagnosticAssumption;
 
-    @NotNull(message = "Medico cannot be null.")
+    @NotNull(message = "Medico username cannot be null.")
     private Medico medico;
 
     @NotNull(message = "Paciente cannot be null.")
