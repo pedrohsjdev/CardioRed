@@ -4,9 +4,18 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { AsyncTypeahead } from "react-bootstrap-typeahead";
 import { findPacientesByName } from "../../../../services/Paciente/PacienteService";
+import moment from "moment";
 
 const FormUpdateConsulta = ({ consultaData, setConsultaData, updateConsulta, setShow }) => {
     const consultaChange = (event) => {
+        if (event.target.name === "dateTime") {
+            setConsultaData({
+                ...consultaData,
+                [event.target.name]: moment(event.target.value).format("DD/MM/YYYY - hh:mm"),
+            });
+            return;
+        }
+
         setConsultaData({
             ...consultaData,
             [event.target.name]: event.target.value,
@@ -15,10 +24,10 @@ const FormUpdateConsulta = ({ consultaData, setConsultaData, updateConsulta, set
 
     const [isLoading, setIsLoading] = useState(false);
     const [options, setOptions] = useState([consultaData.paciente]);
-    const handleSearch = (query) => {
+    const handleSearch = (name) => {
         setIsLoading(true);
 
-        findPacientesByName(query).then((response) => {
+        findPacientesByName(name).then((response) => {
             setOptions(response.data);
             setIsLoading(false);
         });
@@ -68,7 +77,7 @@ const FormUpdateConsulta = ({ consultaData, setConsultaData, updateConsulta, set
                         promptText="Buscar pacientes..."
                         searchText="Buscando..."
                         emptyLabel="Nenhum paciente encontrado."
-                        onChange={(option) => setConsultaData({ ...consultaData, paciente: option })}
+                        onChange={(option) => setConsultaData({ ...consultaData, paciente: option[0] })}
                         renderMenuItemChildren={(option) => (
                             <span>
                                 {option.name} ({option.cpf})
@@ -83,10 +92,10 @@ const FormUpdateConsulta = ({ consultaData, setConsultaData, updateConsulta, set
                 </Form.Label>
                 <Col sm={9}>
                     <Form.Control
-                        defaultValue={consultaData.dateTime}
+                        defaultValue={moment(consultaData.dateTime, "DD/MM/YYYY - hh:mm").format("YYYY-MM-DDThh:mm:ss")}
                         required
                         name="dateTime"
-                        type="localDateTime"
+                        type="datetime-local"
                         onChange={consultaChange}
                     />
                 </Col>
