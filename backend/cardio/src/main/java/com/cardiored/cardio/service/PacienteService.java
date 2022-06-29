@@ -21,41 +21,42 @@ public class PacienteService {
 
     private final PacienteRepository pacienteRepository;
 
-    public Page<Paciente> pageAll(Pageable pageable){
+    public Page<Paciente> pageAll(Pageable pageable) {
         return pacienteRepository.findAll(pageable);
     }
 
-    public Paciente findById(Integer id){
+    public Paciente findById(Integer id) {
         return pacienteRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Paciente not found"));
     }
 
-    public List<Paciente> findByName(String name){
+    public List<Paciente> findByName(String name) {
         return pacienteRepository.findByName(name);
     }
 
-    public Paciente findByCpf(String cpf){
+    public List<Paciente> findByNameContains(String name) {
+        return pacienteRepository.findByNameContains(name);
+    }
+
+    public Paciente findByCpf(String cpf) {
         return pacienteRepository.findByCpf(cpf);
     }
 
-    public Paciente save(PacientePostDTO pacientePostDTO){
+    public Paciente save(PacientePostDTO pacientePostDTO) {
         Assert.isNull(findByCpf(pacientePostDTO.getCpf()), "cpf already exists");
         Paciente paciente = PacienteMapper.INSTANCE.toPaciente(pacientePostDTO);
         return pacienteRepository.save(paciente);
     }
 
-    public void delete(Integer id){
+    public void delete(Integer id) {
         pacienteRepository.delete(findById(id));
     }
 
-    public void replace(PacientePutDTO pacientePutDTO){
+    public void replace(PacientePutDTO pacientePutDTO) {
         Paciente savedPaciente = findById(pacientePutDTO.getId());
         Paciente paciente = PacienteMapper.INSTANCE.toPaciente(pacientePutDTO);
         paciente.setId(savedPaciente.getId());
         pacienteRepository.save(paciente);
     }
-
-
-
 
 }
