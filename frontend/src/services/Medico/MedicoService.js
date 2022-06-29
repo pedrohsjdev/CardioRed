@@ -10,6 +10,10 @@ export const findMedicosByCRM = async (searchInput) => {
     }
 };
 
+export const getMedicoByCRM = (crm) => {
+    return axios.get(`${BASE_URL}/medicos/find/crm/${crm}`);
+};
+
 export const findAllMedicos = async (currentPage) => {
     try {
         const { data } = await axios.get(`${BASE_URL}/medicos?page=${currentPage}&size=10&sort=name`);
