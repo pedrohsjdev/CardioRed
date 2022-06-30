@@ -60,7 +60,7 @@ const Consultas = () => {
                 setShowModalCreate(false);
                 flushConsultaTable();
                 Notify.success("Consulta cadastrada com sucesso!");
-                generatePDF(newConsultaData.id, newConsultaData.paciente.name, newConsultaData.dateTime);
+                generatePDF(newConsultaData.paciente.name, newConsultaData.dateTime);
             },
             (err) => {
                 Notify.failure("Não foi possível cadastrar a consulta!");
