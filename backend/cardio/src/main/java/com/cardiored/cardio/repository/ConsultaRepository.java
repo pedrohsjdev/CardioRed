@@ -22,4 +22,6 @@ public interface ConsultaRepository extends JpaRepository<Consulta, Integer> {
     boolean existsByPacienteCpfAndExamTypeAndStatusAndIdNot(String cpf, ExamType examType, ConsultaStatus status,
             Integer id);
 
+    Consulta findTopByOrderByIdDesc();
+
 }

@@ -16,7 +16,13 @@ import FormViewConsulta from "../components/Form/FormConsulta/FormViewConsulta/F
 import { Notify } from "notiflix/build/notiflix-notify-aio";
 import { userIsAuthenticated } from "../services/Login/LoginService";
 import { useNavigate } from "react-router-dom";
-import { saveConsulta, updateConsulta, deleteConsulta } from "../services/Consulta/ConsultaService";
+import {
+    saveConsulta,
+    updateConsulta,
+    deleteConsulta,
+    toPostConsulta,
+    generatePDF,
+} from "../services/Consulta/ConsultaService";
 
 const Consultas = () => {
     const navigate = useNavigate();
@@ -44,18 +50,23 @@ const Consultas = () => {
             setRefreshConsultaTable(true);
         }
     };
-
     const saveConsultaData = async () => {
-        const response = await saveConsulta(newConsultaData);
+        const postConsulta = await toPostConsulta(newConsultaData);
 
-        if (response.status == 201) {
-            setShowModalCreate(false);
-            flushConsultaTable();
-            Notify.success("Consulta cadastrada com sucesso!");
-        } else {
-            Notify.failure("Não foi possível cadastrar a consulta!");
-            console.error(response);
-        }
+        const requestSave = saveConsulta(postConsulta);
+
+        requestSave.then(
+            () => {
+                setShowModalCreate(false);
+                flushConsultaTable();
+                Notify.success("Consulta cadastrada com sucesso!");
+                generatePDF(newConsultaData.paciente.name, newConsultaData.dateTime);
+            },
+            (err) => {
+                Notify.failure("Não foi possível cadastrar a consulta!");
+                console.error(err);
+            }
+        );
     };
 
     const updateConsultaData = async () => {
@@ -105,7 +116,7 @@ const Consultas = () => {
 
     return (
         <>
-            <NavBar /> 
+            <NavBar />
             <ModalCreate show={showModalCreate} setShow={setShowModalCreate} element="Consulta">
                 <FormCreateConsulta
                     setShow={setShowModalCreate}

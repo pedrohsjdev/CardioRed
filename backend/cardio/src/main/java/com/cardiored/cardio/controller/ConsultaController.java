@@ -49,6 +49,11 @@ public class ConsultaController {
         return ResponseEntity.ok(consultaService.findAllByPacienteCpf(cpf, pageable));
     }
 
+    @GetMapping(path = "getLastId")
+    public ResponseEntity<Integer> getLastId() {
+        return ResponseEntity.ok(consultaService.getLastId());
+    }
+
     @PostMapping
     public ResponseEntity<Void> save(@RequestBody @Valid ConsultaPostDTO consultaPostDTO) {
         consultaService.save(ConsultaMapper.INSTANCE.toConsulta(consultaPostDTO));

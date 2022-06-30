@@ -24,22 +24,22 @@ public class ConsultaPutDTO {
     @NotNull(message = "Id cannot be null.")
     private Integer id;
 
-    @NotNull(message = "DateTime cannot be null.")
-    @JsonFormat(pattern = "dd/MM/yyyy - HH:mm:ss")
+    @NotNull(message = "Date and time cannot be null.")
+    @JsonFormat(pattern = "dd/MM/yyyy - HH:mm")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateTime;
 
-    @NotNull(message = "ExamType cannot be null.")
+    @NotNull(message = "Exam type cannot be null.")
     @Enumerated(EnumType.STRING)
     private ExamType examType;
 
-    @NotNull(message = "ConsultaStatus cannot be null.")
+    @NotNull(message = "Consulta status cannot be null.")
     @Enumerated(EnumType.STRING)
     private ConsultaStatus status;
 
     @Column(length = 20)
-    @NotNull(message = "DiagnosticAssumption cannot be empty.")
+    @NotNull(message = "Diagnostic assumption cannot be empty.")
     private String diagnosticAssumption;
 
     @NotNull(message = "Medico id cannot be null.")

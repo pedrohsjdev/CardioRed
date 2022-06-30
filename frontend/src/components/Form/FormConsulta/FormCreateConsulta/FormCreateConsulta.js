@@ -1,12 +1,23 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { AsyncTypeahead } from "react-bootstrap-typeahead";
 import { findPacientesByName } from "../../../../services/Paciente/PacienteService";
+import { getLastCosultaId } from "../../../../services/Consulta/ConsultaService";
 import "./FormCreateConsulta.css";
 
 const FormCreateConsulta = ({ newConsultaData, setNewConsultaData, saveConsulta, setShow }) => {
+    const [newId, setNewId] = useState(0);
+    useEffect(() => {
+        const getNewId = async () => {
+            await getLastCosultaId().then((res) => {
+                setNewId(res.data + 1);
+            });
+        };
+
+        getNewId();
+    }, []);
     const consultaChange = (event) => {
         setNewConsultaData({
             ...newConsultaData,
@@ -16,10 +27,10 @@ const FormCreateConsulta = ({ newConsultaData, setNewConsultaData, saveConsulta,
 
     const [isLoading, setIsLoading] = useState(false);
     const [options, setOptions] = useState([]);
-    const handleSearch = (query) => {
+    const handleSearch = (name) => {
         setIsLoading(true);
 
-        findPacientesByName(query).then((response) => {
+        findPacientesByName(name).then((response) => {
             setOptions(response.data);
             setIsLoading(false);
         });
@@ -44,7 +55,7 @@ const FormCreateConsulta = ({ newConsultaData, setNewConsultaData, saveConsulta,
                     Identificador*:
                 </Form.Label>
                 <Col sm={3}>
-                    <Form.Control disabled name="id" onChange={consultaChange} type="number" />
+                    <Form.Control value={newId} disabled name="id" type="number" />
                 </Col>
             </Form.Group>
             <Form.Group as={Row} className="mb-3">
@@ -62,7 +73,7 @@ const FormCreateConsulta = ({ newConsultaData, setNewConsultaData, saveConsulta,
                         promptText="Buscar pacientes..."
                         searchText="Buscando..."
                         emptyLabel="Nenhum paciente encontrado."
-                        onChange={(option) => setNewConsultaData({ ...newConsultaData, paciente: option })}
+                        onChange={(option) => setNewConsultaData({ ...newConsultaData, paciente: option[0] })}
                         renderMenuItemChildren={(option) => (
                             <span>
                                 {option.name} ({option.cpf})
@@ -76,7 +87,7 @@ const FormCreateConsulta = ({ newConsultaData, setNewConsultaData, saveConsulta,
                     Data e Hora*:
                 </Form.Label>
                 <Col sm={9}>
-                    <Form.Control required name="dateTime" type="localDateTime" onChange={consultaChange} />
+                    <Form.Control required name="dateTime" type="datetime-local" onChange={consultaChange} />
                 </Col>
             </Form.Group>
             <Form.Group as={Row} className="mb-3">
