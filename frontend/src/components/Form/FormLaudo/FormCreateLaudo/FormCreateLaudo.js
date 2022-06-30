@@ -3,7 +3,7 @@ import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { AsyncTypeahead } from "react-bootstrap-typeahead";
-import { findPacientesByName } from "../../../../services/Paciente/PacienteService";
+import { findPacienteByNameIsLike } from "../../../../services/Paciente/PacienteService";
 
 const FormCreateLaudo = ({ newLaudoData, setNewLaudoData, saveLaudo, setShow }) => {
     const laudoChange = (event) => {
@@ -18,9 +18,11 @@ const FormCreateLaudo = ({ newLaudoData, setNewLaudoData, saveLaudo, setShow }) 
     const handleSearch = (query) => {
         setIsLoading(true);
 
-        findPacientesByName(query).then((response) => {
+        findPacienteByNameIsLike(query).then((response) => {
             setOptions(response.data);
             setIsLoading(false);
+        }).catch(error => {
+            console.log(error)
         });
     };
 
@@ -35,6 +37,34 @@ const FormCreateLaudo = ({ newLaudoData, setNewLaudoData, saveLaudo, setShow }) 
             saveLaudo();
         }
     };
+
+    const handleConvertFile = (event) => {
+        let selectedFile = event.target.files;
+        let file = null;
+        let fileName = "";
+        //Check File is not Empty
+        if (selectedFile.length > 0) {
+            // Select the very first file from list
+            let fileToLoad = selectedFile[0];
+            fileName = fileToLoad.name;
+            // FileReader function for read the file.
+            let fileReader = new FileReader();
+            // Onload of file read the file content
+            fileReader.onload = function(fileLoadedEvent) {
+                file = fileLoadedEvent.target.result;
+                // Print data in console
+                console.log(file);
+            };
+            // Convert data to base64
+            fileReader.readAsDataURL(fileToLoad);
+        }
+    
+        this.setState({
+            fileData: file,
+            fileName: fileName
+      })
+        laudoChange(this.file)
+    }
 
     return (
         <Form noValidate validated={validated} onSubmit={handleSubmit}>
@@ -52,7 +82,7 @@ const FormCreateLaudo = ({ newLaudoData, setNewLaudoData, saveLaudo, setShow }) 
                 </Form.Label>
                 <Col sm={10}>
                     <Form.Group controlId="formFile" className="mb-3">
-                        <Form.Control type="file" />
+                        <Form.Control type="file" onChange={handleConvertFile} />
                     </Form.Group>
                 </Col>
             </Form.Group>
@@ -61,7 +91,7 @@ const FormCreateLaudo = ({ newLaudoData, setNewLaudoData, saveLaudo, setShow }) 
                     Data e Hora*:
                 </Form.Label>
                 <Col sm={9}>
-                    <Form.Control required name="dateTime" type="date" onChange={laudoChange} />
+                    <Form.Control required name="dateTime" type="datetime-local" onChange={laudoChange} />
                 </Col>
             </Form.Group>
             <Form.Group as={Row} className="mb-3">
@@ -79,7 +109,7 @@ const FormCreateLaudo = ({ newLaudoData, setNewLaudoData, saveLaudo, setShow }) 
                         promptText="Buscar pacientes..."
                         searchText="Buscando..."
                         emptyLabel="Nenhum paciente encontrado."
-                        onChange={(option) => setNewLaudoData({ ...newLaudoData, paciente: option })}
+                        onChange={(option) => setNewLaudoData({ ...newLaudoData, paciente: option[0] })}
                         renderMenuItemChildren={(option) => (
                             <span>
                                 {option.name} ({option.cpf})

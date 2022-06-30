@@ -62,7 +62,7 @@ const FormCreateConsulta = ({ newConsultaData, setNewConsultaData, saveConsulta,
                         promptText="Buscar pacientes..."
                         searchText="Buscando..."
                         emptyLabel="Nenhum paciente encontrado."
-                        onChange={(option) => setNewConsultaData({ ...newConsultaData, paciente: option })}
+                        onChange={(option) => setNewConsultaData({ ...newConsultaData, paciente: option[0] })}
                         renderMenuItemChildren={(option) => (
                             <span>
                                 {option.name} ({option.cpf})

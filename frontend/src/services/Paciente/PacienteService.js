@@ -23,6 +23,10 @@ export const findPacientesByName = (name) => {
     return axios.get(`${BASE_URL}/pacientes/find/${name}`);
 };
 
+export const findPacienteByNameIsLike = (name) => {
+    return axios.get(`${BASE_URL}/pacientes/find/like/${name}`);
+};
+
 export const savePaciente = async (pacienteData) => {
     try {
         console.log(pacienteData);
