@@ -105,7 +105,7 @@ const Medicos = () => {
 
     return (
         <>
-            <NavBar />
+            <NavBar currentPage="M" />
             <ModalCreate show={showModalCreate} setShow={setShowModalCreate} element="Médico">
                 <FormCreateMedico
                     setShow={setShowModalCreate}

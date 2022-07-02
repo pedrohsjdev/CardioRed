@@ -105,7 +105,7 @@ const Laudos = () => {
 
     return (
         <>
-            <NavBar /> 
+            <NavBar currentPage="L" />
             <ModalCreate show={showModalCreate} setShow={setShowModalCreate} element="Laudo">
                 <FormCreateLaudo
                     setShow={setShowModalCreate}

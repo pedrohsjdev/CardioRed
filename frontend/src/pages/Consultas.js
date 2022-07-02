@@ -116,7 +116,7 @@ const Consultas = () => {
 
     return (
         <>
-            <NavBar />
+            <NavBar currentPage="C" />
             <ModalCreate show={showModalCreate} setShow={setShowModalCreate} element="Consulta">
                 <FormCreateConsulta
                     setShow={setShowModalCreate}

@@ -16,7 +16,7 @@ function Home() {
     return (
         <>
             <div class="page-container-home">
-                <NavBar />
+                <NavBar currentPage="H" />
                 <div class="content-wrap">
                     <HomeContent />
                 </div>

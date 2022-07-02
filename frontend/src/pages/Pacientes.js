@@ -117,7 +117,7 @@ const Pacientes = () => {
 
     return (
         <>
-            <NavBar />
+            <NavBar currentPage="P" />
 
             <ModalCreate show={showModalCreate} setShow={setShowModalCreate} element="Paciente">
                 <FormCreatePaciente
