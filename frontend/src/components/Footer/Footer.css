@@ -24,3 +24,18 @@
 .github {
   width: 30px;
 }
+
+.footer-main-page {
+  animation: footer-animation 0.3s;
+}
+
+@keyframes footer-animation {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 25px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}

@@ -28,7 +28,7 @@ const NavBar = ({ currentPage }) => {
                         <ul className="navbar-nav">
                             <li className="nav-item ms-5">
                                 <a
-                                    className={`nav-link ${currentPage === "L" ? "active" : ""}`}
+                                    className={`nav-item ${currentPage === "L" ? "active" : ""}`}
                                     href={`${BASE_URL_FRONTEND}/laudos`}
                                 >
                                     Laudos
@@ -36,7 +36,7 @@ const NavBar = ({ currentPage }) => {
                             </li>
                             <li className="nav-item ms-5">
                                 <a
-                                    className={`nav-link ${currentPage === "C" ? "active" : ""}`}
+                                    className={`nav-item ${currentPage === "C" ? "active" : ""}`}
                                     href={`${BASE_URL_FRONTEND}/consultas`}
                                 >
                                     Consultas
@@ -44,7 +44,7 @@ const NavBar = ({ currentPage }) => {
                             </li>
                             <li className="nav-item ms-5">
                                 <a
-                                    className={`nav-link ${currentPage === "P" ? "active" : ""}`}
+                                    className={`nav-item ${currentPage === "P" ? "active" : ""}`}
                                     href={`${BASE_URL_FRONTEND}/pacientes`}
                                 >
                                     Pacientes
@@ -52,7 +52,7 @@ const NavBar = ({ currentPage }) => {
                             </li>
                             <li className="nav-item ms-5">
                                 <a
-                                    className={`nav-link ${currentPage === "M" ? "active" : ""}`}
+                                    className={`nav-item ${currentPage === "M" ? "active" : ""}`}
                                     href={`${BASE_URL_FRONTEND}/medicos`}
                                 >
                                     Médicos
