@@ -29,7 +29,7 @@ const NavBar = () => {
                                 </a>
                             </li>
                             <li className="nav-item ms-5">
-                                <a className="nav-link" href="#">
+                                <a className="nav-link" href="http://localhost:3000/consultas">
                                     Consultas
                                 </a>
                             </li>
