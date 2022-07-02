@@ -1,7 +1,5 @@
 package com.cardiored.cardio.domain;
 
-import javax.persistence.*;
-
 import java.util.List;
 
 import javax.persistence.CascadeType;

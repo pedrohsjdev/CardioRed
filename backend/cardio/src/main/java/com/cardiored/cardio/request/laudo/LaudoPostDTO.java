@@ -1,14 +1,11 @@
 package com.cardiored.cardio.request.laudo;
 
 import com.cardiored.cardio.domain.*;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDate;
 import java.util.Date;
 
 @Data

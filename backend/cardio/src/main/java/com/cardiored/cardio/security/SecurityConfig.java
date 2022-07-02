@@ -39,9 +39,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.cors();
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http.authorizeRequests().antMatchers("/users/**", "/medicos/**", "/residentes/**", "/docentes/**")
+        http.authorizeRequests().antMatchers("/users/**", "/residentes/**", "/docentes/**")
                 .hasAnyAuthority("ROLE_ADM");
-        http.authorizeRequests().antMatchers("/medicos/**").hasAnyAuthority("ROLE_DOCENTE");
+        http.authorizeRequests().antMatchers("/medicos/**").hasAnyAuthority("ROLE_DOCENTE", "ROLE_ADM");
         http.authorizeRequests().antMatchers("/pacientes/**").hasAnyAuthority("ROLE_ADM", "ROLE_MEDICO",
                 "ROLE_RESIDENTE", "ROLE_DOCENTE");
         http.authorizeRequests().anyRequest().authenticated();
