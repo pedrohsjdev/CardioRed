@@ -3,6 +3,7 @@ import "./NavBar.css";
 import Logo from "../../assets/logo-navbar.svg";
 import Logout from "../../assets/logout.svg";
 import { BASE_URL_FRONTEND } from "../../utils/Consts";
+import { logoutUser } from "../../services/Login/LoginService";
 
 const NavBar = ({ currentPage }) => {
     return (
@@ -58,7 +59,7 @@ const NavBar = ({ currentPage }) => {
                                 </a>
                             </li>
                             <li className="nav-item ms-5">
-                                <a className="nav-link" href="http://localhost:3000/medicos">
+                                <a className="nav-link" onClick={logoutUser} href={BASE_URL_FRONTEND}>
                                     <img className="logout-icon" src={Logout}></img>
                                 </a>
                             </li>

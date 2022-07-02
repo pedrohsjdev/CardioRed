@@ -54,3 +54,7 @@ export const getAccessToken = () => {
 export const setAuthorizationAxiosHeader = (token) => {
     axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 };
+
+export const logoutUser = () => {
+    localStorage.removeItem("access_token");
+};
