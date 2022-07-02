@@ -8,3 +8,12 @@
   width: calc(100% - 20%);
   margin: 0 auto;
 }
+
+.page-container-home {
+  position: relative;
+  min-height: 100vh;
+}
+
+.content-wrap {
+  padding-bottom: 5.5rem;
+}
