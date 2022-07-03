@@ -16,32 +16,44 @@ export const findAllConsultas = async (currentPage) => {
     }
 };
 
-export const findConsultasByPacienteCpf = async (searchInput) => {
-    try {
-        const { data } = await axios.get(`${BASE_URL}/consultas/find/cpf/${searchInput}`);
-        return [data];
-    } catch (error) {
-        return [{}];
-    }
+export const findConsultasByPacienteCpf = (searchInput) => {
+    return axios.get(`${BASE_URL}/consultas/find/cpf/like/${searchInput}`);
 };
 
 export const findConsultasByPacienteName = async (searchInput) => {
-    try {
-        const { data } = await axios.get(`${BASE_URL}/consultas/find/name/${searchInput}`);
-        return [data];
-    } catch (error) {
-        return [{}];
-    }
+    return axios.get(`${BASE_URL}/consultas/find/name/like/${searchInput}`);
+};
+
+export const findCIDByCode = async (code) => {
+    return axios.get(`${BASE_URL}/diseases/find/code/like/${code}`);
+};
+
+export const findCIDByName = async (name) => {
+    return axios.get(`${BASE_URL}/diseases/find/name/like/${name}`);
 };
 
 export const getLastCosultaId = () => {
     return axios.get(`${BASE_URL}/consultas/getLastId`);
 };
 
-export const toPostConsulta = async (consultaData) => {
+export const consultaAlreadyExistsSaving = async (consultaData) => {
+    const consultaDataFormated = await toPostConsulta(consultaData, "post");
+    return axios.post(`${BASE_URL}/consultas/consultaAlreadyExistsSaving`, consultaDataFormated);
+};
+
+export const consultaAlreadyExistsChanging = async (consultaData) => {
+    const consultaDataFormated = await toPostConsulta(consultaData);
+    return axios.put(`${BASE_URL}/consultas/consultaAlreadyExistsChanging`, consultaDataFormated);
+};
+
+export const toPostConsulta = async (consultaData, type) => {
+    let dateTimeFormated = consultaData.dateTime;
+    if (type === "post") {
+        dateTimeFormated = moment(consultaData.dateTime).format("DD/MM/yyyy - HH:mm");
+    }
     consultaData = {
         ...consultaData,
-        dateTime: moment(consultaData.dateTime).format("DD/MM/yyyy - HH:mm"),
+        dateTime: dateTimeFormated,
         status: "Ativo",
     };
 

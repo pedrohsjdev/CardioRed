@@ -23,9 +23,12 @@ export const findPacientesByName = (name) => {
     return axios.get(`${BASE_URL}/pacientes/find/like/${name}`);
 };
 
+export const getPacienteByCPF = (cpf) => {
+    return axios.get(`${BASE_URL}/pacientes/cpf/${cpf}`);
+};
+
 export const savePaciente = async (pacienteData) => {
     try {
-        console.log(pacienteData);
         const response = await axios.post(`${BASE_URL}/pacientes`, pacienteData);
         return response;
     } catch (error) {
