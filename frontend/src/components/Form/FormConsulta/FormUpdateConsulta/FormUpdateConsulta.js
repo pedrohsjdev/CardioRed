@@ -1,25 +1,55 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { AsyncTypeahead } from "react-bootstrap-typeahead";
 import { findPacientesByName } from "../../../../services/Paciente/PacienteService";
 import moment from "moment";
+import {
+    findCIDByCode,
+    findCIDByName,
+    consultaAlreadyExistsChanging,
+} from "../../../../services/Consulta/ConsultaService";
 
 const FormUpdateConsulta = ({ consultaData, setConsultaData, updateConsulta, setShow }) => {
     const consultaChange = (event) => {
         if (event.target.name === "dateTime") {
             setConsultaData({
                 ...consultaData,
-                [event.target.name]: moment(event.target.value).format("DD/MM/YYYY - hh:mm"),
+                dateTime: moment(event.target.value).format("DD/MM/yyyy - HH:mm"),
             });
-            return;
+        } else {
+            setConsultaData({
+                ...consultaData,
+                [event.target.name]: event.target.value,
+            });
+        }
+    };
+
+    const isLetter = (char) => {
+        if (typeof char !== "string") {
+            return false;
         }
 
-        setConsultaData({
-            ...consultaData,
-            [event.target.name]: event.target.value,
-        });
+        return char.toLocaleLowerCase() !== char.toUpperCase();
+    };
+
+    const [diagnosticAssumptionIsLoading, setDiagnosticAssumptionIsLoading] = useState(false);
+    const [diagnosticAssumptionOptions, setDiagnosticAssumptionOptions] = useState([]);
+    const handleSearchDiagnosticAssumption = (query) => {
+        setDiagnosticAssumptionIsLoading(true);
+
+        if (isLetter(query.charAt(1))) {
+            findCIDByName(query).then((res) => {
+                setDiagnosticAssumptionOptions(res.data);
+                setDiagnosticAssumptionIsLoading(false);
+            });
+        } else {
+            findCIDByCode(query).then((res) => {
+                setDiagnosticAssumptionOptions(res.data);
+                setDiagnosticAssumptionIsLoading(false);
+            });
+        }
     };
 
     const [isLoading, setIsLoading] = useState(false);
@@ -33,17 +63,55 @@ const FormUpdateConsulta = ({ consultaData, setConsultaData, updateConsulta, set
         });
     };
 
+    const [pacienteIsInvalid, setPacienteIsInvalid] = useState(false);
+    const [diagnosticAssumptionIsInvalid, setDiagnosticAssumptionIsInvalid] = useState(false);
     const [validated, setValidated] = useState(false);
+    const [errorPacienteMessage, setErrorPacienteMessage] = useState("");
     const handleSubmit = (event) => {
-        const form = event.currentTarget;
         event.preventDefault();
+        if (!consultaData.paciente) {
+            setPacienteIsInvalid(true);
+            setErrorPacienteMessage("Informe o paciente.");
+            return;
+        }
+        if (!consultaData.diagnosticAssumption) {
+            setDiagnosticAssumptionIsInvalid(true);
+            return;
+        }
+        if (examTypeIsInvalid) {
+            return;
+        }
 
-        setValidated(true);
+        setPacienteIsInvalid(false);
 
-        if (form.checkValidity() === true) {
+        if (event.currentTarget.checkValidity() === false) {
+            event.stopPropagation();
+        } else {
             updateConsulta();
         }
+
+        setValidated(true);
     };
+
+    const [examTypeError, setExamTypeError] = useState("Informe o tipo de exame.");
+    const [examTypeIsInvalid, setExamTypeIsInvalid] = useState(false);
+
+    useEffect(() => {
+        const timeoutExamType = setTimeout(() => {
+            consultaAlreadyExistsChanging(consultaData).then((res) => {
+                if (res.data) {
+                    setExamTypeIsInvalid(true);
+                    setPacienteIsInvalid(true);
+                    setExamTypeError("Já existe uma consulta cadastrada com esse tipo de exame para o mesmo paciente.");
+                    setErrorPacienteMessage("Consulta já cadastrada.");
+                } else {
+                    setExamTypeIsInvalid(false);
+                    setPacienteIsInvalid(false);
+                }
+            });
+        }, 500);
+        return () => clearTimeout(timeoutExamType);
+    }, [consultaData.examType]);
 
     return (
         <Form noValidate validated={validated} onSubmit={handleSubmit}>
@@ -68,7 +136,9 @@ const FormUpdateConsulta = ({ consultaData, setConsultaData, updateConsulta, set
                 <Col sm={10}>
                     <AsyncTypeahead
                         defaultInputValue={consultaData.paciente.name}
-                        id="async-pacientes-selection"
+                        id="pacienteAsync"
+                        isInvalid={pacienteIsInvalid}
+                        required
                         isLoading={isLoading}
                         labelKey="name"
                         onSearch={handleSearch}
@@ -77,13 +147,23 @@ const FormUpdateConsulta = ({ consultaData, setConsultaData, updateConsulta, set
                         promptText="Buscar pacientes..."
                         searchText="Buscando..."
                         emptyLabel="Nenhum paciente encontrado."
-                        onChange={(option) => setConsultaData({ ...consultaData, paciente: option[0] })}
+                        onChange={(option) => {
+                            setConsultaData({ ...consultaData, paciente: option[0] });
+                            if (!option.length) {
+                                setPacienteIsInvalid(true);
+                            } else {
+                                setPacienteIsInvalid(false);
+                            }
+                        }}
                         renderMenuItemChildren={(option) => (
                             <span>
                                 {option.name} ({option.cpf})
                             </span>
                         )}
                     />
+                    <div hidden={!pacienteIsInvalid} className="invalid-tooltip" style={{ display: "block" }}>
+                        {errorPacienteMessage}
+                    </div>
                 </Col>
             </Form.Group>
             <Form.Group as={Row} className="mb-3">
@@ -92,12 +172,16 @@ const FormUpdateConsulta = ({ consultaData, setConsultaData, updateConsulta, set
                 </Form.Label>
                 <Col sm={9}>
                     <Form.Control
+                        min={moment(new Date()).format("YYYY-MM-DDThh:mm")}
                         defaultValue={moment(consultaData.dateTime, "DD/MM/YYYY - hh:mm").format("YYYY-MM-DDThh:mm:ss")}
                         required
                         name="dateTime"
                         type="datetime-local"
                         onChange={consultaChange}
                     />
+                    <Form.Control.Feedback tooltip type="invalid">
+                        Informe a data e a hora da consulta.
+                    </Form.Control.Feedback>
                 </Col>
             </Form.Group>
             <Form.Group as={Row} className="mb-3">
@@ -106,6 +190,7 @@ const FormUpdateConsulta = ({ consultaData, setConsultaData, updateConsulta, set
                 </Form.Label>
                 <Col sm={10}>
                     <Form.Select
+                        isInvalid={examTypeIsInvalid}
                         defaultValue={consultaData.examType}
                         onChange={consultaChange}
                         required
@@ -117,6 +202,9 @@ const FormUpdateConsulta = ({ consultaData, setConsultaData, updateConsulta, set
                         <option value="Mapa">Mapa</option>
                         <option value="Holter">Holter</option>
                     </Form.Select>
+                    <Form.Control.Feedback tooltip type="invalid">
+                        {examTypeError}
+                    </Form.Control.Feedback>
                 </Col>
             </Form.Group>
             <Form.Group as={Row} className="mb-3">
@@ -124,13 +212,40 @@ const FormUpdateConsulta = ({ consultaData, setConsultaData, updateConsulta, set
                     Hipótese diagnóstica*:
                 </Form.Label>
                 <Col sm={8}>
-                    <Form.Control
-                        defaultValue={consultaData.diagnosticAssumption}
-                        onChange={consultaChange}
+                    <AsyncTypeahead
+                        defaultInputValue={
+                            consultaData.diagnosticAssumption.code + " - " + consultaData.diagnosticAssumption.name
+                        }
+                        id="cidAsync"
+                        isInvalid={diagnosticAssumptionIsInvalid}
                         required
                         name="diagnosticAssumption"
-                        type="text"
+                        isLoading={diagnosticAssumptionIsLoading}
+                        labelKey={(option) => `${option.code} - (${option.name})`}
+                        onSearch={handleSearchDiagnosticAssumption}
+                        options={diagnosticAssumptionOptions}
+                        minLength={3}
+                        promptText="Buscar códigos..."
+                        searchText="Buscando..."
+                        emptyLabel="Nenhum código encontrado."
+                        onChange={(option) => {
+                            setConsultaData({ ...consultaData, diagnosticAssumption: option[0] });
+                            if (!option.length) {
+                                setDiagnosticAssumptionIsInvalid(true);
+                            } else {
+                                setDiagnosticAssumptionIsInvalid(false);
+                            }
+                        }}
+                        renderMenuItemChildren={(option) => (
+                            <span>
+                                {option.code} - ({option.name})
+                            </span>
+                        )}
                     />
+
+                    <Form.Control.Feedback tooltip type="invalid">
+                        Informe a hipótese diagnóstica.
+                    </Form.Control.Feedback>
                 </Col>
             </Form.Group>
             <div className="modal-footer d-flex justify-content-between">
