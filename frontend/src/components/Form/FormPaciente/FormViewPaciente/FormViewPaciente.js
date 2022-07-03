@@ -3,6 +3,13 @@ import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 const FormViewPaciente = ({ pacienteData }) => {
+    const maskCPF = (cpf) => {
+        cpf = cpf.replace(/\D/g, "");
+        cpf = cpf.replace(/(\d{3})(\d)/, "$1.$2");
+        cpf = cpf.replace(/(\d{3})(\d)/, "$1.$2");
+        cpf = cpf.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+        return cpf;
+    };
     return (
         <Form>
             <Form.Control hidden defaultValue={pacienteData.id} />
@@ -11,7 +18,7 @@ const FormViewPaciente = ({ pacienteData }) => {
                     CPF*:
                 </Form.Label>
                 <Col sm={10}>
-                    <Form.Control disabled defaultValue={pacienteData.cpf} type="text" />
+                    <Form.Control disabled defaultValue={maskCPF(pacienteData.cpf)} type="text" />
                 </Col>
             </Form.Group>
             <Form.Group as={Row} className="mb-3">
