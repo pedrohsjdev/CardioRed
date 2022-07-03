@@ -3,9 +3,23 @@ import "./NavBar.css";
 import Logo from "../../assets/logo-navbar.svg";
 import Logout from "../../assets/logout.svg";
 import { BASE_URL_FRONTEND } from "../../utils/Consts";
-import { logoutUser } from "../../services/Login/LoginService";
+import { logoutUser, userIsAdm } from "../../services/Login/LoginService";
 
 const NavBar = ({ currentPage }) => {
+    const renderMedicoMenu = () => {
+        if (userIsAdm()) {
+            return (
+                <li className="nav-item ms-5">
+                    <a
+                        className={`nav-item ${currentPage === "M" ? "active" : ""}`}
+                        href={`${BASE_URL_FRONTEND}/medicos`}
+                    >
+                        Médicos
+                    </a>
+                </li>
+            );
+        }
+    };
     return (
         <header>
             <nav className="navbar navbar-expand-lg navbar-light navbar-shadow">
@@ -50,14 +64,7 @@ const NavBar = ({ currentPage }) => {
                                     Pacientes
                                 </a>
                             </li>
-                            <li className="nav-item ms-5">
-                                <a
-                                    className={`nav-item ${currentPage === "M" ? "active" : ""}`}
-                                    href={`${BASE_URL_FRONTEND}/medicos`}
-                                >
-                                    Médicos
-                                </a>
-                            </li>
+                            {renderMedicoMenu()}
                             <li className="nav-item ms-5">
                                 <a className="nav-link" onClick={logoutUser} href={BASE_URL_FRONTEND}>
                                     <img className="logout-icon" src={Logout}></img>
