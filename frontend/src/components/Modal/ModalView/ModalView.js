@@ -1,6 +1,6 @@
 import React from "react";
 
-const ModalView = ({ element, openModalUpdate, openModalDelete, show, setShow, children, formatDataToUpdate }) => {
+const ModalView = ({ element, openModalUpdate, openModalDelete, show, setShow, children }) => {
     if (!show) {
         return null;
     }
@@ -30,9 +30,6 @@ const ModalView = ({ element, openModalUpdate, openModalDelete, show, setShow, c
                             onClick={() => {
                                 setShow(false);
                                 openModalUpdate();
-                                if (element == "Paciente") {
-                                    formatDataToUpdate();
-                                }
                             }}
                         >
                             Modificar
