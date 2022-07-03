@@ -14,18 +14,18 @@ import FormCreateMedico from "../components/Form/FormMedico/FormCreateMedico/For
 import FormUpdateMedico from "../components/Form/FormMedico/FormUpdateMedico/FormUpdateMedico";
 import FormViewMedico from "../components/Form/FormMedico/FormViewMedico/FormViewMedico";
 import { Notify } from "notiflix/build/notiflix-notify-aio";
-import { userIsAuthenticated } from "../services/Login/LoginService";
+import { userIsAuthenticated, userIsAdm } from "../services/Login/LoginService";
 import { useNavigate } from "react-router-dom";
 import { saveMedico, updateMedico, deleteMedico } from "../services/Medico/MedicoService";
 
 const Medicos = () => {
     const navigate = useNavigate();
     useEffect(() => {
-        if (!userIsAuthenticated()) {
-            navigate("/");
-        }
+        if (!userIsAuthenticated()) navigate("/");
+        else if (!userIsAdm()) navigate("/home");
     }, []);
 
+    const [startCrmTemporary, setStartCrmTemporary] = useState();
     const [showModalCreate, setShowModalCreate] = useState(false);
     const [showModalUpdate, setShowModalUpdate] = useState(false);
     const [showModalView, setShowModalView] = useState(false);
@@ -96,6 +96,7 @@ const Medicos = () => {
 
     const openModalUpdate = () => {
         setShowModalUpdate(true);
+        setStartCrmTemporary(medicoData.crm);
     };
 
     const openModalDelete = () => {
@@ -117,6 +118,7 @@ const Medicos = () => {
 
             <ModalUpdate show={showModalUpdate} setShow={setShowModalUpdate} element="Médico">
                 <FormUpdateMedico
+                    startCrmTemporary={startCrmTemporary}
                     setShow={setShowModalUpdate}
                     medicoData={medicoData}
                     setMedicoData={setMedicoData}
@@ -146,7 +148,7 @@ const Medicos = () => {
                 <h1 className="title-element">Listagem de Médicos</h1>
                 <div className="d-flex justify-content-between">
                     <Button value="Cadastrar" action={openModalCreate} />
-                    <TableSearch setSearchInput={setSearchInput} criteria={"CRM"} />
+                    <TableSearch searchInput={searchInput} setSearchInput={setSearchInput} criteria="CRM" />
                 </div>
                 <MedicosTable
                     setPageData={setPageData}
