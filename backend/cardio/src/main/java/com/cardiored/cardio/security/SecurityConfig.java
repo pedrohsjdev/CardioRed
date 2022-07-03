@@ -42,7 +42,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().antMatchers("/users/**", "/residentes/**", "/docentes/**")
                 .hasAnyAuthority("ROLE_ADM");
         http.authorizeRequests().antMatchers("/medicos/**").hasAnyAuthority("ROLE_DOCENTE", "ROLE_ADM");
-        http.authorizeRequests().antMatchers("/pacientes/**").hasAnyAuthority("ROLE_ADM", "ROLE_MEDICO",
+        http.authorizeRequests().antMatchers("/pacientes/**", "/consultas/**", "/diseases/**").hasAnyAuthority(
+                "ROLE_ADM",
+                "ROLE_MEDICO",
                 "ROLE_RESIDENTE", "ROLE_DOCENTE");
         http.authorizeRequests().anyRequest().authenticated();
         http.addFilter(new CustomAuthenticationFilter(authenticationManagerBean()));
