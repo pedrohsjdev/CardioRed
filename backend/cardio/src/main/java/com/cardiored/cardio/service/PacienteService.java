@@ -1,10 +1,7 @@
 package com.cardiored.cardio.service;
 
 import com.cardiored.cardio.domain.Paciente;
-import com.cardiored.cardio.mapper.PacienteMapper;
 import com.cardiored.cardio.repository.PacienteRepository;
-import com.cardiored.cardio.request.paciente.PacientePostDTO;
-import com.cardiored.cardio.request.paciente.PacientePutDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -38,13 +35,16 @@ public class PacienteService {
         return pacienteRepository.findByNameContains(name);
     }
 
+    public List<Paciente> findByCpfContains(String cpf) {
+        return pacienteRepository.findByCpfContains(cpf);
+    }
+
     public Paciente findByCpf(String cpf) {
         return pacienteRepository.findByCpf(cpf);
     }
 
-    public Paciente save(PacientePostDTO pacientePostDTO) {
-        Assert.isNull(findByCpf(pacientePostDTO.getCpf()), "cpf already exists");
-        Paciente paciente = PacienteMapper.INSTANCE.toPaciente(pacientePostDTO);
+    public Paciente save(Paciente paciente) {
+        Assert.isNull(findByCpf(paciente.getCpf()), "cpf already exists");
         return pacienteRepository.save(paciente);
     }
 
@@ -52,10 +52,12 @@ public class PacienteService {
         pacienteRepository.delete(findById(id));
     }
 
-    public void replace(PacientePutDTO pacientePutDTO) {
-        Paciente savedPaciente = findById(pacientePutDTO.getId());
-        Paciente paciente = PacienteMapper.INSTANCE.toPaciente(pacientePutDTO);
-        paciente.setId(savedPaciente.getId());
+    public void replace(Paciente paciente) {
+        Paciente pacienteReplacing = findById(paciente.getId());
+        Paciente pacienteSameCPF = findByCpf(paciente.getCpf());
+        if (pacienteSameCPF != null && pacienteSameCPF.getId() != pacienteReplacing.getId()) {
+            throw new RuntimeException("Already exists a Paciente with this CPF!");
+        }
         pacienteRepository.save(paciente);
     }
 
