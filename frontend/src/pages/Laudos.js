@@ -14,9 +14,13 @@ import FormCreateLaudo from "../components/Form/FormLaudo/FormCreateLaudo/FormCr
 import FormUpdateLaudo from "../components/Form/FormLaudo/FormUpdateLaudo/FormUpdateLaudo";
 import FormViewLaudo from "../components/Form/FormLaudo/FormViewLaudo/FormViewLaudo";
 import { Notify } from "notiflix/build/notiflix-notify-aio";
-import { userIsAuthenticated } from "../services/Login/LoginService";
+import { userIsAuthenticated, getUsername } from "../services/Login/LoginService";
 import { useNavigate } from "react-router-dom";
-import { saveLaudo, updateLaudo, deleteLaudo } from "../services/Laudo/LaudoService";
+import { saveLaudo, updateLaudo, deleteLaudo, toPostLaudo } from "../services/Laudo/LaudoService";
+import { getMedicoByCRM } from "../services/Medico/MedicoService";
+import { findByPacienteCpfExamTypeStatus } from "../services/Consulta/ConsultaService";
+import moment from "moment";
+import { Loading } from "notiflix";
 
 const Laudos = () => {
     const navigate = useNavigate();
@@ -46,40 +50,52 @@ const Laudos = () => {
     };
 
     const saveLaudoData = async () => {
-        const response = await saveLaudo(newLaudoData);
+        Loading.circle();
+        const postLaudo = await toPostLaudo(newLaudoData, "post");
 
-        if (response.status == 201) {
-            setShowModalCreate(false);
-            flushLaudoTable();
-            Notify.success("Laudo cadastrado com sucesso!");
-        } else {
-            Notify.failure("Não foi possível cadastrar o Laudo!");
-            console.error(response);
-        }
+        saveLaudo(postLaudo).then(
+            () => {
+                Loading.remove();
+                setShowModalCreate(false);
+                flushLaudoTable();
+                Notify.success("Laudo cadastrado com sucesso!");
+            },
+            () => {
+                Loading.remove();
+                Notify.failure("Não foi possível cadastrar o Laudo!");
+                console.error(response);
+            }
+        );
     };
 
     const updateLaudoData = async () => {
-        const response = await updateLaudo(LaudoData);
+        Loading.circle();
+        const response = await updateLaudo(laudoData);
 
         if (response.status == 204) {
+            Loading.remove();
             setShowModalUpdate(false);
             flushLaudoTable();
             Notify.success("Laudo atualizado com sucesso!");
         } else {
+            Loading.remove();
             Notify.failure("Não foi possível modificar o Laudo!");
             console.error(response);
         }
     };
 
     const deleteLaudoData = async () => {
-        const response = await deleteLaudo(LaudoData.id);
+        Loading.circle();
+        const response = await deleteLaudo(laudoData.id);
 
         if (response.status == 204) {
+            Loading.remove();
             setShowModalDelete(false);
             setShowModalView(false);
             flushLaudoTable();
             Notify.success("Laudo removido com sucesso!");
         } else {
+            Loading.remove();
             Notify.failure("Não foi possível remover o Laudo.");
             console.error(response);
         }
@@ -122,14 +138,13 @@ const Laudos = () => {
                     updateLaudo={updateLaudoData}
                 />
             </ModalUpdate>
-            <ModalView
-                show={showModalView}
-                setShow={setShowModalView}
-                openModalDelete={openModalDelete}
-                openModalUpdate={openModalUpdate}
-                element="Laudo"
-            >
-                <FormViewLaudo laudoData={laudoData} />
+            <ModalView setShow={setShowModalView} show={showModalView} element="Laudo">
+                <FormViewLaudo
+                    setShow={setShowModalView}
+                    openModalDelete={openModalDelete}
+                    openModalUpdate={openModalUpdate}
+                    laudoData={laudoData}
+                />
             </ModalView>
             <ModalDelete
                 show={showModalDelete}
@@ -142,7 +157,11 @@ const Laudos = () => {
                 <h1 className="title-element">Listagem de Laudos</h1>
                 <div className="d-flex justify-content-between">
                     <Button value="Cadastrar" action={openModalCreate} />
-                    <TableSearch searchInput={searchInput} setSearchInput={setSearchInput} criteria="CPF do paciente" />
+                    <TableSearch
+                        searchInput={searchInput}
+                        setSearchInput={setSearchInput}
+                        criteria="CPF ou nome do paciente"
+                    />
                 </div>
                 <LaudosTable
                     setPageData={setPageData}
