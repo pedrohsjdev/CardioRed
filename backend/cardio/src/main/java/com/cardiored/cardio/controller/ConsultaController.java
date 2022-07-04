@@ -13,9 +13,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cardiored.cardio.domain.Consulta;
+import com.cardiored.cardio.domain.ConsultaStatus;
+import com.cardiored.cardio.domain.ExamType;
 import com.cardiored.cardio.mapper.ConsultaMapper;
 import com.cardiored.cardio.request.consulta.ConsultaPostDTO;
 import com.cardiored.cardio.request.consulta.ConsultaPutDTO;
@@ -39,22 +42,22 @@ public class ConsultaController {
         return ResponseEntity.ok(consultaService.findByIdOrThrowException(id));
     }
 
-    @GetMapping(path = "/find/name/{name}")
+    @GetMapping(path = "find/name/{name}")
     public ResponseEntity<Page<Consulta>> findByName(@PathVariable String name, Pageable pageable) {
         return ResponseEntity.ok(consultaService.findAllByPacienteName(name, pageable));
     }
 
-    @GetMapping(path = "/find/name/like/{name}")
+    @GetMapping(path = "find/name/like/{name}")
     public ResponseEntity<Page<Consulta>> findAllByPacienteNameContains(@PathVariable String name, Pageable pageable) {
         return ResponseEntity.ok(consultaService.findAllByPacienteNameContains(name, pageable));
     }
 
-    @GetMapping(path = "/find/cpf/{cpf}")
+    @GetMapping(path = "find/cpf/{cpf}")
     public ResponseEntity<Page<Consulta>> findByCpf(@PathVariable String cpf, Pageable pageable) {
         return ResponseEntity.ok(consultaService.findAllByPacienteCpf(cpf, pageable));
     }
 
-    @GetMapping(path = "/find/cpf/like/{cpf}")
+    @GetMapping(path = "find/cpf/like/{cpf}")
     public ResponseEntity<Page<Consulta>> findAllByPacienteCpfContains(@PathVariable String cpf, Pageable pageable) {
         return ResponseEntity.ok(consultaService.findAllByPacienteCpfContains(cpf, pageable));
     }
@@ -64,9 +67,15 @@ public class ConsultaController {
         return ResponseEntity.ok(consultaService.getLastId());
     }
 
+    @GetMapping(path = "find/cpf/examtype/status")
+    public ResponseEntity<Consulta> findByPacienteCpfAndExamTypeAndStatus(@RequestParam(required = true) String cpf,
+            @RequestParam(required = true) ExamType examType,
+            @RequestParam(required = true) ConsultaStatus status) {
+        return ResponseEntity.ok(consultaService.findByPacienteCpfAndExamTypeAndStatus(cpf, examType, status));
+    }
+
     @PostMapping(path = "consultaAlreadyExistsSaving")
     public ResponseEntity<Boolean> existConsultaWithPacienteAndExamType(@RequestBody ConsultaPostDTO consultaPostDTO) {
-        System.out.println(consultaPostDTO);
         return ResponseEntity.ok(consultaService
                 .existConsultaWithPacienteAndExamType(ConsultaMapper.INSTANCE.toConsulta(consultaPostDTO)));
 
@@ -75,7 +84,6 @@ public class ConsultaController {
     @PutMapping(path = "consultaAlreadyExistsChanging")
     public ResponseEntity<Boolean> existConsultaWithPacienteAndExamTypeAndNotId(
             @RequestBody ConsultaPutDTO consultaPutDTO) {
-        System.out.println(consultaPutDTO);
         return ResponseEntity.ok(consultaService
                 .existConsultaWithPacienteAndExamTypeAndNotId(ConsultaMapper.INSTANCE.toConsulta(consultaPutDTO)));
 

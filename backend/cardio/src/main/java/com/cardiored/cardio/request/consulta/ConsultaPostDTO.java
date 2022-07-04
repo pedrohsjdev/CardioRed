@@ -17,9 +17,18 @@ import com.cardiored.cardio.domain.Medico;
 import com.cardiored.cardio.domain.Paciente;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-@Data
+@Setter
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
 public class ConsultaPostDTO {
     @NotNull(message = "DateTime cannot be null.")
     @JsonFormat(pattern = "dd/MM/yyyy - HH:mm")
