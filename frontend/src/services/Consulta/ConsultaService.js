@@ -1,6 +1,6 @@
 import axios from "axios";
 import { BASE_URL } from "../../utils/Consts";
-import { getUsername, getAccessToken, setAuthorizationAxiosHeader } from "../Login/LoginService";
+import { getUsername, getAccessToken, setAuthorizationAxiosHeader, userIsAdm } from "../Login/LoginService";
 import { getMedicoByCRM } from "../Medico/MedicoService";
 import moment from "moment";
 import { generate } from "@pdfme/generator";
@@ -46,6 +46,10 @@ export const consultaAlreadyExistsChanging = async (consultaData) => {
     return axios.put(`${BASE_URL}/consultas/consultaAlreadyExistsChanging`, consultaDataFormated);
 };
 
+export const findByPacienteCpfExamTypeStatus = (cpf, examType, status) => {
+    return axios.get(`${BASE_URL}/consultas/find/cpf/examtype/status?cpf=${cpf}&examType=${examType}&status=${status}`);
+};
+
 export const toPostConsulta = async (consultaData, type) => {
     let dateTimeFormated = consultaData.dateTime;
     if (type === "post") {
@@ -54,12 +58,13 @@ export const toPostConsulta = async (consultaData, type) => {
     consultaData = {
         ...consultaData,
         dateTime: dateTimeFormated,
-        status: "Ativo",
+        status: "Aguardando exame",
     };
-
-    await getMedicoByCRM(getUsername()).then((response) => {
-        consultaData = { ...consultaData, medico: response.data };
-    });
+    if (!userIsAdm()) {
+        await getMedicoByCRM(getUsername()).then((response) => {
+            consultaData = { ...consultaData, medico: response.data };
+        });
+    }
 
     return consultaData;
 };
@@ -68,13 +73,8 @@ export const saveConsulta = (consultaData) => {
     return axios.post(`${BASE_URL}/consultas`, consultaData);
 };
 
-export const updateConsulta = async (consultaData) => {
-    try {
-        const response = await axios.put(`${BASE_URL}/consultas`, consultaData);
-        return response;
-    } catch (error) {
-        return error.response;
-    }
+export const updateConsulta = (consultaData) => {
+    return axios.put(`${BASE_URL}/consultas`, consultaData);
 };
 
 export const deleteConsulta = async (id) => {

@@ -51,6 +51,22 @@ export const userIsAdm = () => {
     return jwt_decode(getAccessToken()).roles.includes("ROLE_ADM");
 };
 
+export const userIsDocente = () => {
+    return jwt_decode(getAccessToken()).roles.includes("ROLE_DOCENTE");
+};
+
+export const userIsResidente = () => {
+    return jwt_decode(getAccessToken()).roles.includes("ROLE_RESIDENTE");
+};
+
+export const userIsMedico = () => {
+    return jwt_decode(getAccessToken()).roles.includes("ROLE_MEDICO");
+};
+
+export const userRoles = () => {
+    return jwt_decode(getAccessToken()).roles;
+};
+
 export const getAccessToken = () => {
     return localStorage.getItem("access_token");
 };

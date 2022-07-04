@@ -3,7 +3,7 @@ import { BASE_URL } from "../../utils/Consts";
 
 export const findPacienteByCPF = async (searchInput) => {
     try {
-        const { data } = await axios.get(`${BASE_URL}/pacientes/cpf/${searchInput}`);
+        const { data } = await axios.get(`${BASE_URL}/pacientes/find/cpf/${searchInput}`);
         return [data];
     } catch (error) {
         return [{}];
@@ -19,12 +19,16 @@ export const findAllPacientes = async (currentPage) => {
     }
 };
 
-export const findPacientesByName = (name) => {
-    return axios.get(`${BASE_URL}/pacientes/find/like/${name}`);
+export const findPacientesByName = (name, currentPage) => {
+    return axios.get(`${BASE_URL}/pacientes/find/name/like/${name}?page=${currentPage}&size=10`);
+};
+
+export const findPacientesByCpf = (name, currentPage) => {
+    return axios.get(`${BASE_URL}/pacientes/find/cpf/like/${name}?page=${currentPage}&size=10`);
 };
 
 export const getPacienteByCPF = (cpf) => {
-    return axios.get(`${BASE_URL}/pacientes/cpf/${cpf}`);
+    return axios.get(`${BASE_URL}/pacientes/find/cpf/${cpf}`);
 };
 
 export const savePaciente = async (pacienteData) => {
