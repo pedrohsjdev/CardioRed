@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./PacientesTable.css";
-import { findAllPacientes, findPacienteByCPF } from "../../../services/Paciente/PacienteService";
+import { findAllPacientes, findPacientesByCpf, findPacientesByName } from "../../../services/Paciente/PacienteService";
 
 const PacientesTable = ({ searchInput, currentPage, refreshPacienteTable, setPageData, openModalView }) => {
     const [pacientes, setPacientes] = useState([]);
@@ -16,14 +16,25 @@ const PacientesTable = ({ searchInput, currentPage, refreshPacienteTable, setPag
             setPageData(response);
         };
 
+        const getPacientesByName = async () => {
+            const response = await findPacientesByName(
+                searchInput.charAt(0).toUpperCase() + searchInput.slice(1),
+                currentPage
+            );
+            setPacientes(response.data.content);
+            setPageData(response.data);
+        };
+
         const getPacientesByCPF = async () => {
-            const response = await findPacienteByCPF(searchInput);
-            setPacientes(response);
-            setPageData(response);
+            const response = await findPacientesByCpf(searchInput, currentPage);
+            setPacientes(response.data.content);
+            setPageData(response.data);
         };
 
         if (searchInput == "") {
             getPacientes();
+        } else if (isLetter(searchInput.charAt(0))) {
+            getPacientesByName();
         } else {
             getPacientesByCPF();
         }
@@ -35,6 +46,14 @@ const PacientesTable = ({ searchInput, currentPage, refreshPacienteTable, setPag
         cpf = cpf.replace(/(\d{3})(\d)/, "$1.$2");
         cpf = cpf.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
         return cpf;
+    };
+
+    const isLetter = (char) => {
+        if (typeof char !== "string") {
+            return false;
+        }
+
+        return char.toLocaleLowerCase() !== char.toUpperCase();
     };
 
     return (

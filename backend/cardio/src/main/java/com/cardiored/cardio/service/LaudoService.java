@@ -1,7 +1,11 @@
 package com.cardiored.cardio.service;
 
+import com.cardiored.cardio.domain.Consulta;
+import com.cardiored.cardio.domain.ConsultaStatus;
 import com.cardiored.cardio.domain.Laudo;
+import com.cardiored.cardio.domain.LaudoStatus;
 import com.cardiored.cardio.mapper.LaudoMapper;
+import com.cardiored.cardio.repository.ConsultaRepository;
 import com.cardiored.cardio.repository.LaudoRepository;
 import com.cardiored.cardio.request.laudo.LaudoPostDTO;
 import lombok.RequiredArgsConstructor;
@@ -18,40 +22,56 @@ import java.util.List;
 public class LaudoService {
 
     private final LaudoRepository laudoRepository;
+    private final PacienteService pacienteService;
+    private final ConsultaRepository consultaRepository;
 
-    public Page<Laudo> pageAll(Pageable pageable){
+    public Page<Laudo> pageAll(Pageable pageable) {
         return laudoRepository.findAll(pageable);
     }
 
-    public Laudo findById(Integer id){
-        return laudoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Laudo not found"));
+    public Page<Laudo> pageAllStatusNot(LaudoStatus status, Pageable pageable) {
+        return laudoRepository.findAllByStatusNot(status, pageable);
     }
 
-    public List<Laudo> findByPacienteName(String name){
-        return laudoRepository.findAllByPacienteName(name);
-    }
-    public List<Laudo> findByPacienteCpf(String cpf){
-        return laudoRepository.findAllByPacienteCpf(cpf);
+    public Laudo findByIdOrThrowException(Integer id) {
+        return laudoRepository.findById(id).orElseThrow(() -> new RuntimeException("Laudo not found!"));
     }
 
-    public Laudo save(LaudoPostDTO laudoPostDTO){
-        Laudo Laudo = LaudoMapper.INSTANCE.toLaudo(laudoPostDTO);
-        return laudoRepository.save(Laudo);
+    public Page<Laudo> findAllByPacienteNameContains(String name, Pageable pageable) {
+        return laudoRepository.findAllByPacienteNameContains(name, pageable);
     }
 
-    public void delete(Integer id){
-        laudoRepository.delete(findById(id));
+    public Page<Laudo> findAllByPacienteCpfContains(String cpf, Pageable pageable) {
+        return laudoRepository.findAllByPacienteCpfContains(cpf, pageable);
     }
 
-    public void replace(Laudo laudo){
-        Laudo savedLaudo = findById(laudo.getId());
+    public Integer getLastId() {
+        return laudoRepository.findTopByOrderByIdDesc().getId();
+    }
+
+    public Boolean existConsultaWithPacienteAndExamType(Laudo laudo) {
+        return consultaRepository.existsByPacienteCpfAndExamTypeAndStatus(
+                pacienteService.findById(laudo.getPaciente().getId()).getCpf(),
+                laudo.getExamType(),
+                ConsultaStatus.AGUARDANDO_LAUDO);
+    }
+
+    public Laudo save(Laudo laudo) {
+        Consulta consulta = laudo.getConsulta();
+        consulta.setStatus(ConsultaStatus.LAUDO_EMITIDO);
+        consultaRepository.save(consulta);
+        return laudoRepository.save(laudo);
+    }
+
+    public void delete(Integer id) {
+        laudoRepository.delete(findByIdOrThrowException(id));
+    }
+
+    public void replace(Laudo laudo) {
+        Laudo savedLaudo = findByIdOrThrowException(laudo.getId());
         Laudo Laudo = LaudoMapper.INSTANCE.toLaudo(laudo);
         Laudo.setId(savedLaudo.getId());
         laudoRepository.save(Laudo);
     }
-
-
-
 
 }

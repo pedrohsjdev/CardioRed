@@ -27,9 +27,17 @@ public class MedicoService {
         return medicoRepository.findByCrm(crm);
     }
 
+    public Page<Medico> findByCrmContains(String crm, Pageable pageable) {
+        return medicoRepository.findByCrmContains(crm, pageable);
+    }
+
     public List<Medico> findByName(String name) {
         return medicoRepository.findByName(name);
-    }    
+    }
+
+    public Page<Medico> findByNameContains(String name, Pageable pageable) {
+        return medicoRepository.findByNameContains(name, pageable);
+    }
 
     public Medico findByIdOrThrowException(Integer id) {
         return medicoRepository.findById(id).orElseThrow(() -> new RuntimeException("Medico not found!"));
@@ -39,8 +47,8 @@ public class MedicoService {
         // Search a Medico with the same CRM as the new Docente.
         Medico medicoFound = findByCrm(medico.getCrm());
         // If Medico with the same CRM was found, then...
-        if(medicoFound != null) {
-            throw new RuntimeException("Medico already exists!");            
+        if (medicoFound != null) {
+            throw new RuntimeException("Medico already exists!");
         }
 
         return medicoRepository.save(medico);
@@ -49,17 +57,18 @@ public class MedicoService {
     public void delete(Integer id) {
         medicoRepository.delete(findByIdOrThrowException(id));
     }
-    
+
     public void replace(Medico medico) {
         findByIdOrThrowException(medico.getId());
 
         // Search a Medico with the same CRM as the new Medico.
         Medico medicoSameCRM = findByCrm(medico.getCrm());
-        // If Medico with the same CRM was found and he isn't the Medico being updated, then...
-        if(medicoSameCRM != null && medicoSameCRM.getId() != medico.getId()) {
+        // If Medico with the same CRM was found and he isn't the Medico being updated,
+        // then...
+        if (medicoSameCRM != null && medicoSameCRM.getId() != medico.getId()) {
             throw new RuntimeException("Already exists a Medico with this CRM!");
         }
 
         medicoRepository.save(medico);
-    } 
+    }
 }

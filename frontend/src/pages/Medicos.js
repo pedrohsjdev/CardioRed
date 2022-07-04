@@ -17,6 +17,7 @@ import { Notify } from "notiflix/build/notiflix-notify-aio";
 import { userIsAuthenticated, userIsAdm } from "../services/Login/LoginService";
 import { useNavigate } from "react-router-dom";
 import { saveMedico, updateMedico, deleteMedico } from "../services/Medico/MedicoService";
+import { Loading } from "notiflix";
 
 const Medicos = () => {
     const navigate = useNavigate();
@@ -46,40 +47,49 @@ const Medicos = () => {
     };
 
     const saveMedicoData = async () => {
+        Loading.circle();
         const response = await saveMedico(newMedicoData);
 
         if (response.status == 201) {
+            Loading.remove();
             setShowModalCreate(false);
             flushMedicoTable();
             Notify.success("Medico cadastrado com sucesso!");
         } else {
+            Loading.remove();
             Notify.failure("Não foi possível cadastrar o médico!");
             console.error(response);
         }
     };
 
     const updateMedicoData = async () => {
+        Loading.circle();
         const response = await updateMedico(medicoData);
 
         if (response.status == 204) {
+            Loading.remove();
             setShowModalUpdate(false);
             flushMedicoTable();
             Notify.success("Medico atualizado com sucesso!");
         } else {
+            Loading.remove();
             Notify.failure("Não foi possível modificar o médico!");
             console.error(response);
         }
     };
 
     const deleteMedicoData = async () => {
+        Loading.circle();
         const response = await deleteMedico(medicoData.id);
 
         if (response.status == 204) {
+            Loading.remove();
             setShowModalDelete(false);
             setShowModalView(false);
             flushMedicoTable();
             Notify.success("Medico removido com sucesso!");
         } else {
+            Loading.remove();
             Notify.failure("Não foi possível remover o Medico.");
             console.error(response);
         }
@@ -126,14 +136,13 @@ const Medicos = () => {
                 />
             </ModalUpdate>
 
-            <ModalView
-                show={showModalView}
-                setShow={setShowModalView}
-                openModalDelete={openModalDelete}
-                openModalUpdate={openModalUpdate}
-                element="Médico"
-            >
-                <FormViewMedico medicoData={medicoData} />
+            <ModalView setShow={setShowModalView} show={showModalView} element="Médico">
+                <FormViewMedico
+                    setShow={setShowModalView}
+                    openModalDelete={openModalDelete}
+                    openModalUpdate={openModalUpdate}
+                    medicoData={medicoData}
+                />
             </ModalView>
 
             <ModalDelete

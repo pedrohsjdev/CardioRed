@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./MedicosTable.css";
-import { findAllMedicos, findMedicosByCRM } from "../../../services/Medico/MedicoService";
+import { findAllMedicos, findMedicosByCrm, findMedicosByName } from "../../../services/Medico/MedicoService";
 
 const MedicosTable = ({ currentPage, searchInput, refreshMedicoTable, openModalView, setPageData }) => {
     const [medicos, setMedicos] = useState([{}]);
@@ -16,18 +16,37 @@ const MedicosTable = ({ currentPage, searchInput, refreshMedicoTable, openModalV
             setPageData(response);
         };
 
+        const getMedicosByName = async () => {
+            const response = await findMedicosByName(
+                searchInput.charAt(0).toUpperCase() + searchInput.slice(1),
+                currentPage
+            );
+            setMedicos(response.data.content);
+            setPageData(response.data);
+        };
+
         const getMedicosByCRM = async () => {
-            const response = await findMedicosByCRM(searchInput);
-            setMedicos(response);
-            setPageData(response);
+            const response = await findMedicosByCrm(searchInput, currentPage);
+            setMedicos(response.data.content);
+            setPageData(response.data);
         };
 
         if (searchInput == "") {
             getMedicos();
+        } else if (isLetter(searchInput.charAt(0))) {
+            getMedicosByName();
         } else {
             getMedicosByCRM();
         }
     }, [currentPage, searchInput, refreshMedicoTable]);
+
+    const isLetter = (char) => {
+        if (typeof char !== "string") {
+            return false;
+        }
+
+        return char.toLocaleLowerCase() !== char.toUpperCase();
+    };
 
     return (
         <>

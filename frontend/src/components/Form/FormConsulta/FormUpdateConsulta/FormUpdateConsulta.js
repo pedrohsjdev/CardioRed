@@ -4,12 +4,14 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { AsyncTypeahead } from "react-bootstrap-typeahead";
 import { findPacientesByName } from "../../../../services/Paciente/PacienteService";
+import { findMedicosByName } from "../../../../services/Medico/MedicoService";
 import moment from "moment";
 import {
     findCIDByCode,
     findCIDByName,
     consultaAlreadyExistsChanging,
 } from "../../../../services/Consulta/ConsultaService";
+import { userIsAdm } from "../../../../services/Login/LoginService";
 
 const FormUpdateConsulta = ({ consultaData, setConsultaData, updateConsulta, setShow }) => {
     const consultaChange = (event) => {
@@ -97,9 +99,11 @@ const FormUpdateConsulta = ({ consultaData, setConsultaData, updateConsulta, set
     const [examTypeIsInvalid, setExamTypeIsInvalid] = useState(false);
 
     useEffect(() => {
+        console.log(consultaData);
         const timeoutExamType = setTimeout(() => {
             consultaAlreadyExistsChanging(consultaData).then((res) => {
                 if (res.data) {
+                    console.log(res);
                     setExamTypeIsInvalid(true);
                     setPacienteIsInvalid(true);
                     setExamTypeError("Já existe uma consulta cadastrada com esse tipo de exame para o mesmo paciente.");
@@ -112,6 +116,63 @@ const FormUpdateConsulta = ({ consultaData, setConsultaData, updateConsulta, set
         }, 500);
         return () => clearTimeout(timeoutExamType);
     }, [consultaData.examType]);
+
+    /* Medico ASYNC */
+    const [isLoadingMedico, setIsLoadingMedico] = useState(false);
+    const [optionsMedico, setOptionsMedico] = useState([]);
+    const [medicoIsInvalid, setMedicoIsInvalid] = useState(false);
+    const handleSearchMedico = (name) => {
+        setIsLoadingMedico(true);
+
+        findMedicosByName(name.charAt(0).toUpperCase() + name.slice(1)).then((response) => {
+            setOptionsMedico(response.data);
+            setIsLoadingMedico(false);
+        });
+    };
+
+    const renderMedicoInput = () => {
+        if (userIsAdm()) {
+            return (
+                <Form.Group as={Row} className="mb-3">
+                    <Form.Label column sm={2}>
+                        Médicos*:
+                    </Form.Label>
+                    <Col sm={10}>
+                        <AsyncTypeahead
+                            id="pacienteAsync"
+                            isInvalid={medicoIsInvalid}
+                            required
+                            isLoading={isLoadingMedico}
+                            labelKey={(option) => `${option.name} - (${option.crm})`}
+                            onSearch={handleSearchMedico}
+                            options={optionsMedico}
+                            minLength={1}
+                            promptText="Buscar médicos..."
+                            searchText="Buscando..."
+                            emptyLabel="Nenhum médico encontrado."
+                            onChange={(option) => {
+                                setConsultaData({ ...consultaData, medico: option[0] });
+                                if (!option.length) {
+                                    setMedicoIsInvalid(true);
+                                } else {
+                                    setMedicoIsInvalid(false);
+                                }
+                                console.log(consultaData);
+                            }}
+                            renderMenuItemChildren={(option) => (
+                                <span>
+                                    {option.name} - ({option.crm})
+                                </span>
+                            )}
+                        />
+                        <div hidden={!medicoIsInvalid} className="invalid-tooltip" style={{ display: "block" }}>
+                            Informe o médico que irá realizar a consulta.
+                        </div>
+                    </Col>
+                </Form.Group>
+            );
+        }
+    };
 
     return (
         <Form noValidate validated={validated} onSubmit={handleSubmit}>
@@ -166,6 +227,7 @@ const FormUpdateConsulta = ({ consultaData, setConsultaData, updateConsulta, set
                     </div>
                 </Col>
             </Form.Group>
+            {renderMedicoInput()}
             <Form.Group as={Row} className="mb-3">
                 <Form.Label column sm={3}>
                     Data e Hora*:

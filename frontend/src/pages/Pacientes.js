@@ -17,6 +17,7 @@ import { userIsAuthenticated } from "../services/Login/LoginService";
 import { Notify } from "notiflix/build/notiflix-notify-aio";
 import { useNavigate } from "react-router-dom";
 import { savePaciente, updatePaciente, deletePaciente } from "../services/Paciente/PacienteService";
+import { Loading } from "notiflix";
 
 const Pacientes = () => {
     const navigate = useNavigate();
@@ -46,46 +47,56 @@ const Pacientes = () => {
     };
 
     const savePacienteData = async () => {
+        Loading.circle();
         const response = await savePaciente(newPacienteData);
 
         if (response.status == 201) {
+            Loading.remove();
             setShowModalCreate(false);
             flushPacienteTable();
             Notify.success("Paciente cadastrado com sucesso!");
         } else {
+            Loading.remove();
             Notify.failure("Não foi possível cadastrar o paciente.");
             console.error(response);
         }
     };
 
     const updatePacienteData = async () => {
+        Loading.circle();
         const response = await updatePaciente(pacienteData);
 
         if (response.status == 204) {
+            Loading.remove();
             setShowModalUpdate(false);
             flushPacienteTable();
             Notify.success("As informações do paciente foram atualizadas com sucesso!");
         } else {
+            Loading.remove();
             Notify.failure("Não foi possível atualizar as informações do paciente.");
             console.error(response);
         }
     };
 
     const deletePacienteData = async () => {
+        Loading.circle();
         const response = await deletePaciente(pacienteData.id);
 
         if (response.status == 204) {
+            Loading.remove();
             setShowModalDelete(false);
             setShowModalView(false);
             flushPacienteTable();
             Notify.success("Paciente removido com sucesso!");
         } else {
+            Loading.remove();
             Notify.failure("Não foi possível remover o paciente.");
             console.error(response);
         }
     };
 
     const openModalCreate = () => {
+        setNewPacienteData({});
         // Open modal
         setShowModalCreate(true);
     };
@@ -129,14 +140,13 @@ const Pacientes = () => {
                 />
             </ModalUpdate>
 
-            <ModalView
-                show={showModalView}
-                setShow={setShowModalView}
-                openModalDelete={openModalDelete}
-                openModalUpdate={openModalUpdate}
-                element="Paciente"
-            >
-                <FormViewPaciente pacienteData={pacienteData} />
+            <ModalView setShow={setShowModalView} show={showModalView} element="Paciente">
+                <FormViewPaciente
+                    setShow={setShowModalView}
+                    openModalDelete={openModalDelete}
+                    openModalUpdate={openModalUpdate}
+                    pacienteData={pacienteData}
+                />
             </ModalView>
 
             <ModalDelete

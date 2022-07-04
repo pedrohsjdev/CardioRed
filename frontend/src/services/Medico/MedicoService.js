@@ -14,6 +14,14 @@ export const getMedicoByCRM = (crm) => {
     return axios.get(`${BASE_URL}/medicos/find/crm/${crm}`);
 };
 
+export const findMedicosByName = (name, currentPage) => {
+    return axios.get(`${BASE_URL}/medicos/find/name/like/${name}?page=${currentPage}&size=10`);
+};
+
+export const findMedicosByCrm = (crm, currentPage) => {
+    return axios.get(`${BASE_URL}/medicos/find/crm/like/${crm}?page=${currentPage}&size=10`);
+};
+
 export const findAllMedicos = async (currentPage) => {
     try {
         const { data } = await axios.get(`${BASE_URL}/medicos?page=${currentPage}&size=10&sort=name`);

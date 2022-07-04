@@ -64,7 +64,6 @@ const FormCreatePaciente = ({ newPacienteData, setNewPacienteData, savePaciente,
     const [cpfIsInvalid, setCpfIsInvalid] = useState(false);
     const verifyCPF = () => {
         setCpfIsInvalid(false);
-        console.log(newPacienteData.cpf);
         getPacienteByCPF(newPacienteData.cpf).then((res) => {
             if (res.data) {
                 setCpfIsInvalid(true);
@@ -200,7 +199,13 @@ const FormCreatePaciente = ({ newPacienteData, setNewPacienteData, savePaciente,
                 </Col>
             </Form.Group>
             <div className="modal-footer d-flex justify-content-between">
-                <button type="button" className="btn btn-primary btn-modal btn-left" onClick={() => setShow(false)}>
+                <button
+                    type="button"
+                    className="btn btn-primary btn-modal btn-left"
+                    onClick={() => {
+                        setShow(false);
+                    }}
+                >
                     Cancelar
                 </button>
                 <button type="submit" className="btn btn-primary btn-modal">

@@ -36,7 +36,7 @@ const ConsultasTable = ({ searchInput, currentPage, refreshConsultaTable, setPag
             setPageData(response.data);
         };
 
-        const getConsultasByPacienteCPF = async () => {
+        const getConsultasByPacienteCpf = async () => {
             const response = await findConsultasByPacienteCpf(searchInput);
             setConsultas(response.data.content);
             setPageData(response.data);
@@ -47,7 +47,7 @@ const ConsultasTable = ({ searchInput, currentPage, refreshConsultaTable, setPag
         } else if (isLetter(searchInput.charAt(0))) {
             getConsultasByPacienteName();
         } else {
-            getConsultasByPacienteCPF();
+            getConsultasByPacienteCpf();
         }
     }, [currentPage, searchInput, refreshConsultaTable]);
 

@@ -13,3 +13,11 @@
 .laudo-table .center {
   text-align: center;
 }
+
+.special {
+  background-color: #fff48c;
+}
+
+.special.secret {
+  display: none;
+}

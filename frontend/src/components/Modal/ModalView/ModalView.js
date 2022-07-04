@@ -1,6 +1,6 @@
 import React from "react";
 
-const ModalView = ({ element, openModalUpdate, openModalDelete, show, setShow, children }) => {
+const ModalView = ({ element, show, setShow, children }) => {
     if (!show) {
         return null;
     }
@@ -14,27 +14,6 @@ const ModalView = ({ element, openModalUpdate, openModalDelete, show, setShow, c
                         <button type="button" className="btn-close" onClick={() => setShow(false)}></button>
                     </div>
                     <div className="modal-body">{children}</div>
-                    <div className="modal-footer d-flex justify-content-between">
-                        <button
-                            type="button"
-                            className="btn btn-primary btn-modal btn-left"
-                            onClick={() => {
-                                openModalDelete();
-                            }}
-                        >
-                            Remover
-                        </button>
-                        <button
-                            type="button"
-                            className="btn btn-primary btn-modal"
-                            onClick={() => {
-                                setShow(false);
-                                openModalUpdate();
-                            }}
-                        >
-                            Modificar
-                        </button>
-                    </div>
                 </div>
             </div>
         </div>

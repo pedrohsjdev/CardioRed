@@ -26,24 +26,29 @@ public class PacienteController {
         return ResponseEntity.ok(pacienteService.pageAll(pageable));
     }
 
-    @GetMapping(path = "/{id}")
+    @GetMapping(path = "find/id/{id}")
     public ResponseEntity<Paciente> findById(@PathVariable Integer id) {
         return ResponseEntity.ok(pacienteService.findById(id));
     }
 
-    @GetMapping(path = "/find/{name}")
+    @GetMapping(path = "/find/name/{name}")
     public ResponseEntity<List<Paciente>> findByName(@PathVariable String name) {
         return ResponseEntity.ok(pacienteService.findByName(name));
     }
 
-    @GetMapping(path = "/find/like/{name}")
-    public ResponseEntity<List<Paciente>> findByNameLike(@PathVariable String name) {
-        return ResponseEntity.ok(pacienteService.findByNameContains(name));
+    @GetMapping(path = "/find/name/like/{name}")
+    public ResponseEntity<Page<Paciente>> findByNameLike(@PathVariable String name, Pageable pageable) {
+        return ResponseEntity.ok(pacienteService.findByNameContains(name, pageable));
     }
 
-    @GetMapping(path = "/cpf/{cpf}")
+    @GetMapping(path = "find/cpf/{cpf}")
     public ResponseEntity<Paciente> findByCpf(@PathVariable String cpf) {
         return ResponseEntity.ok(pacienteService.findByCpf(cpf));
+    }
+
+    @GetMapping(path = "/find/cpf/like/{cpf}")
+    public ResponseEntity<Page<Paciente>> findByCpfLike(@PathVariable String cpf, Pageable pageable) {
+        return ResponseEntity.ok(pacienteService.findByCpfContains(cpf, pageable));
     }
 
     @PostMapping

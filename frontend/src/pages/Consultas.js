@@ -23,6 +23,7 @@ import {
     toPostConsulta,
     generatePDF,
 } from "../services/Consulta/ConsultaService";
+import { Loading } from "notiflix";
 
 const Consultas = () => {
     const navigate = useNavigate();
@@ -51,18 +52,21 @@ const Consultas = () => {
         }
     };
     const saveConsultaData = async () => {
+        Loading.circle();
         const postConsulta = await toPostConsulta(newConsultaData, "post");
 
         const requestSave = saveConsulta(postConsulta);
 
         requestSave.then(
             () => {
+                Loading.remove();
                 setShowModalCreate(false);
                 flushConsultaTable();
                 Notify.success("Consulta cadastrada com sucesso!");
                 generatePDF(newConsultaData.paciente.name, newConsultaData.dateTime);
             },
             (err) => {
+                Loading.remove();
                 Notify.failure("Não foi possível cadastrar a consulta!");
                 console.error(err);
             }
@@ -70,27 +74,33 @@ const Consultas = () => {
     };
 
     const updateConsultaData = async () => {
+        Loading.circle();
         const response = await updateConsulta(consultaData);
 
         if (response.status == 204) {
+            Loading.remove();
             setShowModalUpdate(false);
             flushConsultaTable();
             Notify.success("Consulta atualizada com sucesso!");
         } else {
+            Loading.remove();
             Notify.failure("Não foi possível modificar a consulta!");
             console.error(response);
         }
     };
 
     const deleteConsultaData = async () => {
+        Loading.circle();
         const response = await deleteConsulta(consultaData.id);
 
         if (response.status == 204) {
+            Loading.remove();
             setShowModalDelete(false);
             setShowModalView(false);
             flushConsultaTable();
             Notify.success("Consulta removida com sucesso!");
         } else {
+            Loading.remove();
             Notify.failure("Não foi possível remover a Consulta.");
             console.error(response);
         }
@@ -134,14 +144,14 @@ const Consultas = () => {
                     updateConsulta={updateConsultaData}
                 />
             </ModalUpdate>
-            <ModalView
-                show={showModalView}
-                setShow={setShowModalView}
-                openModalDelete={openModalDelete}
-                openModalUpdate={openModalUpdate}
-                element="Consulta"
-            >
-                <FormViewConsulta consultaData={consultaData} />
+            <ModalView setShow={setShowModalView} show={showModalView} element="Consulta">
+                <FormViewConsulta
+                    openModalDelete={openModalDelete}
+                    openModalUpdate={openModalUpdate}
+                    setConsultaData={setConsultaData}
+                    setShow={setShowModalView}
+                    consultaData={consultaData}
+                />
             </ModalView>
             <ModalDelete
                 show={showModalDelete}
@@ -157,7 +167,7 @@ const Consultas = () => {
                     <TableSearch
                         searchInput={searchInput}
                         setSearchInput={setSearchInput}
-                        criteria={"CPF do paciente"}
+                        criteria={"CPF ou nome do paciente"}
                     />
                 </div>
                 <ConsultasTable

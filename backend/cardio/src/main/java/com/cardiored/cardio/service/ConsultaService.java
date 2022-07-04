@@ -9,6 +9,7 @@ import org.springframework.util.Assert;
 
 import com.cardiored.cardio.domain.Consulta;
 import com.cardiored.cardio.domain.ConsultaStatus;
+import com.cardiored.cardio.domain.ExamType;
 import com.cardiored.cardio.repository.ConsultaRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -48,20 +49,22 @@ public class ConsultaService {
         return consultaRepository.findTopByOrderByIdDesc().getId();
     }
 
+    public Consulta findByPacienteCpfAndExamTypeAndStatus(String cpf, ExamType examType, ConsultaStatus status) {
+        return consultaRepository.findByPacienteCpfAndExamTypeAndStatus(cpf, examType, status);
+    }
+
     public Boolean existConsultaWithPacienteAndExamType(Consulta consulta) {
-        System.out.println(consulta);
         return consultaRepository.existsByPacienteCpfAndExamTypeAndStatus(
                 pacienteService.findById(consulta.getPaciente().getId()).getCpf(),
                 consulta.getExamType(),
-                ConsultaStatus.ATIVO);
+                ConsultaStatus.AGUARDANDO_EXAME);
     }
 
     public Boolean existConsultaWithPacienteAndExamTypeAndNotId(Consulta consulta) {
-        System.out.println(consulta);
         return consultaRepository.existsByPacienteCpfAndExamTypeAndStatusAndIdNot(
                 pacienteService.findById(consulta.getPaciente().getId()).getCpf(),
                 consulta.getExamType(),
-                ConsultaStatus.ATIVO,
+                ConsultaStatus.AGUARDANDO_EXAME,
                 consulta.getId());
     }
 
@@ -71,7 +74,7 @@ public class ConsultaService {
         Assert.isTrue(!consultaRepository.existsByPacienteCpfAndExamTypeAndStatus(
                 pacienteService.findById(consulta.getPaciente().getId()).getCpf(),
                 consulta.getExamType(),
-                ConsultaStatus.ATIVO),
+                ConsultaStatus.AGUARDANDO_EXAME),
                 "A Consulta with this same exam type already exists!");
 
         return consultaRepository.save(consulta);
@@ -86,7 +89,7 @@ public class ConsultaService {
         Assert.isTrue(!consultaRepository.existsByPacienteCpfAndExamTypeAndStatusAndIdNot(
                 pacienteService.findById(consulta.getPaciente().getId()).getCpf(),
                 consulta.getExamType(),
-                ConsultaStatus.ATIVO,
+                ConsultaStatus.AGUARDANDO_EXAME,
                 consulta.getId()),
                 "A Consulta with this same exam type already exists!");
 

@@ -5,12 +5,14 @@ import Col from "react-bootstrap/Col";
 import { AsyncTypeahead } from "react-bootstrap-typeahead";
 import moment from "moment";
 import { findPacientesByName } from "../../../../services/Paciente/PacienteService";
+import { findMedicosByName } from "../../../../services/Medico/MedicoService";
 import {
     getLastCosultaId,
     consultaAlreadyExistsSaving,
     findCIDByCode,
     findCIDByName,
 } from "../../../../services/Consulta/ConsultaService";
+import { userIsAdm } from "../../../../services/Login/LoginService";
 import "./FormCreateConsulta.css";
 
 const FormCreateConsulta = ({ newConsultaData, setNewConsultaData, saveConsulta, setShow }) => {
@@ -29,6 +31,7 @@ const FormCreateConsulta = ({ newConsultaData, setNewConsultaData, saveConsulta,
             ...newConsultaData,
             [event.target.name]: event.target.value,
         });
+        console.log(newConsultaData);
     };
 
     const isLetter = (char) => {
@@ -74,6 +77,8 @@ const FormCreateConsulta = ({ newConsultaData, setNewConsultaData, saveConsulta,
     const [errorPacienteMessage, setErrorPacienteMessage] = useState("");
     const handleSubmit = (event) => {
         event.preventDefault();
+        if (!newConsultaData.medico) {
+        }
         if (!newConsultaData.paciente) {
             setPacienteIsInvalid(true);
             setErrorPacienteMessage("Informe o paciente.");
@@ -98,7 +103,6 @@ const FormCreateConsulta = ({ newConsultaData, setNewConsultaData, saveConsulta,
 
     const [examTypeError, setExamTypeError] = useState("Informe o tipo de exame.");
     const [examTypeIsInvalid, setExamTypeIsInvalid] = useState(false);
-
     useEffect(() => {
         const timeoutExamType = setTimeout(() => {
             consultaAlreadyExistsSaving(newConsultaData).then((res) => {
@@ -115,6 +119,63 @@ const FormCreateConsulta = ({ newConsultaData, setNewConsultaData, saveConsulta,
         }, 500);
         return () => clearTimeout(timeoutExamType);
     }, [newConsultaData.examType]);
+
+    /* Medico ASYNC */
+    const [isLoadingMedico, setIsLoadingMedico] = useState(false);
+    const [optionsMedico, setOptionsMedico] = useState([]);
+    const [medicoIsInvalid, setMedicoIsInvalid] = useState(false);
+    const handleSearchMedico = (name) => {
+        setIsLoadingMedico(true);
+
+        findMedicosByName(name.charAt(0).toUpperCase() + name.slice(1)).then((response) => {
+            setOptionsMedico(response.data);
+            setIsLoadingMedico(false);
+        });
+    };
+
+    const renderMedicoInput = () => {
+        if (userIsAdm()) {
+            return (
+                <Form.Group as={Row} className="mb-3">
+                    <Form.Label column sm={2}>
+                        Médico*:
+                    </Form.Label>
+                    <Col sm={10}>
+                        <AsyncTypeahead
+                            id="medicoAsync"
+                            isInvalid={medicoIsInvalid}
+                            required
+                            isLoading={isLoadingMedico}
+                            labelKey={(option) => `${option.name} - (${option.crm})`}
+                            onSearch={handleSearchMedico}
+                            options={optionsMedico}
+                            minLength={1}
+                            promptText="Buscar médicos..."
+                            searchText="Buscando..."
+                            emptyLabel="Nenhum médico encontrado."
+                            onChange={(option) => {
+                                setNewConsultaData({ ...newConsultaData, medico: option[0] });
+                                if (!option.length) {
+                                    setMedicoIsInvalid(true);
+                                } else {
+                                    setMedicoIsInvalid(false);
+                                }
+                                console.log(newConsultaData);
+                            }}
+                            renderMenuItemChildren={(option) => (
+                                <span>
+                                    {option.name} - ({option.crm})
+                                </span>
+                            )}
+                        />
+                        <div hidden={!medicoIsInvalid} className="invalid-tooltip" style={{ display: "block" }}>
+                            Informe o médico que irá realizar a consulta.
+                        </div>
+                    </Col>
+                </Form.Group>
+            );
+        }
+    };
 
     return (
         <Form noValidate validated={validated} onSubmit={handleSubmit}>
@@ -136,7 +197,7 @@ const FormCreateConsulta = ({ newConsultaData, setNewConsultaData, saveConsulta,
                         isInvalid={pacienteIsInvalid}
                         required
                         isLoading={isLoading}
-                        labelKey={(option) => `${option.name}- (${option.cpf})`}
+                        labelKey={(option) => `${option.name} - (${option.cpf})`}
                         onSearch={handleSearch}
                         options={options}
                         minLength={1}
@@ -162,6 +223,7 @@ const FormCreateConsulta = ({ newConsultaData, setNewConsultaData, saveConsulta,
                     </div>
                 </Col>
             </Form.Group>
+            {renderMedicoInput()}
             <Form.Group as={Row} className="mb-3">
                 <Form.Label column sm={3}>
                     Data e Hora*:
@@ -171,7 +233,11 @@ const FormCreateConsulta = ({ newConsultaData, setNewConsultaData, saveConsulta,
                         min={moment(new Date()).format("YYYY-MM-DDThh:mm")}
                         required
                         name="dateTime"
-                        type="datetime-local"
+                        type="text"
+                        placeholder="Informe a data e a hora que a consulta será realizada."
+                        onFocus={(e) => {
+                            e.target.type = "datetime-local";
+                        }}
                         onChange={consultaChange}
                     />
 

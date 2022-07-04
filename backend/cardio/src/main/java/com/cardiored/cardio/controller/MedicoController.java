@@ -47,19 +47,29 @@ public class MedicoController {
         return ResponseEntity.ok(medicoService.pageAll(pageable));
     }
 
-    @GetMapping("/find/id/{id}")
+    @GetMapping("find/id/{id}")
     public ResponseEntity<Medico> findById(@PathVariable(required = false) Integer id) {
         return ResponseEntity.ok(medicoService.findByIdOrThrowException(id));
     }
 
-    @GetMapping("/find/name/{name}")
+    @GetMapping("find/name/{name}")
     public ResponseEntity<List<Medico>> findByName(@PathVariable(required = false) String name) {
         return ResponseEntity.ok(medicoService.findByName(name));
     }
 
-    @GetMapping("/find/crm/{crm}")
+    @GetMapping(path = "find/name/like/{name}")
+    public ResponseEntity<Page<Medico>> findByNameLike(@PathVariable String name, Pageable pageable) {
+        return ResponseEntity.ok(medicoService.findByNameContains(name, pageable));
+    }
+
+    @GetMapping("find/crm/{crm}")
     public ResponseEntity<Medico> findByCrm(@PathVariable(required = false) String crm) {
         return ResponseEntity.ok(medicoService.findByCrm(crm));
+    }
+
+    @GetMapping(path = "find/crm/like/{crm}")
+    public ResponseEntity<Page<Medico>> findByCrmLike(@PathVariable String crm, Pageable pageable) {
+        return ResponseEntity.ok(medicoService.findByCrmContains(crm, pageable));
     }
 
     @PostMapping
@@ -70,7 +80,6 @@ public class MedicoController {
                 user = userService
                         .save(new User(null, allMedicoInfo.getCrm(), allMedicoInfo.getPassword(), new ArrayList<>()));
                 userService.addRoleToUser(allMedicoInfo.getCrm(), "ROLE_DOCENTE");
-                userService.addRoleToUser(allMedicoInfo.getCrm(), "ROLE_MEDICO");
 
                 docenteService.save(Docente.builder()
                         .crm(allMedicoInfo.getCrm())
@@ -84,7 +93,6 @@ public class MedicoController {
                 user = userService
                         .save(new User(null, allMedicoInfo.getCrm(), allMedicoInfo.getPassword(), new ArrayList<>()));
                 userService.addRoleToUser(allMedicoInfo.getCrm(), "ROLE_RESIDENTE");
-                userService.addRoleToUser(allMedicoInfo.getCrm(), "ROLE_MEDICO");
 
                 residenteService.save(Residente.builder()
                         .crm(allMedicoInfo.getCrm())
