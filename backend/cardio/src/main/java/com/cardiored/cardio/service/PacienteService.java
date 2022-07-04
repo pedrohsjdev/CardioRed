@@ -31,12 +31,12 @@ public class PacienteService {
         return pacienteRepository.findByName(name);
     }
 
-    public List<Paciente> findByNameContains(String name) {
-        return pacienteRepository.findByNameContains(name);
+    public Page<Paciente> findByNameContains(String name, Pageable pageable) {
+        return pacienteRepository.findByNameContains(name, pageable);
     }
 
-    public List<Paciente> findByCpfContains(String cpf) {
-        return pacienteRepository.findByCpfContains(cpf);
+    public Page<Paciente> findByCpfContains(String cpf, Pageable pageable) {
+        return pacienteRepository.findByCpfContains(cpf, pageable);
     }
 
     public Paciente findByCpf(String cpf) {
