@@ -2,7 +2,6 @@ package com.cardiored.cardio.domain;
 
 import java.util.Date;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -48,8 +47,8 @@ public class Consulta {
     private ConsultaStatus status;
 
     @NotNull
-    @Column(length = 20)
-    private String diagnosticAssumption;
+    @ManyToOne
+    private Disease diagnosticAssumption;
 
     @NotNull
     @ManyToOne

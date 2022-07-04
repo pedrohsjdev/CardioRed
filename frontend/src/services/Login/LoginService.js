@@ -47,10 +47,18 @@ export const getUsername = () => {
     return jwt_decode(getAccessToken()).sub;
 };
 
+export const userIsAdm = () => {
+    return jwt_decode(getAccessToken()).roles.includes("ROLE_ADM");
+};
+
 export const getAccessToken = () => {
     return localStorage.getItem("access_token");
 };
 
 export const setAuthorizationAxiosHeader = (token) => {
     axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+};
+
+export const logoutUser = () => {
+    localStorage.removeItem("access_token");
 };

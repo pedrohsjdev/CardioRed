@@ -2,7 +2,6 @@ package com.cardiored.cardio.request.consulta;
 
 import java.util.Date;
 
-import javax.persistence.Column;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Temporal;
@@ -12,6 +11,7 @@ import javax.validation.constraints.NotNull;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.cardiored.cardio.domain.ConsultaStatus;
+import com.cardiored.cardio.domain.Disease;
 import com.cardiored.cardio.domain.ExamType;
 import com.cardiored.cardio.domain.Medico;
 import com.cardiored.cardio.domain.Paciente;
@@ -35,9 +35,8 @@ public class ConsultaPostDTO {
     @Enumerated(EnumType.STRING)
     private ConsultaStatus status;
 
-    @Column(length = 20)
     @NotNull(message = "DiagnosticAssumption cannot be empty.")
-    private String diagnosticAssumption;
+    private Disease diagnosticAssumption;
 
     @NotNull(message = "Medico username cannot be null.")
     private Medico medico;

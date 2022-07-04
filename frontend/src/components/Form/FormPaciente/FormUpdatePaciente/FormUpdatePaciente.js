@@ -13,6 +13,23 @@ const FormUpdatePaciente = ({ pacienteData, setPacienteData, updatePaciente, set
             });
             return;
         }
+        if (event.target.name === "name") {
+            const inputed = event.target.value;
+            setPacienteData({
+                ...pacienteData,
+                name: inputed.charAt(0).toUpperCase() + inputed.slice(1),
+            });
+            return;
+        }
+
+        if (event.target.name === "cpf") {
+            const inputed = event.target.value;
+            setPacienteData({
+                ...pacienteData,
+                cpf: event.target.value.replaceAll(".", "").replace("-", ""),
+            });
+            return;
+        }
 
         setPacienteData({
             ...pacienteData,
@@ -22,20 +39,72 @@ const FormUpdatePaciente = ({ pacienteData, setPacienteData, updatePaciente, set
 
     const [validated, setValidated] = useState(false);
     const handleSubmit = (event) => {
-        const form = event.currentTarget;
+        console.log(pacienteData);
         event.preventDefault();
 
-        setValidated(true);
-
-        if (!/^[0-9]+$/.test(pacienteData.cpf)) {
+        if (!validateCPF(pacienteData.cpf)) {
+            setCpfIsInvalid(true);
+            setCpfErrorMessage("CPF inválido!");
+        }
+        if (cpfIsInvalid) {
             return;
         }
-
-        if (form.checkValidity() === true) {
+        if (event.currentTarget.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+        } else {
             updatePaciente();
         }
+
+        setValidated(true);
     };
 
+    const [cpfErrorMessage, setCpfErrorMessage] = useState("Informe o CPF do paciente.");
+    const [cpfIsInvalid, setCpfIsInvalid] = useState(false);
+    const verifyCPF = () => {
+        setCpfIsInvalid(false);
+        getPacienteByCPF(pacienteData.cpf).then((res) => {
+            if (res.data) {
+                setCpfIsInvalid(true);
+                setCpfErrorMessage("CPF já cadastrado no sistema.");
+            }
+        });
+    };
+
+    const validateCPF = (strCPF) => {
+        let sum;
+        let remainder;
+        sum = 0;
+        if (strCPF == "00000000000" || strCPF == undefined) return false;
+
+        for (let i = 1; i <= 9; i++) {
+            sum = sum + parseInt(strCPF.substring(i - 1, i)) * (11 - i);
+        }
+        remainder = (sum * 10) % 11;
+
+        if (remainder == 10 || remainder == 11) remainder = 0;
+        if (remainder != parseInt(strCPF.substring(9, 10))) return false;
+
+        sum = 0;
+        for (let i = 1; i <= 10; i++) {
+            sum = sum + parseInt(strCPF.substring(i - 1, i)) * (12 - i);
+        }
+        remainder = (sum * 10) % 11;
+
+        if (remainder == 10 || remainder == 11) remainder = 0;
+        if (remainder != parseInt(strCPF.substring(10, 11))) return false;
+        return true;
+    };
+
+    const maskCPF = (cpf) => {
+        cpf = cpf.replace(/\D/g, "");
+        cpf = cpf.replace(/(\d{3})(\d)/, "$1.$2");
+        cpf = cpf.replace(/(\d{3})(\d)/, "$1.$2");
+        cpf = cpf.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+        return cpf;
+    };
+
+    let typingTimer;
     return (
         <Form noValidate validated={validated} onSubmit={handleSubmit}>
             <Form.Control hidden defaultValue={pacienteData.id} />
@@ -45,14 +114,26 @@ const FormUpdatePaciente = ({ pacienteData, setPacienteData, updatePaciente, set
                 </Form.Label>
                 <Col sm={10}>
                     <Form.Control
+                        pattern="^[0-9]{3}.[0-9]{3}.[0-9]{3}-[0-9]{2}$"
+                        autoComplete="off"
                         required
-                        value={pacienteData.cpf}
+                        isInvalid={cpfIsInvalid}
+                        value={pacienteData.cpf ? maskCPF(pacienteData.cpf) : ""}
                         type="text"
                         name="cpf"
-                        maxLength="11"
+                        maxLength="14"
+                        onKeyUp={() => {
+                            clearTimeout(typingTimer);
+                            typingTimer = setTimeout(verifyCPF, 1000);
+                        }}
+                        onKeyDown={(e) => {
+                            clearTimeout(typingTimer);
+                        }}
                         onChange={pacienteChange}
-                        isInvalid={!/^[0-9]+$/.test(pacienteData.cpf)}
                     />
+                    <Form.Control.Feedback tooltip type="invalid">
+                        {cpfErrorMessage}
+                    </Form.Control.Feedback>
                 </Col>
             </Form.Group>
             <Form.Group as={Row} className="mb-3">
@@ -61,12 +142,16 @@ const FormUpdatePaciente = ({ pacienteData, setPacienteData, updatePaciente, set
                 </Form.Label>
                 <Col sm={10}>
                     <Form.Control
+                        autoComplete="off"
                         required
                         defaultValue={pacienteData.name}
                         type="text"
                         name="name"
                         onChange={pacienteChange}
                     />
+                    <Form.Control.Feedback tooltip type="invalid">
+                        Informe o nome do paciente.
+                    </Form.Control.Feedback>
                 </Col>
             </Form.Group>
             <Form.Group as={Row} className="mb-3">
@@ -85,6 +170,9 @@ const FormUpdatePaciente = ({ pacienteData, setPacienteData, updatePaciente, set
                         <option value="F">Feminino</option>
                         <option value="M">Masculino</option>
                     </Form.Select>
+                    <Form.Control.Feedback tooltip type="invalid">
+                        Informe o sexo do paciente.
+                    </Form.Control.Feedback>
                 </Col>
             </Form.Group>
             <Form.Group as={Row} className="mb-3">
@@ -106,6 +194,9 @@ const FormUpdatePaciente = ({ pacienteData, setPacienteData, updatePaciente, set
                         <option value="Amarelo">Amarelo</option>
                         <option value="Indígena">Indígena</option>
                     </Form.Select>
+                    <Form.Control.Feedback tooltip type="invalid">
+                        Informe a cor do paciente.
+                    </Form.Control.Feedback>
                 </Col>
             </Form.Group>
             <Form.Group as={Row} className="mb-3">
@@ -114,6 +205,7 @@ const FormUpdatePaciente = ({ pacienteData, setPacienteData, updatePaciente, set
                 </Form.Label>
                 <Col sm={8}>
                     <Form.Control
+                        max={moment(new Date()).format("YYYY-MM-DD")}
                         required
                         defaultValue={"".concat(
                             pacienteData.birthDate.slice(6, 10),
@@ -126,6 +218,9 @@ const FormUpdatePaciente = ({ pacienteData, setPacienteData, updatePaciente, set
                         name="birthDate"
                         onChange={pacienteChange}
                     />
+                    <Form.Control.Feedback tooltip type="invalid">
+                        Informe a data de nascimento do paciente.
+                    </Form.Control.Feedback>
                 </Col>
             </Form.Group>
             <div className="modal-footer d-flex justify-content-between">

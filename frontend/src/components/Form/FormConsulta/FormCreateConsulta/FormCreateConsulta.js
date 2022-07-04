@@ -3,12 +3,18 @@ import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { AsyncTypeahead } from "react-bootstrap-typeahead";
+import moment from "moment";
 import { findPacientesByName } from "../../../../services/Paciente/PacienteService";
-import { getLastCosultaId } from "../../../../services/Consulta/ConsultaService";
+import {
+    getLastCosultaId,
+    consultaAlreadyExistsSaving,
+    findCIDByCode,
+    findCIDByName,
+} from "../../../../services/Consulta/ConsultaService";
 import "./FormCreateConsulta.css";
 
 const FormCreateConsulta = ({ newConsultaData, setNewConsultaData, saveConsulta, setShow }) => {
-    const [newId, setNewId] = useState(0);
+    const [newId, setNewId] = useState(1);
     useEffect(() => {
         const getNewId = async () => {
             await getLastCosultaId().then((res) => {
@@ -25,28 +31,90 @@ const FormCreateConsulta = ({ newConsultaData, setNewConsultaData, saveConsulta,
         });
     };
 
+    const isLetter = (char) => {
+        if (typeof char !== "string") {
+            return false;
+        }
+
+        return char.toLocaleLowerCase() !== char.toUpperCase();
+    };
+
+    const [diagnosticAssumptionIsLoading, setDiagnosticAssumptionIsLoading] = useState(false);
+    const [diagnosticAssumptionOptions, setDiagnosticAssumptionOptions] = useState([]);
+    const handleSearchDiagnosticAssumption = (query) => {
+        setDiagnosticAssumptionIsLoading(true);
+
+        if (isLetter(query.charAt(1))) {
+            findCIDByName(query).then((res) => {
+                setDiagnosticAssumptionOptions(res.data);
+                setDiagnosticAssumptionIsLoading(false);
+            });
+        } else {
+            findCIDByCode(query).then((res) => {
+                setDiagnosticAssumptionOptions(res.data);
+                setDiagnosticAssumptionIsLoading(false);
+            });
+        }
+    };
+
     const [isLoading, setIsLoading] = useState(false);
     const [options, setOptions] = useState([]);
     const handleSearch = (name) => {
         setIsLoading(true);
 
-        findPacientesByName(name).then((response) => {
+        findPacientesByName(name.charAt(0).toUpperCase() + name.slice(1)).then((response) => {
             setOptions(response.data);
             setIsLoading(false);
         });
     };
 
+    const [pacienteIsInvalid, setPacienteIsInvalid] = useState(false);
+    const [diagnosticAssumptionIsInvalid, setDiagnosticAssumptionIsInvalid] = useState(false);
     const [validated, setValidated] = useState(false);
+    const [errorPacienteMessage, setErrorPacienteMessage] = useState("");
     const handleSubmit = (event) => {
-        const form = event.currentTarget;
         event.preventDefault();
+        if (!newConsultaData.paciente) {
+            setPacienteIsInvalid(true);
+            setErrorPacienteMessage("Informe o paciente.");
+            return;
+        }
+        if (!newConsultaData.diagnosticAssumption) {
+            setDiagnosticAssumptionIsInvalid(true);
+            return;
+        }
+        if (examTypeIsInvalid) {
+            return;
+        }
 
-        setValidated(true);
-
-        if (form.checkValidity() === true) {
+        if (event.currentTarget.checkValidity() === false) {
+            event.stopPropagation();
+        } else {
             saveConsulta();
         }
+
+        setValidated(true);
     };
+
+    const [examTypeError, setExamTypeError] = useState("Informe o tipo de exame.");
+    const [examTypeIsInvalid, setExamTypeIsInvalid] = useState(false);
+
+    useEffect(() => {
+        const timeoutExamType = setTimeout(() => {
+            consultaAlreadyExistsSaving(newConsultaData).then((res) => {
+                if (res.data) {
+                    setExamTypeIsInvalid(true);
+                    setPacienteIsInvalid(true);
+                    setExamTypeError("Já existe uma consulta cadastrada com esse tipo de exame para o mesmo paciente.");
+                    setErrorPacienteMessage("Consulta já cadastrada.");
+                } else {
+                    setExamTypeIsInvalid(false);
+                    setPacienteIsInvalid(false);
+                }
+            });
+        }, 500);
+        return () => clearTimeout(timeoutExamType);
+    }, [newConsultaData.examType]);
 
     return (
         <Form noValidate validated={validated} onSubmit={handleSubmit}>
@@ -64,22 +132,34 @@ const FormCreateConsulta = ({ newConsultaData, setNewConsultaData, saveConsulta,
                 </Form.Label>
                 <Col sm={10}>
                     <AsyncTypeahead
-                        id="async-pacientes-selection"
+                        id="pacienteAsync"
+                        isInvalid={pacienteIsInvalid}
+                        required
                         isLoading={isLoading}
-                        labelKey="name"
+                        labelKey={(option) => `${option.name}- (${option.cpf})`}
                         onSearch={handleSearch}
                         options={options}
                         minLength={1}
                         promptText="Buscar pacientes..."
                         searchText="Buscando..."
                         emptyLabel="Nenhum paciente encontrado."
-                        onChange={(option) => setNewConsultaData({ ...newConsultaData, paciente: option[0] })}
+                        onChange={(option) => {
+                            setNewConsultaData({ ...newConsultaData, paciente: option[0] });
+                            if (!option.length) {
+                                setPacienteIsInvalid(true);
+                            } else {
+                                setPacienteIsInvalid(false);
+                            }
+                        }}
                         renderMenuItemChildren={(option) => (
                             <span>
-                                {option.name} ({option.cpf})
+                                {option.name} - ({option.cpf})
                             </span>
                         )}
                     />
+                    <div hidden={!pacienteIsInvalid} className="invalid-tooltip" style={{ display: "block" }}>
+                        {errorPacienteMessage}
+                    </div>
                 </Col>
             </Form.Group>
             <Form.Group as={Row} className="mb-3">
@@ -87,7 +167,17 @@ const FormCreateConsulta = ({ newConsultaData, setNewConsultaData, saveConsulta,
                     Data e Hora*:
                 </Form.Label>
                 <Col sm={9}>
-                    <Form.Control required name="dateTime" type="datetime-local" onChange={consultaChange} />
+                    <Form.Control
+                        min={moment(new Date()).format("YYYY-MM-DDThh:mm")}
+                        required
+                        name="dateTime"
+                        type="datetime-local"
+                        onChange={consultaChange}
+                    />
+
+                    <Form.Control.Feedback tooltip type="invalid">
+                        Informe a data e a hora da consulta.
+                    </Form.Control.Feedback>
                 </Col>
             </Form.Group>
             <Form.Group as={Row} className="mb-3">
@@ -95,13 +185,17 @@ const FormCreateConsulta = ({ newConsultaData, setNewConsultaData, saveConsulta,
                     Exame*:
                 </Form.Label>
                 <Col sm={10}>
-                    <Form.Select onChange={consultaChange} required name="examType">
+                    <Form.Select isInvalid={examTypeIsInvalid} onChange={consultaChange} required name="examType">
                         <option value="">Escolha uma opção</option>
                         <option value="Ecocardiograma">Ecocardiograma</option>
                         <option value="Eletrocardiograma">Eletrocardiograma</option>
                         <option value="Mapa">Mapa</option>
                         <option value="Holter">Holter</option>
                     </Form.Select>
+
+                    <Form.Control.Feedback tooltip type="invalid">
+                        {examTypeError}
+                    </Form.Control.Feedback>
                 </Col>
             </Form.Group>
             <Form.Group as={Row} className="mb-3">
@@ -109,7 +203,38 @@ const FormCreateConsulta = ({ newConsultaData, setNewConsultaData, saveConsulta,
                     Hipótese diagnóstica*:
                 </Form.Label>
                 <Col sm={8}>
-                    <Form.Control onChange={consultaChange} required name="diagnosticAssumption" type="text" />
+                    <AsyncTypeahead
+                        id="cidAsync"
+                        isInvalid={diagnosticAssumptionIsInvalid}
+                        required
+                        name="diagnosticAssumption"
+                        isLoading={diagnosticAssumptionIsLoading}
+                        labelKey={(option) => `${option.code} - (${option.name})`}
+                        onSearch={handleSearchDiagnosticAssumption}
+                        options={diagnosticAssumptionOptions}
+                        minLength={3}
+                        promptText="Buscar códigos..."
+                        searchText="Buscando..."
+                        emptyLabel="Nenhum código encontrado."
+                        onChange={(option) => {
+                            console.log;
+                            setNewConsultaData({ ...newConsultaData, diagnosticAssumption: option[0] });
+                            if (!option.length) {
+                                setDiagnosticAssumptionIsInvalid(true);
+                            } else {
+                                setDiagnosticAssumptionIsInvalid(false);
+                            }
+                        }}
+                        renderMenuItemChildren={(option) => (
+                            <span>
+                                {option.code} - ({option.name})
+                            </span>
+                        )}
+                    />
+
+                    <Form.Control.Feedback tooltip type="invalid">
+                        Informe a hipótese diagnóstica.
+                    </Form.Control.Feedback>
                 </Col>
             </Form.Group>
             <div className="modal-footer d-flex justify-content-between">

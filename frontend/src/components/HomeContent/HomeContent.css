@@ -9,6 +9,8 @@
   font-family: var(--body-font);
   font-size: var(--normal-font-size);
   color: var(--text-title-color);
+  text-align: justify;
+  padding-right: 4.5rem;
 }
 
 .heart-container {
@@ -34,11 +36,4 @@
   font-family: var(--body-font);
   font-size: var(--normal-font-size);
   color: #162d8d;
-}
-
-.list-content-home li {
-  font-family: var(--body-font);
-  font-size: var(--normal-font-size);
-  list-style-type: none;
-  color: var(--first-color);
 }

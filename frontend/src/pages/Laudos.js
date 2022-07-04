@@ -105,7 +105,7 @@ const Laudos = () => {
 
     return (
         <>
-            <NavBar /> 
+            <NavBar currentPage="L" />
             <ModalCreate show={showModalCreate} setShow={setShowModalCreate} element="Laudo">
                 <FormCreateLaudo
                     setShow={setShowModalCreate}
@@ -142,7 +142,7 @@ const Laudos = () => {
                 <h1 className="title-element">Listagem de Laudos</h1>
                 <div className="d-flex justify-content-between">
                     <Button value="Cadastrar" action={openModalCreate} />
-                    <TableSearch setSearchInput={setSearchInput} criteria={"CPF"} />
+                    <TableSearch searchInput={searchInput} setSearchInput={setSearchInput} criteria="CPF do paciente" />
                 </div>
                 <LaudosTable
                     setPageData={setPageData}

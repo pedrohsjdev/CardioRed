@@ -17,7 +17,7 @@ function App() {
                 <Route path="/medicos" element={<Medicos />} />
                 <Route path="/pacientes" element={<Pacientes />} />
                 <Route path="/consultas" element={<Consultas />} />
-                <Route path="/laudos" element={<Laudos/>}/>
+                <Route path="/laudos" element={<Laudos />} />
             </Routes>
         </BrowserRouter>
     );

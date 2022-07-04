@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import { getMedicoByCRM } from "../../../../services/Medico/MedicoService";
+import "./FormCreateMedico.css";
 
 const FormCreateMedico = ({ newMedicoData, setNewMedicoData, saveMedico, setShow }) => {
     const medicoChange = (event) => {
@@ -9,20 +11,65 @@ const FormCreateMedico = ({ newMedicoData, setNewMedicoData, saveMedico, setShow
             ...newMedicoData,
             [event.target.name]: event.target.value,
         });
+        if (event.target.name === "crm") {
+            setNewMedicoData({
+                ...newMedicoData,
+                [event.target.name]: event.target.value.toUpperCase(),
+            });
+        }
     };
 
     const [validated, setValidated] = useState(false);
     const handleSubmit = (event) => {
-        const form = event.currentTarget;
-        event.preventDefault();
+        if (event.currentTarget.checkValidity() === false || crmIsInvalid) {
+            event.preventDefault();
+            event.stopPropagation();
+        } else {
+            saveMedico();
+        }
 
         setValidated(true);
+        event.preventDefault();
+    };
 
-        if (form.checkValidity() === true) {
-            saveMedico();
+    const patternCRM = new RegExp(/^[0-9]{4,9}-[a-zA-Z]{2}$/);
+    const [crmErrorMessage, setCrmErrorMessage] = useState("Informe o CRM do médico.");
+    const [crmIsInvalid, setCrmIsInvalid] = useState(false);
+    const verifyCRM = () => {
+        setCrmIsInvalid(false);
+        getMedicoByCRM(newMedicoData.crm).then((res) => {
+            if (res.data) {
+                setCrmIsInvalid(true);
+                setCrmErrorMessage("CRM já cadastrado no sistema.");
+            }
+        });
+        if (!patternCRM.test(newMedicoData.crm)) {
+            setCrmIsInvalid(true);
+            setCrmErrorMessage("CRM inválido!");
         }
     };
 
+    const patternPassword = new RegExp(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/);
+    const [passwordMessageError, setPasswordMessageError] = useState("Informe uma senha de acesso ao sistema. ");
+    const verifyPassword = (pass) => {
+        if (!patternPassword.test(pass)) {
+            setPasswordMessageError(
+                "A senha deve ter, pelo menos, oito caracteres. Dentre esses, deve conter: 1 caractere especial, 1 caractere numérico, 1 caractere minúsculo e 1 caractere maiúsculo."
+            );
+        }
+    };
+
+    const [residencyYearMessageError, setResidencyYearMessageError] = useState(
+        "Informe o ano de residência do residente."
+    );
+    const verifyResidencyYear = (year) => {
+        const currentYear = new Date().getFullYear();
+        if (year < 2000 || year > currentYear) {
+            setResidencyYearMessageError("O ano deve estar entre 2000 e " + currentYear + ".");
+        }
+    };
+
+    let typingTimer;
     return (
         <Form noValidate validated={validated} onSubmit={handleSubmit}>
             <Form.Group as={Row} className="mb-3">
@@ -30,7 +77,24 @@ const FormCreateMedico = ({ newMedicoData, setNewMedicoData, saveMedico, setShow
                     CRM*:
                 </Form.Label>
                 <Col sm={10}>
-                    <Form.Control required maxLength={11} name="crm" onChange={medicoChange} type="text" />
+                    <Form.Control
+                        pattern={patternCRM.source}
+                        autoComplete="off"
+                        isInvalid={crmIsInvalid}
+                        required
+                        maxLength={11}
+                        name="crm"
+                        onKeyUp={() => {
+                            clearTimeout(typingTimer);
+                            typingTimer = setTimeout(verifyCRM, 1000);
+                        }}
+                        onKeyDown={() => clearTimeout(typingTimer)}
+                        onChange={medicoChange}
+                        type="text"
+                    />
+                    <Form.Control.Feedback tooltip type="invalid">
+                        {crmErrorMessage}
+                    </Form.Control.Feedback>
                 </Col>
             </Form.Group>
             <Form.Group as={Row} className="mb-3">
@@ -38,13 +102,10 @@ const FormCreateMedico = ({ newMedicoData, setNewMedicoData, saveMedico, setShow
                     Nome*:
                 </Form.Label>
                 <Col sm={10}>
-                    <Form.Control
-                        defaultValue={newMedicoData.doctorType}
-                        required
-                        name="name"
-                        onChange={medicoChange}
-                        type="text"
-                    />
+                    <Form.Control autoComplete="off" required name="name" onChange={medicoChange} type="text" />
+                    <Form.Control.Feedback tooltip type="invalid">
+                        Informe o nome do médico.
+                    </Form.Control.Feedback>
                 </Col>
             </Form.Group>
             <Form.Group as={Row} className="mb-3">
@@ -58,6 +119,9 @@ const FormCreateMedico = ({ newMedicoData, setNewMedicoData, saveMedico, setShow
                         <option value="Docente">Docente</option>
                         <option value="Residente">Residente</option>
                     </Form.Select>
+                    <Form.Control.Feedback tooltip type="invalid">
+                        Informe a hierarquia do médico.
+                    </Form.Control.Feedback>
                 </Col>
             </Form.Group>
             <Form.Group as={Row} className="mb-3">
@@ -66,12 +130,21 @@ const FormCreateMedico = ({ newMedicoData, setNewMedicoData, saveMedico, setShow
                 </Form.Label>
                 <Col sm={8}>
                     <Form.Control
-                        required={!(newMedicoData.doctorType === "Residente")}
+                        min={2000}
+                        max={new Date().getFullYear()}
+                        autoComplete="off"
+                        required={newMedicoData.doctorType === "Residente"}
                         disabled={!(newMedicoData.doctorType === "Residente")}
                         name="residencyYear"
                         type="number"
-                        onChange={medicoChange}
+                        onChange={(e) => {
+                            medicoChange(e);
+                            verifyResidencyYear(e.target.value);
+                        }}
                     />
+                    <Form.Control.Feedback tooltip type="invalid">
+                        {residencyYearMessageError}
+                    </Form.Control.Feedback>
                 </Col>
             </Form.Group>
             <Form.Group as={Row} className="mb-3">
@@ -81,7 +154,7 @@ const FormCreateMedico = ({ newMedicoData, setNewMedicoData, saveMedico, setShow
                 <Col sm={10}>
                     <Form.Select
                         onChange={medicoChange}
-                        required={!(newMedicoData.doctorType === "Docente")}
+                        required={newMedicoData.doctorType === "Docente"}
                         disabled={!(newMedicoData.doctorType === "Docente")}
                         name="titulation"
                         type="text"
@@ -92,6 +165,9 @@ const FormCreateMedico = ({ newMedicoData, setNewMedicoData, saveMedico, setShow
                         <option value="Livre-docente">Livre-docente</option>
                         <option value="Titular">Titular</option>
                     </Form.Select>
+                    <Form.Control.Feedback tooltip type="invalid">
+                        Informe a titualação do docente.
+                    </Form.Control.Feedback>
                 </Col>
             </Form.Group>
             <Form.Group as={Row} className="mb-3">
@@ -99,7 +175,20 @@ const FormCreateMedico = ({ newMedicoData, setNewMedicoData, saveMedico, setShow
                     Senha*:
                 </Form.Label>
                 <Col sm={10}>
-                    <Form.Control onChange={medicoChange} required name="password" type="text" />
+                    <Form.Control
+                        pattern={patternPassword.source}
+                        autoComplete="off"
+                        onChange={(e) => {
+                            medicoChange(e);
+                            verifyPassword(e.target.value);
+                        }}
+                        required
+                        name="password"
+                        type="text"
+                    />
+                    <Form.Control.Feedback tooltip type="invalid">
+                        {passwordMessageError}
+                    </Form.Control.Feedback>
                 </Col>
             </Form.Group>
             <div className="modal-footer d-flex justify-content-between">

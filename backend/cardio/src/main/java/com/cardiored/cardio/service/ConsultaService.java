@@ -28,8 +28,16 @@ public class ConsultaService {
         return consultaRepository.findAllByPacienteName(name, pageable);
     }
 
+    public Page<Consulta> findAllByPacienteNameContains(String name, Pageable pageable) {
+        return consultaRepository.findAllByPacienteNameContains(name, pageable);
+    }
+
     public Page<Consulta> findAllByPacienteCpf(String cpf, Pageable pageable) {
         return consultaRepository.findAllByPacienteCpf(cpf, pageable);
+    }
+
+    public Page<Consulta> findAllByPacienteCpfContains(String cpf, Pageable pageable) {
+        return consultaRepository.findAllByPacienteCpfContains(cpf, pageable);
     }
 
     public Consulta findByIdOrThrowException(Integer id) {
@@ -38,6 +46,23 @@ public class ConsultaService {
 
     public Integer getLastId() {
         return consultaRepository.findTopByOrderByIdDesc().getId();
+    }
+
+    public Boolean existConsultaWithPacienteAndExamType(Consulta consulta) {
+        System.out.println(consulta);
+        return consultaRepository.existsByPacienteCpfAndExamTypeAndStatus(
+                pacienteService.findById(consulta.getPaciente().getId()).getCpf(),
+                consulta.getExamType(),
+                ConsultaStatus.ATIVO);
+    }
+
+    public Boolean existConsultaWithPacienteAndExamTypeAndNotId(Consulta consulta) {
+        System.out.println(consulta);
+        return consultaRepository.existsByPacienteCpfAndExamTypeAndStatusAndIdNot(
+                pacienteService.findById(consulta.getPaciente().getId()).getCpf(),
+                consulta.getExamType(),
+                ConsultaStatus.ATIVO,
+                consulta.getId());
     }
 
     public Consulta save(Consulta consulta) {

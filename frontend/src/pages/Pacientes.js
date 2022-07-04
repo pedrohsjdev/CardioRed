@@ -85,13 +85,6 @@ const Pacientes = () => {
         }
     };
 
-    const formatPacienteDataToUpdate = () => {
-        setPacienteData({
-            ...pacienteData,
-            ["cpf"]: pacienteData.cpf.replaceAll(".", "").replace("-", ""),
-        });
-    };
-
     const openModalCreate = () => {
         // Open modal
         setShowModalCreate(true);
@@ -100,7 +93,6 @@ const Pacientes = () => {
     const openModalView = (data) => {
         // Set clicked cell data to form inputs
         setPacienteData(data);
-        console.log(pacienteData);
         // Open modal
         setShowModalView(true);
     };
@@ -117,7 +109,7 @@ const Pacientes = () => {
 
     return (
         <>
-            <NavBar />
+            <NavBar currentPage="P" />
 
             <ModalCreate show={showModalCreate} setShow={setShowModalCreate} element="Paciente">
                 <FormCreatePaciente
@@ -143,7 +135,6 @@ const Pacientes = () => {
                 openModalDelete={openModalDelete}
                 openModalUpdate={openModalUpdate}
                 element="Paciente"
-                formatDataToUpdate={formatPacienteDataToUpdate}
             >
                 <FormViewPaciente pacienteData={pacienteData} />
             </ModalView>
@@ -160,7 +151,7 @@ const Pacientes = () => {
                 <h1 className="title-element">Listagem de Pacientes</h1>
                 <div className="d-flex justify-content-between">
                     <Button value="Cadastrar" action={openModalCreate} />
-                    <TableSearch setSearchInput={setSearchInput} criteria="CPF" />
+                    <TableSearch searchInput={searchInput} setSearchInput={setSearchInput} criteria="CPF" />
                 </div>
 
                 <PacientesTable

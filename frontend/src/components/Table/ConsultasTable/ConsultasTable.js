@@ -1,9 +1,21 @@
 import React, { useEffect, useState } from "react";
 import "./ConsultasTable.css";
-import { findAllConsultas, findConsultasByPacienteCpf } from "../../../services/Consulta/ConsultaService";
+import {
+    findAllConsultas,
+    findConsultasByPacienteCpf,
+    findConsultasByPacienteName,
+} from "../../../services/Consulta/ConsultaService";
 
 const ConsultasTable = ({ searchInput, currentPage, refreshConsultaTable, setPageData, openModalView }) => {
     const [consultas, setConsultas] = useState([{}]);
+
+    const isLetter = (char) => {
+        if (typeof char !== "string") {
+            return false;
+        }
+
+        return char.toLocaleLowerCase() !== char.toUpperCase();
+    };
 
     useEffect(() => {
         const getConsultas = async () => {
@@ -16,16 +28,26 @@ const ConsultasTable = ({ searchInput, currentPage, refreshConsultaTable, setPag
             setPageData(response);
         };
 
-        const getConsultasByPacienteCpf = async () => {
+        const getConsultasByPacienteName = async () => {
+            const response = await findConsultasByPacienteName(
+                searchInput.charAt(0).toUpperCase() + searchInput.slice(1)
+            );
+            setConsultas(response.data.content);
+            setPageData(response.data);
+        };
+
+        const getConsultasByPacienteCPF = async () => {
             const response = await findConsultasByPacienteCpf(searchInput);
-            setConsultas(response);
-            setPageData(response);
+            setConsultas(response.data.content);
+            setPageData(response.data);
         };
 
         if (searchInput == "") {
             getConsultas();
+        } else if (isLetter(searchInput.charAt(0))) {
+            getConsultasByPacienteName();
         } else {
-            getConsultasByPacienteCpf();
+            getConsultasByPacienteCPF();
         }
     }, [currentPage, searchInput, refreshConsultaTable]);
 

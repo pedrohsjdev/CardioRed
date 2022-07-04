@@ -15,9 +15,13 @@ function Home() {
 
     return (
         <>
-            <NavBar />
-            <HomeContent />
-            <Footer />
+            <div class="page-container-home">
+                <NavBar currentPage="H" />
+                <div class="content-wrap">
+                    <HomeContent />
+                </div>
+                <Footer />
+            </div>
         </>
     );
 }

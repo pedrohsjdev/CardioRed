@@ -1,6 +1,7 @@
 package com.cardiored.cardio.controller;
 
 import com.cardiored.cardio.domain.Paciente;
+import com.cardiored.cardio.mapper.PacienteMapper;
 import com.cardiored.cardio.request.paciente.PacientePostDTO;
 import com.cardiored.cardio.request.paciente.PacientePutDTO;
 import com.cardiored.cardio.service.PacienteService;
@@ -47,7 +48,7 @@ public class PacienteController {
 
     @PostMapping
     public ResponseEntity<Void> save(@RequestBody @Valid PacientePostDTO pacientePostDTO) {
-        pacienteService.save(pacientePostDTO);
+        pacienteService.save(PacienteMapper.INSTANCE.toPaciente(pacientePostDTO));
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -59,7 +60,7 @@ public class PacienteController {
 
     @PutMapping
     public ResponseEntity<Void> replace(@RequestBody PacientePutDTO pacientePutDTO) {
-        pacienteService.replace(pacientePutDTO);
+        pacienteService.replace(PacienteMapper.INSTANCE.toPaciente(pacientePutDTO));
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

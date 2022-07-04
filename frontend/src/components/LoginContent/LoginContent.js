@@ -18,12 +18,16 @@ const LoginContent = () => {
         const response = await loginRequest(inputs);
 
         if (response.status == 200) {
-            Notify.success("Login efetuado com sucesso!");
+            Notify.success("Login efetuado com sucesso!", {
+                closeButton: true,
+            });
             saveTokens(response.data);
             setTimeout(navigate("/home"), 5000);
-        } else {
+        } else if (response.status == 401) {
             Notify.failure("Não foi possível efetuar o login.");
-            console.error(response);
+            setCredentialsValidated(false);
+        } else {
+            Notify.failure("Servidor indisponível.");
         }
     };
 
@@ -34,9 +38,12 @@ const LoginContent = () => {
 
     // Function to change the inputs states variables
     const inputChange = (event) => {
+        setCredentialsValidated(true);
         const { name, value } = event.target;
         setInputs({ ...inputs, [name]: value });
     };
+
+    const [credentialsValidated, setCredentialsValidated] = useState(true);
 
     return (
         <>
@@ -53,14 +60,21 @@ const LoginContent = () => {
                         </div>
 
                         <div className="login-forms">
-                            <form action="" className="login" id="login-in">
+                            <form
+                                action=""
+                                className={"login " + (credentialsValidated ? "" : "invalid")}
+                                id="login-in"
+                            >
                                 <h1 className="login-title">Login</h1>
 
                                 <div className="login-box">
+                                    <div className={"error-info-div " + (credentialsValidated ? "" : "show-message")}>
+                                        <p className="valitation-message ">Credenciais inválidas!</p>
+                                    </div>
                                     <input
                                         type="text"
                                         placeholder="Usuário"
-                                        className="login-input"
+                                        className={"login-input " + (credentialsValidated ? "" : "invalid")}
                                         name="username"
                                         onChange={inputChange}
                                     />
@@ -70,7 +84,7 @@ const LoginContent = () => {
                                     <input
                                         type="password"
                                         placeholder="Senha"
-                                        className="login-input"
+                                        className={"login-input " + (credentialsValidated ? "" : "invalid")}
                                         name="password"
                                         onChange={inputChange}
                                     />

@@ -44,14 +44,41 @@ public class ConsultaController {
         return ResponseEntity.ok(consultaService.findAllByPacienteName(name, pageable));
     }
 
+    @GetMapping(path = "/find/name/like/{name}")
+    public ResponseEntity<Page<Consulta>> findAllByPacienteNameContains(@PathVariable String name, Pageable pageable) {
+        return ResponseEntity.ok(consultaService.findAllByPacienteNameContains(name, pageable));
+    }
+
     @GetMapping(path = "/find/cpf/{cpf}")
     public ResponseEntity<Page<Consulta>> findByCpf(@PathVariable String cpf, Pageable pageable) {
         return ResponseEntity.ok(consultaService.findAllByPacienteCpf(cpf, pageable));
     }
 
+    @GetMapping(path = "/find/cpf/like/{cpf}")
+    public ResponseEntity<Page<Consulta>> findAllByPacienteCpfContains(@PathVariable String cpf, Pageable pageable) {
+        return ResponseEntity.ok(consultaService.findAllByPacienteCpfContains(cpf, pageable));
+    }
+
     @GetMapping(path = "getLastId")
     public ResponseEntity<Integer> getLastId() {
         return ResponseEntity.ok(consultaService.getLastId());
+    }
+
+    @PostMapping(path = "consultaAlreadyExistsSaving")
+    public ResponseEntity<Boolean> existConsultaWithPacienteAndExamType(@RequestBody ConsultaPostDTO consultaPostDTO) {
+        System.out.println(consultaPostDTO);
+        return ResponseEntity.ok(consultaService
+                .existConsultaWithPacienteAndExamType(ConsultaMapper.INSTANCE.toConsulta(consultaPostDTO)));
+
+    }
+
+    @PutMapping(path = "consultaAlreadyExistsChanging")
+    public ResponseEntity<Boolean> existConsultaWithPacienteAndExamTypeAndNotId(
+            @RequestBody ConsultaPutDTO consultaPutDTO) {
+        System.out.println(consultaPutDTO);
+        return ResponseEntity.ok(consultaService
+                .existConsultaWithPacienteAndExamTypeAndNotId(ConsultaMapper.INSTANCE.toConsulta(consultaPutDTO)));
+
     }
 
     @PostMapping

@@ -8,8 +8,37 @@
   color: var(--first-color) !important;
 }
 
-.nav-link {
-  font-family: var(--body-font);
+.nav-item {
   font-size: 18px;
-  color: var(--text-title-color) !important;
+  padding-right: 0.5rem;
+  padding-left: 0.5rem;
+  color: rgba(0, 0, 0, 0.9);
+}
+
+.logout-icon {
+  width: 35px;
+}
+
+.navbar-nav {
+  align-items: center;
+}
+
+.nav-item.active {
+  border-bottom: 3px solid var(--first-color);
+  color: var(--first-color);
+}
+
+.navbar {
+  animation: navbar-animation 0.3s;
+}
+
+@keyframes navbar-animation {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 25px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
 }

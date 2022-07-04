@@ -51,7 +51,7 @@ const Consultas = () => {
         }
     };
     const saveConsultaData = async () => {
-        const postConsulta = await toPostConsulta(newConsultaData);
+        const postConsulta = await toPostConsulta(newConsultaData, "post");
 
         const requestSave = saveConsulta(postConsulta);
 
@@ -97,6 +97,7 @@ const Consultas = () => {
     };
 
     const openModalCreate = () => {
+        setNewConsultaData({});
         setShowModalCreate(true);
     };
 
@@ -116,7 +117,7 @@ const Consultas = () => {
 
     return (
         <>
-            <NavBar />
+            <NavBar currentPage="C" />
             <ModalCreate show={showModalCreate} setShow={setShowModalCreate} element="Consulta">
                 <FormCreateConsulta
                     setShow={setShowModalCreate}
@@ -153,7 +154,11 @@ const Consultas = () => {
                 <h1 className="title-element">Listagem de Consultas</h1>
                 <div className="d-flex justify-content-between">
                     <Button value="Cadastrar" action={openModalCreate} />
-                    <TableSearch setSearchInput={setSearchInput} criteria={"CPF do paciente"} />
+                    <TableSearch
+                        searchInput={searchInput}
+                        setSearchInput={setSearchInput}
+                        criteria={"CPF do paciente"}
+                    />
                 </div>
                 <ConsultasTable
                     setPageData={setPageData}
