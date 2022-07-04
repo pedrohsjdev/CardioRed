@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-const FormViewPaciente = ({ pacienteData }) => {
+const FormViewPaciente = ({ pacienteData, openModalUpdate, openModalDelete, setShow }) => {
     const maskCPF = (cpf) => {
         cpf = cpf.replace(/\D/g, "");
         cpf = cpf.replace(/(\d{3})(\d)/, "$1.$2");
@@ -64,6 +64,27 @@ const FormViewPaciente = ({ pacienteData }) => {
                     <Form.Control disabled defaultValue={pacienteData.birthDate} type="text" />
                 </Col>
             </Form.Group>
+            <div className="modal-footer d-flex justify-content-between">
+                <button
+                    type="button"
+                    className="btn btn-primary btn-modal btn-left"
+                    onClick={() => {
+                        openModalDelete();
+                    }}
+                >
+                    Remover
+                </button>
+                <button
+                    type="button"
+                    className="btn btn-primary btn-modal"
+                    onClick={() => {
+                        setShow(false);
+                        openModalUpdate();
+                    }}
+                >
+                    Modificar
+                </button>
+            </div>
         </Form>
     );
 };

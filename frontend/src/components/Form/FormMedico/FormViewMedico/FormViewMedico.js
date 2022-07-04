@@ -2,7 +2,7 @@ import React from "react";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-const FormViewMedico = ({ medicoData }) => {
+const FormViewMedico = ({ medicoData, openModalUpdate, openModalDelete, setShow }) => {
     return (
         <Form>
             <Form.Control hidden defaultValue={medicoData.id} />
@@ -65,6 +65,27 @@ const FormViewMedico = ({ medicoData }) => {
                     <Form.Control disabled defaultValue={medicoData.password} type="text" />
                 </Col>
             </Form.Group>
+            <div className="modal-footer d-flex justify-content-between">
+                <button
+                    type="button"
+                    className="btn btn-primary btn-modal btn-left"
+                    onClick={() => {
+                        openModalDelete();
+                    }}
+                >
+                    Remover
+                </button>
+                <button
+                    type="button"
+                    className="btn btn-primary btn-modal"
+                    onClick={() => {
+                        setShow(false);
+                        openModalUpdate();
+                    }}
+                >
+                    Modificar
+                </button>
+            </div>
         </Form>
     );
 };
