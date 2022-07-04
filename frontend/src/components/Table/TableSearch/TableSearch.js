@@ -19,25 +19,46 @@ const TableSearch = ({ criteria, setSearchInput, searchInput }) => {
         return char.toLocaleLowerCase() !== char.toUpperCase();
     };
 
-    return (
-        <>
-            <div className="d-flex justify-content-between mt-5">
-                <span className="label">Pesquisar:</span>
-                <form>
-                    <input
-                        value={isLetter(searchInput.charAt(0)) ? searchInput : maskCPF(searchInput)}
-                        type="text"
-                        maxLength={isLetter(searchInput.charAt(0)) ? "" : 14}
-                        className="form-control"
-                        placeholder={criteria}
-                        onChange={(event) => {
-                            setSearchInput(event.target.value.replaceAll(".", "").replace("-", ""));
-                        }}
-                    />
-                </form>
-            </div>
-        </>
-    );
+    if (criteria.includes("CPF")) {
+        return (
+            <>
+                <div className="d-flex justify-content-between mt-5">
+                    <span className="label">Pesquisar:</span>
+                    <form>
+                        <input
+                            value={isLetter(searchInput.charAt(0)) ? searchInput : maskCPF(searchInput)}
+                            type="text"
+                            maxLength={isLetter(searchInput.charAt(0)) ? "" : 14}
+                            className="form-control"
+                            placeholder={criteria}
+                            onChange={(event) => {
+                                setSearchInput(event.target.value.replaceAll(".", "").replace("-", ""));
+                            }}
+                        />
+                    </form>
+                </div>
+            </>
+        );
+    } else {
+        return (
+            <>
+                <div className="d-flex justify-content-between mt-5">
+                    <span className="label">Pesquisar:</span>
+                    <form>
+                        <input
+                            type="text"
+                            maxLength={isLetter(searchInput.charAt(0)) ? "" : 14}
+                            className="form-control"
+                            placeholder={criteria}
+                            onChange={(e) => {
+                                setSearchInput(e.target.value);
+                            }}
+                        />
+                    </form>
+                </div>
+            </>
+        );
+    }
 };
 
 export default TableSearch;
