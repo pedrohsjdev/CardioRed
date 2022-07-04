@@ -3,15 +3,25 @@ package com.cardiored.cardio.domain;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.Date;
 
-@Data
+@Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 @Entity
 @Builder
 public class Laudo {
@@ -19,10 +29,13 @@ public class Laudo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Lob
     @NotNull
-    private String resultPath;
+    private String results;
 
     @NotNull
+    @JsonFormat(pattern = "dd/MM/yyyy - HH:mm")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateTime;
 
@@ -33,11 +46,11 @@ public class Laudo {
     private String description;
 
     @NotNull
-    @Column(length = 20)
-    private String conclusion;
+    @ManyToOne
+    private Disease conclusion;
 
     @NotNull
-    private Status status;
+    private LaudoStatus status;
 
     @NotNull
     @ManyToOne
@@ -48,5 +61,10 @@ public class Laudo {
     @ManyToOne
     @JoinColumn(name = "pacienteId")
     private Paciente paciente;
+
+    @NotNull
+    @OneToOne
+    @JoinColumn(name = "consultaId")
+    private Consulta consulta;
 
 }

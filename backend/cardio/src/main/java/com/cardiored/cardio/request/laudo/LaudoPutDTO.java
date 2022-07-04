@@ -16,6 +16,7 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.sql.Clob;
 import java.util.Date;
 
 @Setter
@@ -23,9 +24,12 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class LaudoPostDTO {
+public class LaudoPutDTO {
+    @NotNull(message = "Id cannot be null.")
+    private Integer id;
+
     @NotEmpty(message = "Results cannot be empty")
-    private String results;
+    private Clob results;
 
     @NotNull
     @JsonFormat(pattern = "dd/MM/yyyy - HH:mm")
@@ -42,7 +46,7 @@ public class LaudoPostDTO {
     @NotEmpty(message = "description cannot be empty")
     private String description;
 
-    @NotNull
+    @NotEmpty(message = "conclusion cannot be empty")
     private Disease conclusion;
 
     @NotNull
