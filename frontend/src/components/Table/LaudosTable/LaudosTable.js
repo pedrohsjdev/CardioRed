@@ -1,33 +1,56 @@
 import React, { useEffect, useState } from "react";
 import "./LaudosTable.css";
-import { findAllLaudos, findLaudosByPacienteCpf } from "../../../services/Laudo/LaudoService";
+import {
+    findAllLaudos,
+    findLaudosByPacienteName,
+    findLaudosByPacienteCpf,
+    findLaudosByStatusNot,
+} from "../../../services/Laudo/LaudoService";
+import { userIsMedico } from "../../../services/Login/LoginService";
 
 const LaudosTable = ({ searchInput, currentPage, refreshLaudoTable, setPageData, openModalView }) => {
     const [laudos, setLaudos] = useState([{}]);
 
+    const isLetter = (char) => {
+        if (typeof char !== "string") {
+            return false;
+        }
+
+        return char.toLocaleLowerCase() !== char.toUpperCase();
+    };
+
     useEffect(() => {
         const getLaudos = async () => {
-            const response = await findAllLaudos(currentPage);
+            const response = userIsMedico()
+                ? await findLaudosByStatusNot("PROVISORIO", currentPage)
+                : await findAllLaudos(currentPage);
             if (response.content) {
                 console.log(response);
                 setLaudos(response.content);
             } else {
-                console.log("teste");
                 setLaudos([{}]);
             }
             setPageData(response);
         };
 
+        const getLaudosByPacienteName = async () => {
+            const response = await findLaudosByPacienteName(searchInput.charAt(0).toUpperCase() + searchInput.slice(1));
+            setLaudos(response.data.content);
+            setPageData(response.data);
+        };
+
         const getLaudosByPacienteCpf = async () => {
             const response = await findLaudosByPacienteCpf(searchInput);
-            setLaudos(response);
-            setPageData(response);
+            setLaudos(response.data.content);
+            setPageData(response.data);
         };
 
         if (searchInput == "") {
             getLaudos();
+        } else if (isLetter(searchInput.charAt(0))) {
+            getLaudosByPacienteName();
         } else {
-            getLaudosBylaudoCpf();
+            getLaudosByPacienteCpf();
         }
     }, [currentPage, searchInput, refreshLaudoTable]);
 
@@ -55,21 +78,29 @@ const LaudosTable = ({ searchInput, currentPage, refreshLaudoTable, setPageData,
                 </thead>
                 <tbody>
                     {laudos.map((laudo, index) => (
-                        <tr onClick={() => openModalView(laudo)} key={index}>
+                        <tr
+                            className={laudo.status === "Provisório" ? "special" : ""}
+                            onClick={() => openModalView(laudo)}
+                            key={index}
+                        >
                             <td className="center">{laudo.id} </td>
-                            <td className="paciente">{laudo.paciente?laudo.paciente.name:laudo.paciente}</td>
+                            <td className="paciente">{laudo.paciente ? laudo.paciente.name : ""}</td>
                             <td>{laudo.examType}</td>
                             <td>{laudo.dateTime}</td>
-                            <td>{laudo.medico}</td>
+                            <td>{laudo.medico ? laudo.medico.name : ""}</td>
                         </tr>
                     ))}
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th scope="col" className="center">Identificador</th>
-                        <th scope="col" className="paciente">Paciente</th>
+                        <th scope="col" className="center">
+                            Identificador
+                        </th>
+                        <th scope="col" className="paciente">
+                            Paciente
+                        </th>
                         <th scope="col">Exame</th>
-                        <th scope="col">Data</th>
+                        <th scope="col">Data do Exame</th>
                         <th scope="col">Responsável pelo Laudo</th>
                     </tr>
                 </tfoot>
