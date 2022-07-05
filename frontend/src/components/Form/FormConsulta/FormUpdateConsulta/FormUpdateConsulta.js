@@ -3,7 +3,7 @@ import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { AsyncTypeahead } from "react-bootstrap-typeahead";
-import { findPacientesByName } from "../../../../services/Paciente/PacienteService";
+import { getPacientesByName } from "../../../../services/Paciente/PacienteService";
 import { findMedicosByName } from "../../../../services/Medico/MedicoService";
 import moment from "moment";
 import {
@@ -59,7 +59,7 @@ const FormUpdateConsulta = ({ consultaData, setConsultaData, updateConsulta, set
     const handleSearch = (name) => {
         setIsLoading(true);
 
-        findPacientesByName(name).then((response) => {
+        getPacientesByName(name).then((response) => {
             setOptions(response.data);
             setIsLoading(false);
         });

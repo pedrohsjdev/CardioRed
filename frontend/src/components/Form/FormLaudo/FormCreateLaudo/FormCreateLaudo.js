@@ -4,8 +4,8 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { AsyncTypeahead } from "react-bootstrap-typeahead";
 import moment from "moment";
-import { findPacientesByName } from "../../../../services/Paciente/PacienteService";
-import { findMedicosByName } from "../../../../services/Medico/MedicoService";
+import { getPacientesByName } from "../../../../services/Paciente/PacienteService";
+import { getMedicosByName } from "../../../../services/Medico/MedicoService";
 import { getLastLaudoId, consultaExists } from "../../../../services/Laudo/LaudoService";
 import { findCIDByCode, findCIDByName } from "../../../../services/Consulta/ConsultaService";
 import { userIsAdm } from "../../../../services/Login/LoginService";
@@ -59,7 +59,7 @@ const FormCreateLaudo = ({ newLaudoData, setNewLaudoData, saveLaudo, setShow }) 
     const handleSearch = (name) => {
         setIsLoading(true);
 
-        findPacientesByName(name.charAt(0).toUpperCase() + name.slice(1)).then((response) => {
+        getPacientesByName(name.charAt(0).toUpperCase() + name.slice(1)).then((response) => {
             setOptions(response.data);
             setIsLoading(false);
         });
@@ -155,7 +155,7 @@ const FormCreateLaudo = ({ newLaudoData, setNewLaudoData, saveLaudo, setShow }) 
     const handleSearchMedico = (name) => {
         setIsLoadingMedico(true);
 
-        findMedicosByName(name.charAt(0).toUpperCase() + name.slice(1)).then((response) => {
+        getMedicosByName(name.charAt(0).toUpperCase() + name.slice(1)).then((response) => {
             setOptionsMedico(response.data);
             setIsLoadingMedico(false);
         });
