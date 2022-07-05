@@ -43,7 +43,7 @@ const FormViewConsulta = ({ consultaData, setConsultaData, openModalUpdate, open
     };
 
     const renderPrintIcon = () => {
-        if (consultaData.status === "Aguardando exame") {
+        if (consultaData.status === "Aguardando exame" && consultaData.medico.crm === getUsername()) {
             return (
                 <button
                     onClick={(e) => {
@@ -58,7 +58,7 @@ const FormViewConsulta = ({ consultaData, setConsultaData, openModalUpdate, open
         }
     };
     const renderChangeStatusIcon = () => {
-        if (consultaData.status === "Aguardando exame") {
+        if (consultaData.status === "Aguardando exame" && consultaData.medico.crm === getUsername()) {
             return (
                 <button
                     onClick={(e) => {
