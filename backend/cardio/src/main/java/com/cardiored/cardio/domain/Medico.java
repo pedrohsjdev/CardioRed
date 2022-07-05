@@ -14,13 +14,17 @@ import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
-@Data
+@Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @SuperBuilder
@@ -28,18 +32,25 @@ public class Medico {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
     @Column(length = 11)
     @NotNull
     private String crm;
+
     @NotNull
     private String name;
 
     @Enumerated(EnumType.STRING)
     @NotNull
     private DoctorType doctorType;
-    
+
+    private Integer residencyYear;
+
+    @Enumerated(EnumType.STRING)
+    private Titulation titulation;
+
     @OneToOne
-    @JoinColumn(name="userId")
+    @JoinColumn(name = "userId")
     @NotNull
     private User user;
 }

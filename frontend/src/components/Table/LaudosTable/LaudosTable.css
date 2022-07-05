@@ -1,0 +1,23 @@
+.laudo-table {
+  text-align: left;
+}
+
+.laudo-table .id {
+  width: 9rem;
+}
+
+.laudo-table .laudo {
+  padding-left: 3rem;
+}
+
+.laudo-table .center {
+  text-align: center;
+}
+
+.special {
+  background-color: #fff48c;
+}
+
+.special.secret {
+  display: none;
+}

@@ -5,14 +5,11 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import com.cardiored.cardio.domain.Docente;
 import com.cardiored.cardio.domain.Medico;
-import com.cardiored.cardio.domain.Residente;
 import com.cardiored.cardio.domain.User;
-import com.cardiored.cardio.request.medico.AllMedicoInfo;
-import com.cardiored.cardio.service.DocenteService;
+import com.cardiored.cardio.request.medico.MedicoDTO;
+import com.cardiored.cardio.request.medico.MedicoPutDTO;
 import com.cardiored.cardio.service.MedicoService;
-import com.cardiored.cardio.service.ResidenteService;
 import com.cardiored.cardio.service.UserService;
 
 import org.springframework.data.domain.Page;
@@ -30,7 +27,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -39,147 +35,134 @@ import lombok.RequiredArgsConstructor;
 public class MedicoController {
     private final MedicoService medicoService;
     private final UserService userService;
-    private final DocenteService docenteService;
-    private final ResidenteService residenteService;
     private final PasswordEncoder passwordEncoder;
- 
+
     @GetMapping
     public ResponseEntity<Page<Medico>> pageAll(Pageable pageable) {
         return ResponseEntity.ok(medicoService.pageAll(pageable));
     }
 
-    @GetMapping("/find/id/{id}")
-    public ResponseEntity<Medico> findById(@PathVariable(required=false) Integer id) {
-        return ResponseEntity.ok(medicoService.findByIdOrThrowException(id));        
+    @GetMapping("find/id/{id}")
+    public ResponseEntity<Medico> findById(@PathVariable(required = false) Integer id) {
+        return ResponseEntity.ok(medicoService.findByIdOrThrowException(id));
     }
 
-    @GetMapping("/find/name/{name}")
-    public ResponseEntity<List<Medico>> findByName(@PathVariable(required=false) String name) {
-        return ResponseEntity.ok(medicoService.findByName(name));        
+    @GetMapping("find/name/{name}")
+    public ResponseEntity<List<Medico>> findByName(@PathVariable(required = false) String name) {
+        return ResponseEntity.ok(medicoService.findByName(name));
     }
 
-    @GetMapping("/find/crm/{crm}")
-    public ResponseEntity<Medico> findByCrm(@PathVariable(required=false) String crm) {
+    @GetMapping(path = "find/name/like/{name}")
+    public ResponseEntity<Page<Medico>> findByNameLike(@PathVariable String name, Pageable pageable) {
+        return ResponseEntity.ok(medicoService.findByNameContains(name, pageable));
+    }
+
+    @GetMapping(path = "findList/name/like/{name}")
+    public ResponseEntity<List<Medico>> findByNameLikeList(@PathVariable String name) {
+        return ResponseEntity.ok(medicoService.findByNameContains(name));
+    }
+
+    @GetMapping("find/crm/{crm}")
+    public ResponseEntity<Medico> findByCrm(@PathVariable(required = false) String crm) {
         return ResponseEntity.ok(medicoService.findByCrm(crm));
     }
 
-    @PostMapping
-    public ResponseEntity<Void> save(@RequestBody @Valid AllMedicoInfo allMedicoInfo) {
-        User user;
-        switch(allMedicoInfo.getDoctorType()) {            
-            case DOCENTE:                
-                user = userService.save(new User(null, allMedicoInfo.getCrm(), allMedicoInfo.getPassword(), new ArrayList<>()));
-                userService.addRoleToUser(allMedicoInfo.getCrm(), "ROLE_DOCENTE");
-                userService.addRoleToUser(allMedicoInfo.getCrm(), "ROLE_MEDICO");
+    @GetMapping(path = "find/crm/like/{crm}")
+    public ResponseEntity<Page<Medico>> findByCrmLike(@PathVariable String crm, Pageable pageable) {
+        return ResponseEntity.ok(medicoService.findByCrmContains(crm, pageable));
+    }
 
-                docenteService.save(Docente.builder()
-                                                .crm(allMedicoInfo.getCrm())
-                                                .name(allMedicoInfo.getName())
-                                                .doctorType(allMedicoInfo.getDoctorType())
-                                                .user(user)
-                                                .titulation(allMedicoInfo.getTitulation())
-                                                .build());
+    @PostMapping
+    public ResponseEntity<Void> save(@RequestBody @Valid MedicoDTO medicoDTO) {
+
+        User user = null;
+        switch (medicoDTO.getDoctorType()) {
+            case DOCENTE:
+                user = userService
+                        .save(new User(null, medicoDTO.getCrm(), medicoDTO.getPassword(), new ArrayList<>()));
+                userService.addRoleToUser(medicoDTO.getCrm(), "ROLE_DOCENTE");
+                medicoService.save(Medico.builder()
+                        .crm(medicoDTO.getCrm())
+                        .name(medicoDTO.getName())
+                        .doctorType(medicoDTO.getDoctorType())
+                        .user(user)
+                        .titulation(medicoDTO.getTitulation())
+                        .build());
                 break;
             case RESIDENTE:
-                user = userService.save(new User(null, allMedicoInfo.getCrm(), allMedicoInfo.getPassword(), new ArrayList<>()));
-                userService.addRoleToUser(allMedicoInfo.getCrm(), "ROLE_RESIDENTE");
-                userService.addRoleToUser(allMedicoInfo.getCrm(), "ROLE_MEDICO");
-
-                residenteService.save(Residente.builder()
-                                                .crm(allMedicoInfo.getCrm())
-                                                .name(allMedicoInfo.getName())
-                                                .doctorType(allMedicoInfo.getDoctorType())
-                                                .user(user)
-                                                .residencyYear(allMedicoInfo.getResidencyYear())
-                                                .build());
+                user = userService
+                        .save(new User(null, medicoDTO.getCrm(), medicoDTO.getPassword(), new ArrayList<>()));
+                userService.addRoleToUser(medicoDTO.getCrm(), "ROLE_RESIDENTE");
+                medicoService.save(Medico.builder()
+                        .crm(medicoDTO.getCrm())
+                        .name(medicoDTO.getName())
+                        .doctorType(medicoDTO.getDoctorType())
+                        .user(user)
+                        .residencyYear(medicoDTO.getResidencyYear())
+                        .build());
                 break;
             case MEDICO:
-                user = userService.save(new User(null, allMedicoInfo.getCrm(), allMedicoInfo.getPassword(), new ArrayList<>()));
-                userService.addRoleToUser(allMedicoInfo.getCrm(), "ROLE_MEDICO");
-
+                user = userService
+                        .save(new User(null, medicoDTO.getCrm(), medicoDTO.getPassword(), new ArrayList<>()));
+                userService.addRoleToUser(medicoDTO.getCrm(), "ROLE_MEDICO");
                 medicoService.save(Medico.builder()
-                                                .crm(allMedicoInfo.getCrm())
-                                                .name(allMedicoInfo.getName())
-                                                .doctorType(allMedicoInfo.getDoctorType())
-                                                .user(user)                                                
-                                                .build());
+                        .crm(medicoDTO.getCrm())
+                        .name(medicoDTO.getName())
+                        .doctorType(medicoDTO.getDoctorType())
+                        .user(user)
+                        .build());
         }
-
 
         return new ResponseEntity<>(HttpStatus.CREATED);
-    } 
+    }
 
     @PutMapping
-    public ResponseEntity<Void> replace(@RequestBody @Valid AllMedicoInfo allMedicoInfo) {
-        User user;
-        switch(allMedicoInfo.getDoctorType()) {            
-            case DOCENTE:          
-                user = docenteService.findByIdOrThrowException(allMedicoInfo.getId()).getUser();
-                docenteService.delete(allMedicoInfo.getId());
-                user.setUsername(allMedicoInfo.getCrm());
-                if(allMedicoInfo.getPassword() != null) {    
-                    user.setPassword(passwordEncoder.encode(allMedicoInfo.getPassword()));
-                }               
-                user.setRoles(new ArrayList<>());
-                userService.replace(user);
-                userService.addRoleToUser(allMedicoInfo.getCrm(), "ROLE_DOCENTE");
-                userService.addRoleToUser(allMedicoInfo.getCrm(), "ROLE_MEDICO");
-               
-                docenteService.save(Docente.builder()
-                                                .id(allMedicoInfo.getId())
-                                                .crm(allMedicoInfo.getCrm())
-                                                .name(allMedicoInfo.getName())
-                                                .doctorType(allMedicoInfo.getDoctorType())
-                                                .user(user)
-                                                .titulation(allMedicoInfo.getTitulation())
-                                                .build());
+    public ResponseEntity<Void> replace(@RequestBody @Valid MedicoPutDTO medicoPutDTO) {
+        medicoService.medicoSameCRM(medicoPutDTO.getCrm(), medicoPutDTO.getId());
+        User user = medicoPutDTO.getUser();
+        user.setUsername(medicoPutDTO.getCrm());
+        if (!user.getPassword().equals("")) {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+        } else {
+            user.setPassword(userService.findByIdOrThrowException(user.getId()).getPassword());
+        }
+        user.getRoles().clear();
+        userService.replace(user);
+        switch (medicoPutDTO.getDoctorType()) {
+            case DOCENTE:
+                userService.addRoleToUser(user.getUsername(), "ROLE_DOCENTE");
+                medicoService.replace(Medico.builder().id(medicoPutDTO.getId())
+                        .crm(medicoPutDTO.getCrm())
+                        .name(medicoPutDTO.getName())
+                        .doctorType(medicoPutDTO.getDoctorType())
+                        .user(user)
+                        .titulation(medicoPutDTO.getTitulation())
+                        .build());
                 break;
             case RESIDENTE:
-                user = residenteService.findByIdOrThrowException(allMedicoInfo.getId()).getUser();
-                residenteService.delete(allMedicoInfo.getId());
-                user.setUsername(allMedicoInfo.getCrm());
-                if(allMedicoInfo.getPassword() != null) {    
-                    user.setPassword(passwordEncoder.encode(allMedicoInfo.getPassword()));
-                }               
-                user.setRoles(new ArrayList<>());
-                userService.addRoleToUser(allMedicoInfo.getCrm(), "ROLE_RESIDENTE");
-                userService.addRoleToUser(allMedicoInfo.getCrm(), "ROLE_MEDICO");
-                
-
-                residenteService.save(Residente.builder()
-                                                .id(allMedicoInfo.getId())
-                                                .crm(allMedicoInfo.getCrm())
-                                                .name(allMedicoInfo.getName())
-                                                .doctorType(allMedicoInfo.getDoctorType())
-                                                .user(user)
-                                                .residencyYear(allMedicoInfo.getResidencyYear())
-                                                .build());
+                userService.addRoleToUser(user.getUsername(), "ROLE_RESIDENTE");
+                medicoService.replace(Medico.builder().id(medicoPutDTO.getId())
+                        .crm(medicoPutDTO.getCrm())
+                        .name(medicoPutDTO.getName())
+                        .doctorType(medicoPutDTO.getDoctorType())
+                        .user(user)
+                        .residencyYear(medicoPutDTO.getResidencyYear())
+                        .build());
                 break;
             case MEDICO:
-                user = medicoService.findByIdOrThrowException(allMedicoInfo.getId()).getUser();
-                medicoService.delete(allMedicoInfo.getId());                
-                user.setUsername(allMedicoInfo.getCrm());
-                if(allMedicoInfo.getPassword() != null) {    
-                    user.setPassword(passwordEncoder.encode(allMedicoInfo.getPassword()));
-                }               
-                user.setRoles(new ArrayList<>());
-                userService.addRoleToUser(allMedicoInfo.getCrm(), "ROLE_MEDICO");
-
-                medicoService.save(Medico.builder()
-                                                .id(allMedicoInfo.getId())
-                                                .crm(allMedicoInfo.getCrm())
-                                                .name(allMedicoInfo.getName())
-                                                .doctorType(allMedicoInfo.getDoctorType())
-                                                .user(user)                                                
-                                                .build());
+                userService.addRoleToUser(user.getUsername(), "ROLE_MEDICO");
+                medicoService.replace(Medico.builder().id(medicoPutDTO.getId())
+                        .crm(medicoPutDTO.getCrm())
+                        .name(medicoPutDTO.getName())
+                        .doctorType(medicoPutDTO.getDoctorType())
+                        .user(user)
+                        .build());
         }
-
-
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> delete(@RequestParam(required = true) Integer id) {        
+    public ResponseEntity<Void> delete(@RequestParam(required = true) Integer id) {
         Integer userId = medicoService.findByIdOrThrowException(id).getUser().getId();
         medicoService.delete(id);
         userService.delete(userId);

@@ -39,25 +39,24 @@ public class UserService implements UserDetailsService {
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public User findByUsername(String username){
+    public User findByUsername(String username) {
         return userRepository.findByUsername(username);
     }
 
-    public User findByIdOrThrowException(Integer id){
+    public User findByIdOrThrowException(Integer id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
-    public void save(UserPostDTO userPostDTO){
+    public void save(UserPostDTO userPostDTO) {
         userRepository.save(
-                UserMapper.INSTANCE.toUser(userPostDTO)
-        );
+                UserMapper.INSTANCE.toUser(userPostDTO));
     }
 
-    public User save(User user){
+    public User save(User user) {
         User userFind = findByUsername(user.getUsername());
-        if(userFind != null) {
-           throw new RuntimeException("User already exists!");    
+        if (userFind != null) {
+            throw new RuntimeException("User already exists!");
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
@@ -75,18 +74,19 @@ public class UserService implements UserDetailsService {
         user.getRoles().add(role);
     }
 
-    public void delete(Integer id){
+    public void delete(Integer id) {
         userRepository.delete(findByIdOrThrowException(id));
     }
 
-    public void replace(User user){
+    public void replace(User user) {
         findByIdOrThrowException(user.getId());
+        System.out.println("User:" + user);
         userRepository.save(user);
     }
 
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username);
-        if(user == null) {
+        if (user == null) {
             throw new UsernameNotFoundException("User not found in the database");
         }
 
@@ -95,15 +95,17 @@ public class UserService implements UserDetailsService {
             authorities.add(new SimpleGrantedAuthority(role.getName()));
         });
 
-        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), authorities);
+        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
+                authorities);
     }
 
     public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-        if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            try {                
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            try {
                 String refresh_token = authorizationHeader.substring("Bearer ".length());
-                String access_token =  TokenCreator.generateAccessToken(refresh_token, request.getRequestURL().toString());
+                String access_token = TokenCreator.generateAccessToken(refresh_token,
+                        request.getRequestURL().toString());
 
                 Map<String, String> tokens = new HashMap<>();
                 tokens.put("access_token", access_token);
@@ -114,15 +116,15 @@ public class UserService implements UserDetailsService {
             } catch (Exception e) {
                 response.setHeader("error", e.getMessage());
                 response.setStatus(HttpStatus.FORBIDDEN.value());
-                //response.sendError(HttpStatus.FORBIDDEN.value(), e.getMessage());
+                // response.sendError(HttpStatus.FORBIDDEN.value(), e.getMessage());
                 Map<String, String> tokens = new HashMap<>();
                 tokens.put("error_message", e.getMessage());
                 response.setContentType(MediaType.APPLICATION_JSON_VALUE);
                 new ObjectMapper().writeValue(response.getOutputStream(), tokens);
-                
+
             }
         } else {
-            throw new RuntimeException  ("Refresh token is missing");
+            throw new RuntimeException("Refresh token is missing");
         }
     }
 

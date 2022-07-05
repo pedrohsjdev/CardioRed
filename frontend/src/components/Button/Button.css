@@ -1,0 +1,12 @@
+.btn-generic {
+  width: 200px;
+  height: 36px;
+  border-radius: 8px;
+}
+
+.btn-modal.btn-left:focus {
+  background-color: var(--first-color-dark);
+
+  border-color: var(--first-color-dark);
+  box-shadow: 0 0 0 0.25rem rgba(255, 25, 25, 0.25);
+}

@@ -1,19 +1,23 @@
 package com.cardiored.cardio.domain;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.persistence.*;
 
-@Data
+@Setter
+@Getter
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name="`User`")
+@Table(name = "`User`")
 public class User {
 
     @Id

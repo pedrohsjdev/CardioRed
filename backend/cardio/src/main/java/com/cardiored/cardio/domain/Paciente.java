@@ -1,22 +1,24 @@
 package com.cardiored.cardio.domain;
- 
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-
 import org.springframework.format.annotation.DateTimeFormat;
-
 import java.time.LocalDate;
 
-@Data
+@Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 @Entity
 @Builder
 public class Paciente {
@@ -31,9 +33,9 @@ public class Paciente {
     @NotNull
     private String name;
 
-    @NotNull   
+    @NotNull
     @JsonFormat(pattern = "dd/MM/yyyy")
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) 
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDate birthDate;
 
     @NotNull

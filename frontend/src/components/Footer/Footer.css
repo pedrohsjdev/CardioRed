@@ -1,0 +1,41 @@
+.footer-main-page {
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  background-color: var(--first-color);
+  height: 5.5rem;
+  align-items: center;
+  display: flex;
+}
+
+.footer-text {
+  font-size: 14px;
+  font-family: var(--body-font);
+  color: #efefef;
+  margin: 0;
+}
+
+.footer-container a,
+.footer-text {
+  line-height: 35px;
+}
+
+.github {
+  width: 30px;
+}
+
+.footer-main-page {
+  animation: footer-animation 0.3s;
+}
+
+@keyframes footer-animation {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 25px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}

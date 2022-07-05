@@ -1,8 +1,5 @@
 package com.cardiored.cardio.security;
 
-import com.cardiored.cardio.filter.CustomAuthenticationFilter;
-import com.cardiored.cardio.filter.CustomAuthorizationFilter;
-
 import java.util.Arrays;
 
 import org.springframework.context.annotation.Bean;
@@ -19,6 +16,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import com.cardiored.cardio.filter.CustomAuthenticationFilter;
+import com.cardiored.cardio.filter.CustomAuthorizationFilter;
 
 import lombok.RequiredArgsConstructor;
 
@@ -39,8 +39,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.cors();
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http.authorizeRequests().antMatchers("/users/**", "/medicos/**", "/residentes/**", "/docentes/**").hasAnyAuthority("ROLE_ADM");
-        http.authorizeRequests().antMatchers("/pacientes/**").hasAnyAuthority("ROLE_ADM", "ROLE_MEDICO", "ROLE_RESIDENTE", "ROLE_DOCENTE");
+        http.authorizeRequests().antMatchers("/users/**", "/residentes/**", "/docentes/**")
+                .hasAnyAuthority("ROLE_ADM");
+        http.authorizeRequests()
+                .antMatchers("/pacientes/**", "/consultas/**", "/diseases/**", "/medicos/**")
+                .hasAnyAuthority(
+                        "ROLE_ADM",
+                        "ROLE_MEDICO",
+                        "ROLE_RESIDENTE", "ROLE_DOCENTE");
         http.authorizeRequests().anyRequest().authenticated();
         http.addFilter(new CustomAuthenticationFilter(authenticationManagerBean()));
         http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
@@ -49,9 +55,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         final CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("https://cardiored.netlify.app"));
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
         configuration.setAllowedMethods(Arrays.asList("*"));
-        configuration.setAllowedHeaders(Arrays.asList("Authorization"));
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
         configuration.setAllowCredentials(true);
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

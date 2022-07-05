@@ -1,40 +1,40 @@
 import React, { useState, useEffect } from "react";
-import MedicosTable from "../components/MedicosTable/table";
-import NavBar from "../components/Navbar/navbar";
-import Register from "../components/registerButton/register";
-import FormSearch from "../components/SearchBar/FormSearch";
-import CounterElements from "../components/TableCounter/CounterElements";
-import Paginator from "../components/Paginator/Paginator";
-import "./style.css";
-import axios from "axios";
-import ModalView from "../components/Modal/View/ModalView";
-import ModalCreate from "../components/Modal/Create/ModalCreate";
-import ModalUpdate from "../components/Modal/Update/ModalUpdate";
-import ModalDelete from "../components/Modal/Delete/ModalDelete";
-import FormCreateMedico from "../components/Form/FormMedico/Create/FormCreateMedico";
-import FormUpdateMedico from "../components/Form/FormMedico/Update/FormUpdateMedico";
-import FormViewMedico from "../components/Form/FormMedico/View/FormViewMedico";
+import MedicosTable from "../components/Table/MedicosTable/MedicosTable";
+import NavBar from "../components/NavBar/NavBar";
+import Button from "../components/Button/Button";
+import TableSearch from "../components/Table/TableSearch/TableSearch";
+import TableCounter from "../components/Table/TableCounter/TableCounter";
+import TablePaginator from "../components/Table/TablePaginator/TablePaginator";
+import "./Pages.css";
+import ModalView from "../components/Modal/ModalView/ModalView";
+import ModalCreate from "../components/Modal/ModalCreate/ModalCreate";
+import ModalUpdate from "../components/Modal/ModalUpdate/ModalUpdate";
+import ModalDelete from "../components/Modal/ModalDelete/ModalDelete";
+import FormCreateMedico from "../components/Form/FormMedico/FormCreateMedico/FormCreateMedico";
+import FormUpdateMedico from "../components/Form/FormMedico/FormUpdateMedico/FormUpdateMedico";
+import FormViewMedico from "../components/Form/FormMedico/FormViewMedico/FormViewMedico";
 import { Notify } from "notiflix/build/notiflix-notify-aio";
-import userAuth from "../utils/userAuth";
+import { userIsAuthenticated, userIsAdm } from "../services/Login/LoginService";
 import { useNavigate } from "react-router-dom";
-import { BASE_URL } from "../utils/requests";
+import { saveMedico, updateMedico, deleteMedico } from "../services/Medico/MedicoService";
+import { Loading } from "notiflix";
 
 const Medicos = () => {
     const navigate = useNavigate();
     useEffect(() => {
-        if (!userAuth()) {
-            navigate("/");
-        }
+        if (!userIsAuthenticated()) navigate("/");
+        else if (!userIsAdm()) navigate("/home");
     }, []);
 
+    const [startCrmTemporary, setStartCrmTemporary] = useState();
     const [showModalCreate, setShowModalCreate] = useState(false);
     const [showModalUpdate, setShowModalUpdate] = useState(false);
     const [showModalView, setShowModalView] = useState(false);
     const [showModalDelete, setShowModalDelete] = useState(false);
+    const [searchInput, setSearchInput] = useState("");
     const [newMedicoData, setNewMedicoData] = useState({});
     const [medicoData, setMedicoData] = useState({});
     const [pageData, setPageData] = useState({});
-    const [searchInput, setSearchInput] = useState("");
     const [refreshMedicoTable, setRefreshMedicoTable] = useState(false);
     const [currentPage, setCurrentPage] = useState(0);
 
@@ -46,47 +46,53 @@ const Medicos = () => {
         }
     };
 
-    const saveMedico = async () => {
-        const response = await axios
-            .post(`${BASE_URL}/medicos`, newMedicoData)
-            .then((response) => {
-                setShowModalCreate(false);
-                flushMedicoTable();
-                Notify.success("Medico cadastrado com sucesso!");
-            })
-            .catch((error) => {
-                console.log(error);
-                Notify.failure("Não foi possível cadastrar o médico!");
-            });
+    const saveMedicoData = async () => {
+        Loading.circle();
+        const response = await saveMedico(newMedicoData);
+
+        if (response.status == 201) {
+            Loading.remove();
+            setShowModalCreate(false);
+            flushMedicoTable();
+            Notify.success("Medico cadastrado com sucesso!");
+        } else {
+            Loading.remove();
+            Notify.failure("Não foi possível cadastrar o médico!");
+            console.error(response);
+        }
     };
 
-    const updateMedico = async () => {
-        const response = await axios
-            .put(`${BASE_URL}/medicos`, medicoData)
-            .then(() => {
-                setShowModalUpdate(false);
-                flushMedicoTable();
-                Notify.success("Medico atualizado com sucesso!");
-            })
-            .catch((error) => {
-                console.log(error);
-                Notify.failure("Não foi possível modificar o médico!");
-            });
+    const updateMedicoData = async () => {
+        Loading.circle();
+        const response = await updateMedico(medicoData);
+
+        if (response.status == 204) {
+            Loading.remove();
+            setShowModalUpdate(false);
+            flushMedicoTable();
+            Notify.success("Medico atualizado com sucesso!");
+        } else {
+            Loading.remove();
+            Notify.failure("Não foi possível modificar o médico!");
+            console.error(response);
+        }
     };
 
-    const deleteMedico = () => {
-        axios
-            .delete(`${BASE_URL}/medicos?id=${medicoData.id}`)
-            .then(() => {
-                setShowModalDelete(false);
-                setShowModalView(false);
-                flushMedicoTable();
-                Notify.success("Medico removido com sucesso!");
-            })
-            .catch((error) => {
-                Notify.failure("Não foi possível remover o Medico.");
-                console.error(error);
-            });
+    const deleteMedicoData = async () => {
+        Loading.circle();
+        const response = await deleteMedico(medicoData.id);
+
+        if (response.status == 204) {
+            Loading.remove();
+            setShowModalDelete(false);
+            setShowModalView(false);
+            flushMedicoTable();
+            Notify.success("Medico removido com sucesso!");
+        } else {
+            Loading.remove();
+            Notify.failure("Não foi possível remover o Medico.");
+            console.error(response);
+        }
     };
 
     const openModalCreate = () => {
@@ -100,6 +106,8 @@ const Medicos = () => {
 
     const openModalUpdate = () => {
         setShowModalUpdate(true);
+        setMedicoData({ ...medicoData, user: { ...medicoData.user, password: "" } });
+        setStartCrmTemporary(medicoData.crm);
     };
 
     const openModalDelete = () => {
@@ -109,41 +117,33 @@ const Medicos = () => {
 
     return (
         <>
-            <NavBar />
-            <ModalCreate
-                show={showModalCreate}
-                setShow={setShowModalCreate}
-                element="Médico"
-            >
+            <NavBar currentPage="M" />
+            <ModalCreate show={showModalCreate} setShow={setShowModalCreate} element="Médico">
                 <FormCreateMedico
                     setShow={setShowModalCreate}
                     newMedicoData={newMedicoData}
                     setNewMedicoData={setNewMedicoData}
-                    saveMedico={saveMedico}
+                    saveMedico={saveMedicoData}
                 />
             </ModalCreate>
 
-            <ModalUpdate
-                show={showModalUpdate}
-                setShow={setShowModalUpdate}
-                element="Médico"
-            >
+            <ModalUpdate show={showModalUpdate} setShow={setShowModalUpdate} element="Médico">
                 <FormUpdateMedico
+                    startCrmTemporary={startCrmTemporary}
                     setShow={setShowModalUpdate}
                     medicoData={medicoData}
                     setMedicoData={setMedicoData}
-                    updateMedico={updateMedico}
+                    updateMedico={updateMedicoData}
                 />
             </ModalUpdate>
 
-            <ModalView
-                show={showModalView}
-                setShow={setShowModalView}
-                openModalDelete={openModalDelete}
-                openModalUpdate={openModalUpdate}
-                element="Médico"
-            >
-                <FormViewMedico medicoData={medicoData} />
+            <ModalView setShow={setShowModalView} show={showModalView} element="Médico">
+                <FormViewMedico
+                    setShow={setShowModalView}
+                    openModalDelete={openModalDelete}
+                    openModalUpdate={openModalUpdate}
+                    medicoData={medicoData}
+                />
             </ModalView>
 
             <ModalDelete
@@ -151,17 +151,14 @@ const Medicos = () => {
                 setShow={setShowModalDelete}
                 setShowModalView={setShowModalView}
                 element="Médico"
-                deleteElement={deleteMedico}
+                deleteElement={deleteMedicoData}
             />
 
             <div className="page-container">
                 <h1 className="title-element">Listagem de Médicos</h1>
                 <div className="d-flex justify-content-between">
-                    <Register openModalCreate={openModalCreate} />
-                    <FormSearch
-                        setSearchInput={setSearchInput}
-                        criteria={"CRM"}
-                    />
+                    <Button value="Cadastrar" action={openModalCreate} />
+                    <TableSearch searchInput={searchInput} setSearchInput={setSearchInput} criteria="CRM ou nome" />
                 </div>
                 <MedicosTable
                     setPageData={setPageData}
@@ -171,16 +168,12 @@ const Medicos = () => {
                     refreshMedicoTable={refreshMedicoTable}
                 />
                 <div className="d-flex justify-content-between mb-3">
-                    <CounterElements
+                    <TableCounter
                         firstElement={pageData.empty === true ? 0 : 1}
-                        lastElement={
-                            pageData.empty === true
-                                ? 0
-                                : pageData.numberOfElements
-                        }
+                        lastElement={pageData.empty === true ? 0 : pageData.numberOfElements}
                         totalElements={pageData.totalElements}
                     />
-                    <Paginator
+                    <TablePaginator
                         currentPage={currentPage}
                         totalPages={pageData.totalPages}
                         setCurrentPage={setCurrentPage}
