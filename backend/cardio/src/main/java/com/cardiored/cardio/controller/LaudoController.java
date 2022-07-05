@@ -92,6 +92,16 @@ public class LaudoController {
         return ResponseEntity.ok(laudoService.getLastId());
     }
 
+    @GetMapping(path = "existsbycpf/{cpf}")
+    public ResponseEntity<Boolean> existsByPacienteCpf(@PathVariable String cpf) {
+        return ResponseEntity.ok(laudoService.existsByPacienteCpf(cpf));
+    }
+
+    @GetMapping(path = "existsbycrm/{crm}")
+    public ResponseEntity<Boolean> existsByMedicoCrm(@PathVariable String crm) {
+        return ResponseEntity.ok(laudoService.existsByMedicoCrm(crm));
+    }
+
     @PostMapping(path = "consultaExists")
     public ResponseEntity<Boolean> consultaExists(@RequestBody LaudoPostDTO laudoPostDTO) {
         return ResponseEntity.ok(laudoService

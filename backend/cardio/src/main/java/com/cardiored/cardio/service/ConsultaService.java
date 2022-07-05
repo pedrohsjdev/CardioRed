@@ -49,6 +49,14 @@ public class ConsultaService {
         return consultaRepository.findTopByOrderByIdDesc().getId();
     }
 
+    public boolean existsByPacienteCpf(String cpf) {
+        return consultaRepository.existsByPacienteCpf(cpf);
+    }
+
+    public boolean existsByMedicoCrm(String crm) {
+        return consultaRepository.existsByMedicoCrm(crm);
+    }
+
     public Consulta findByPacienteCpfAndExamTypeAndStatus(String cpf, ExamType examType, ConsultaStatus status) {
         return consultaRepository.findByPacienteCpfAndExamTypeAndStatus(cpf, examType, status);
     }

@@ -89,6 +89,16 @@ public class ConsultaController {
 
     }
 
+    @GetMapping(path = "existsbycpf/{cpf}")
+    public ResponseEntity<Boolean> existsByPacienteCpf(@PathVariable String cpf) {
+        return ResponseEntity.ok(consultaService.existsByPacienteCpf(cpf));
+    }
+
+    @GetMapping(path = "existsbycrm/{crm}")
+    public ResponseEntity<Boolean> existsByMedicoCrm(@PathVariable String crm) {
+        return ResponseEntity.ok(consultaService.existsByMedicoCrm(crm));
+    }
+
     @PostMapping
     public ResponseEntity<Void> save(@RequestBody @Valid ConsultaPostDTO consultaPostDTO) {
         consultaService.save(ConsultaMapper.INSTANCE.toConsulta(consultaPostDTO));

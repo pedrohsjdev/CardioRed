@@ -74,6 +74,14 @@ public class LaudoService {
         return laudoRepository.findTopByOrderByIdDesc().getId();
     }
 
+    public boolean existsByPacienteCpf(String cpf) {
+        return laudoRepository.existsByPacienteCpf(cpf);
+    }
+
+    public boolean existsByMedicoCrm(String crm) {
+        return laudoRepository.existsByMedicoCrm(crm);
+    }
+
     public Boolean existConsultaWithPacienteAndExamType(Laudo laudo) {
         return consultaRepository.existsByPacienteCpfAndExamTypeAndStatus(
                 pacienteService.findById(laudo.getPaciente().getId()).getCpf(),
