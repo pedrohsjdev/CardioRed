@@ -26,19 +26,4 @@ public class CardioApplication {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    CommandLineRunner run(UserService userService, DiseaseService diseaseService) {
-        return args -> {
-            userService.saveRole(new Role(null, "ROLE_ADM"));
-            userService.saveRole(new Role(null, "ROLE_MEDICO"));
-            userService.saveRole(new Role(null, "ROLE_RESIDENTE"));
-            userService.saveRole(new Role(null, "ROLE_DOCENTE"));
-
-            userService.save(new User(null, "admin", "1234", new ArrayList<>()));
-            userService.addRoleToUser("admin", "ROLE_ADM");
-
-            diseaseService.loadDiseases();
-        };
-    }
-
 }
