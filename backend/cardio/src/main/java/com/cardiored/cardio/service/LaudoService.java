@@ -7,14 +7,12 @@ import com.cardiored.cardio.domain.LaudoStatus;
 import com.cardiored.cardio.mapper.LaudoMapper;
 import com.cardiored.cardio.repository.ConsultaRepository;
 import com.cardiored.cardio.repository.LaudoRepository;
-import com.cardiored.cardio.request.laudo.LaudoPostDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
