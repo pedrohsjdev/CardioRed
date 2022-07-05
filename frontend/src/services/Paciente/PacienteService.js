@@ -19,6 +19,10 @@ export const findAllPacientes = async (currentPage) => {
     }
 };
 
+export const getPacientesByName = (name) => {
+    return axios.get(`${BASE_URL}/pacientes/findList/name/like/${name}`);
+};
+
 export const findPacientesByName = (name, currentPage) => {
     return axios.get(`${BASE_URL}/pacientes/find/name/like/${name}?page=${currentPage}&size=10`);
 };
