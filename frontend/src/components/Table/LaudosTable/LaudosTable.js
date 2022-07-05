@@ -77,19 +77,27 @@ const LaudosTable = ({ searchInput, currentPage, refreshLaudoTable, setPageData,
                     </tr>
                 </thead>
                 <tbody>
-                    {laudos.map((laudo, index) => (
-                        <tr
-                            className={laudo.status === "Provisório" ? "special" : ""}
-                            onClick={() => openModalView(laudo)}
-                            key={index}
-                        >
-                            <td className="center">{laudo.id} </td>
-                            <td className="paciente">{laudo.paciente ? laudo.paciente.name : ""}</td>
-                            <td>{laudo.examType}</td>
-                            <td>{laudo.dateTime}</td>
-                            <td>{laudo.medico ? laudo.medico.name : ""}</td>
+                    {!laudos.length || laudos === undefined ? (
+                        <tr>
+                            <td colSpan="5" style={{ textAlign: "center" }}>
+                                Nenhum laudo encontrado.
+                            </td>
                         </tr>
-                    ))}
+                    ) : (
+                        laudos.map((laudo, index) => (
+                            <tr
+                                className={laudo.status === "Provisório" ? "special" : ""}
+                                onClick={() => openModalView(laudo)}
+                                key={index}
+                            >
+                                <td className="center">{laudo.id} </td>
+                                <td className="paciente">{laudo.paciente ? laudo.paciente.name : ""}</td>
+                                <td>{laudo.examType}</td>
+                                <td>{laudo.dateTime}</td>
+                                <td>{laudo.medico ? laudo.medico.name : ""}</td>
+                            </tr>
+                        ))
+                    )}
                 </tbody>
                 <tfoot>
                     <tr>

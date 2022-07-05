@@ -71,16 +71,24 @@ const ConsultasTable = ({ searchInput, currentPage, refreshConsultaTable, setPag
                     </tr>
                 </thead>
                 <tbody>
-                    {consultas.map((consulta, index) => (
-                        <tr onClick={() => openModalView(consulta)} key={index}>
-                            <td className="center">{consulta.id} </td>
-                            <td className="paciente">
-                                {consulta.paciente ? consulta.paciente.name : consulta.paciente}
+                    {!consultas.length || consultas === undefined ? (
+                        <tr>
+                            <td colSpan="5" style={{ textAlign: "center" }}>
+                                Nenhuma consulta encontrada.
                             </td>
-                            <td>{consulta.examType}</td>
-                            <td>{consulta.dateTime}</td>
                         </tr>
-                    ))}
+                    ) : (
+                        consultas.map((consulta, index) => (
+                            <tr onClick={() => openModalView(consulta)} key={index}>
+                                <td className="center">{consulta.id} </td>
+                                <td className="paciente">
+                                    {consulta.paciente ? consulta.paciente.name : consulta.paciente}
+                                </td>
+                                <td>{consulta.examType}</td>
+                                <td>{consulta.dateTime}</td>
+                            </tr>
+                        ))
+                    )}
                 </tbody>
                 <tfoot>
                     <tr>

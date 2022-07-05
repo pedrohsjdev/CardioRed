@@ -71,15 +71,23 @@ const MedicosTable = ({ currentPage, searchInput, refreshMedicoTable, openModalV
                     </tr>
                 </thead>
                 <tbody>
-                    {medicos.map((medico, index) => (
-                        <tr onClick={() => openModalView(medico)} key={index}>
-                            <td>{medico.crm}</td>
-                            <td>{medico.name}</td>
-                            <td>{medico.doctorType}</td>
-                            <td>{medico.residencyYear}</td>
-                            <td>{medico.titulation}</td>
+                    {!medicos.length || medicos === undefined ? (
+                        <tr>
+                            <td colSpan="5" style={{ textAlign: "center" }}>
+                                Nenhum médico encontrado.
+                            </td>
                         </tr>
-                    ))}
+                    ) : (
+                        medicos.map((medico, index) => (
+                            <tr onClick={() => openModalView(medico)} key={index}>
+                                <td>{medico.crm}</td>
+                                <td>{medico.name}</td>
+                                <td>{medico.doctorType}</td>
+                                <td>{medico.residencyYear}</td>
+                                <td>{medico.titulation}</td>
+                            </tr>
+                        ))
+                    )}
                 </tbody>
                 <tfoot>
                     <tr>
