@@ -1,9 +1,11 @@
 import React from "react";
 
-const ModalView = ({ element, show, setShow, children }) => {
+const ModalView = ({ element, show, setShow, children, status }) => {
     if (!show) {
         return null;
     }
+
+    element = status === "Provisório" ? "Laudo provisório" : element;
 
     return (
         <div className="modal fade show">

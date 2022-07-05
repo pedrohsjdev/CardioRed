@@ -47,7 +47,6 @@ export const saveMedico = async (medicoData) => {
 
 export const updateMedico = async (medicoData) => {
     try {
-        console.log(medicoData);
         const response = await axios.put(`${BASE_URL}/medicos`, medicoData);
         return response;
     } catch (error) {

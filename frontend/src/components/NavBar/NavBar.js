@@ -3,9 +3,13 @@ import "./NavBar.css";
 import Logo from "../../assets/logo-navbar.svg";
 import Logout from "../../assets/logout.svg";
 import { BASE_URL_FRONTEND } from "../../utils/Consts";
-import { logoutUser, userIsAdm } from "../../services/Login/LoginService";
+import { logoutUser, userIsAdm, userIsAuthenticated } from "../../services/Login/LoginService";
 
 const NavBar = ({ currentPage }) => {
+    if (!userIsAuthenticated()) {
+        return null;
+    }
+
     const renderMedicoMenu = () => {
         if (userIsAdm()) {
             return (

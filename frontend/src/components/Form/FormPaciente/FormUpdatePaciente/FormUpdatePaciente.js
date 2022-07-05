@@ -3,6 +3,7 @@ import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import moment from "moment";
+import { getPacienteByCPF } from "../../../../services/Paciente/PacienteService";
 
 const FormUpdatePaciente = ({ pacienteData, setPacienteData, updatePaciente, setShow }) => {
     const pacienteChange = (event) => {
@@ -39,18 +40,17 @@ const FormUpdatePaciente = ({ pacienteData, setPacienteData, updatePaciente, set
 
     const [validated, setValidated] = useState(false);
     const handleSubmit = (event) => {
-        console.log(pacienteData);
         event.preventDefault();
 
         if (!validateCPF(pacienteData.cpf)) {
             setCpfIsInvalid(true);
             setCpfErrorMessage("CPF inválido!");
+            return;
         }
         if (cpfIsInvalid) {
             return;
         }
         if (event.currentTarget.checkValidity() === false) {
-            event.preventDefault();
             event.stopPropagation();
         } else {
             updatePaciente();
@@ -62,11 +62,12 @@ const FormUpdatePaciente = ({ pacienteData, setPacienteData, updatePaciente, set
     const [cpfErrorMessage, setCpfErrorMessage] = useState("Informe o CPF do paciente.");
     const [cpfIsInvalid, setCpfIsInvalid] = useState(false);
     const verifyCPF = () => {
-        setCpfIsInvalid(false);
         getPacienteByCPF(pacienteData.cpf).then((res) => {
             if (res.data) {
                 setCpfIsInvalid(true);
                 setCpfErrorMessage("CPF já cadastrado no sistema.");
+            } else {
+                setCpfIsInvalid(false);
             }
         });
     };
@@ -75,7 +76,21 @@ const FormUpdatePaciente = ({ pacienteData, setPacienteData, updatePaciente, set
         let sum;
         let remainder;
         sum = 0;
-        if (strCPF == "00000000000" || strCPF == undefined) return false;
+        if (
+            strCPF === undefined ||
+            strCPF.length != 11 ||
+            strCPF == "00000000000" ||
+            strCPF == "11111111111" ||
+            strCPF == "22222222222" ||
+            strCPF == "33333333333" ||
+            strCPF == "44444444444" ||
+            strCPF == "55555555555" ||
+            strCPF == "66666666666" ||
+            strCPF == "77777777777" ||
+            strCPF == "88888888888" ||
+            strCPF == "99999999999"
+        )
+            return false;
 
         for (let i = 1; i <= 9; i++) {
             sum = sum + parseInt(strCPF.substring(i - 1, i)) * (11 - i);

@@ -46,6 +46,7 @@ const FormCreatePaciente = ({ newPacienteData, setNewPacienteData, savePaciente,
         if (!validateCPF(newPacienteData.cpf)) {
             setCpfIsInvalid(true);
             setCpfErrorMessage("CPF inválido!");
+            return;
         }
         if (cpfIsInvalid) {
             return;
@@ -63,11 +64,12 @@ const FormCreatePaciente = ({ newPacienteData, setNewPacienteData, savePaciente,
     const [cpfErrorMessage, setCpfErrorMessage] = useState("Informe o CPF do paciente.");
     const [cpfIsInvalid, setCpfIsInvalid] = useState(false);
     const verifyCPF = () => {
-        setCpfIsInvalid(false);
         getPacienteByCPF(newPacienteData.cpf).then((res) => {
             if (res.data) {
                 setCpfIsInvalid(true);
                 setCpfErrorMessage("CPF já cadastrado no sistema.");
+            } else {
+                setCpfIsInvalid(false);
             }
         });
     };
@@ -76,7 +78,22 @@ const FormCreatePaciente = ({ newPacienteData, setNewPacienteData, savePaciente,
         let sum;
         let remainder;
         sum = 0;
-        if (strCPF == "00000000000" || strCPF == undefined) return false;
+
+        if (
+            strCPF === undefined ||
+            strCPF.length != 11 ||
+            strCPF == "00000000000" ||
+            strCPF == "11111111111" ||
+            strCPF == "22222222222" ||
+            strCPF == "33333333333" ||
+            strCPF == "44444444444" ||
+            strCPF == "55555555555" ||
+            strCPF == "66666666666" ||
+            strCPF == "77777777777" ||
+            strCPF == "88888888888" ||
+            strCPF == "99999999999"
+        )
+            return false;
 
         for (let i = 1; i <= 9; i++) {
             sum = sum + parseInt(strCPF.substring(i - 1, i)) * (11 - i);
