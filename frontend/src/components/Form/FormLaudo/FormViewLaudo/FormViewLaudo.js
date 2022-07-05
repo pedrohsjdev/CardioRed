@@ -3,7 +3,7 @@ import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import OpenNewWindow from "../../../../assets/open-new-window.svg";
-import { getUsername } from "../../../../services/Login/LoginService";
+import { getUsername, userIsAdm, userIsDocente } from "../../../../services/Login/LoginService";
 
 const FormViewLaudo = ({ laudoData, openModalUpdate, openModalDelete, setShow }) => {
     const b64toBlob = (b64Data, contentType = "", sliceSize = 512) => {
@@ -32,6 +32,54 @@ const FormViewLaudo = ({ laudoData, openModalUpdate, openModalDelete, setShow })
         cpf = cpf.replace(/(\d{3})(\d)/, "$1.$2");
         cpf = cpf.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
         return cpf;
+    };
+
+    const renderMedicoInput = () => {
+        if (userIsAdm()) {
+            return (
+                <Form.Group as={Row} className="mb-3">
+                    <Form.Label column sm={3}>
+                        Médico:
+                    </Form.Label>
+                    <Col sm={9}>
+                        <Form.Control
+                            defaultValue={laudoData.medico.name + " (" + laudoData.medico.crm + ")"}
+                            disabled
+                            type="text"
+                        />
+                    </Col>
+                </Form.Group>
+            );
+        }
+    };
+
+    const renderFooter = () => {
+        if (!userIsAdm() && !userIsDocente() && laudoData.medico.crm !== getUsername()) {
+            return null;
+        }
+        return (
+            <div className="modal-footer d-flex justify-content-between">
+                <button
+                    type="button"
+                    className="btn btn-primary btn-modal btn-left"
+                    onClick={() => {
+                        openModalDelete();
+                    }}
+                >
+                    Remover
+                </button>
+                <button
+                    type="button"
+                    className="btn btn-primary btn-modal"
+                    onClick={() => {
+                        setShow(false);
+                        openModalUpdate();
+                    }}
+                >
+                    {laudoData.status === "Provisório" && userIsDocente() ? "Revisar" : "Modificar"}
+                </button>
+            </div>
+        );
     };
 
     return (
@@ -73,7 +121,7 @@ const FormViewLaudo = ({ laudoData, openModalUpdate, openModalDelete, setShow })
             </Form.Group>
             <Form.Group as={Row} className="mb-3">
                 <Form.Label column sm={2}>
-                    Paciente*:
+                    Paciente:
                 </Form.Label>
                 <Col sm={10}>
                     <Form.Control
@@ -82,6 +130,7 @@ const FormViewLaudo = ({ laudoData, openModalUpdate, openModalDelete, setShow })
                     />
                 </Col>
             </Form.Group>
+            {renderMedicoInput()}
             <Form.Group as={Row} className="mb-3">
                 <Form.Label column sm={2}>
                     Exame*:
@@ -110,29 +159,7 @@ const FormViewLaudo = ({ laudoData, openModalUpdate, openModalDelete, setShow })
                     />
                 </Col>
             </Form.Group>
-            <div className="modal-footer d-flex justify-content-between">
-                <button
-                    type="button"
-                    className="btn btn-primary btn-modal btn-left"
-                    onClick={() => {
-                        openModalDelete();
-                    }}
-                >
-                    Remover
-                </button>
-                <button
-                    type="button"
-                    className="btn btn-primary btn-modal"
-                    onClick={() => {
-                        setShow(false);
-                        openModalUpdate();
-                    }}
-                >
-                    {laudoData.status === "Provisório" && laudoData.medico.crm !== getUsername()
-                        ? "Revisar"
-                        : "Modificar"}
-                </button>
-            </div>
+            {renderFooter()}
         </Form>
     );
 };

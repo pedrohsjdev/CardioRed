@@ -14,7 +14,7 @@ import FormCreateLaudo from "../components/Form/FormLaudo/FormCreateLaudo/FormCr
 import FormUpdateLaudo from "../components/Form/FormLaudo/FormUpdateLaudo/FormUpdateLaudo";
 import FormViewLaudo from "../components/Form/FormLaudo/FormViewLaudo/FormViewLaudo";
 import { Notify } from "notiflix/build/notiflix-notify-aio";
-import { userIsAuthenticated, getUsername } from "../services/Login/LoginService";
+import { userIsAuthenticated, getUsername, userIsDocente, userIsResidente } from "../services/Login/LoginService";
 import { useNavigate } from "react-router-dom";
 import { saveLaudo, updateLaudo, deleteLaudo, toPostLaudo } from "../services/Laudo/LaudoService";
 import { getMedicoByCRM } from "../services/Medico/MedicoService";
@@ -70,17 +70,29 @@ const Laudos = () => {
 
     const updateLaudoData = async () => {
         Loading.circle();
-        const response = await updateLaudo(laudoData);
+
+        if (userIsDocente()) {
+            console.log("é");
+            setLaudoData({
+                ...laudoData,
+                status: "Definitivo",
+            });
+        }
+
+        const response = await updateLaudo({
+            ...laudoData,
+            status: userIsResidente() ? laudoData.status : "Definitivo",
+        }).catch(() => {
+            Loading.remove();
+            Notify.failure("Não foi possível modificar o Laudo!");
+            console.error(response);
+        });
 
         if (response.status == 204) {
             Loading.remove();
             setShowModalUpdate(false);
             flushLaudoTable();
             Notify.success("Laudo atualizado com sucesso!");
-        } else {
-            Loading.remove();
-            Notify.failure("Não foi possível modificar o Laudo!");
-            console.error(response);
         }
     };
 
@@ -138,7 +150,7 @@ const Laudos = () => {
                     updateLaudo={updateLaudoData}
                 />
             </ModalUpdate>
-            <ModalView setShow={setShowModalView} show={showModalView} element="Laudo">
+            <ModalView status={laudoData.status} setShow={setShowModalView} show={showModalView} element="Laudo">
                 <FormViewLaudo
                     setShow={setShowModalView}
                     openModalDelete={openModalDelete}

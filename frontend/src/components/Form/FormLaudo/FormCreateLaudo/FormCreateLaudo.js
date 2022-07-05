@@ -189,7 +189,6 @@ const FormCreateLaudo = ({ newLaudoData, setNewLaudoData, saveLaudo, setShow }) 
                                 } else {
                                     setMedicoIsInvalid(false);
                                 }
-                                console.log(newLaudoData);
                             }}
                             renderMenuItemChildren={(option) => (
                                 <span>

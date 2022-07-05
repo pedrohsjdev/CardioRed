@@ -1,32 +1,40 @@
 import axios from "axios";
 import { BASE_URL } from "../../utils/Consts";
-import {
-    getUsername,
-    getAccessToken,
-    setAuthorizationAxiosHeader,
-    userIsResidente,
-    userIsAdm,
-} from "../Login/LoginService";
+import { getUsername, userIsResidente, userIsAdm } from "../Login/LoginService";
 import { getMedicoByCRM } from "../Medico/MedicoService";
 import { findByPacienteCpfExamTypeStatus } from "../Consulta/ConsultaService";
 import moment from "moment";
 
-export const findAllLaudos = async (currentPage) => {
-    try {
-        setAuthorizationAxiosHeader(getAccessToken());
-        const { data } = await axios.get(`${BASE_URL}/laudos?page=${currentPage}&size=10`);
-        return data;
-    } catch (error) {
-        return [{}];
-    }
+export const findAllLaudos = (currentPage) => {
+    return axios.get(`${BASE_URL}/laudos?page=${currentPage}&size=10`);
+};
+
+export const findAllLaudosResidenteUser = (crm, currentPage) => {
+    return axios.get(`${BASE_URL}/laudos/DEFINITIVO/${crm}?page=${currentPage}&size=10&sort=paciente_name`);
 };
 
 export const findLaudosByPacienteCpf = (searchInput, currentPage) => {
     return axios.get(`${BASE_URL}/laudos/find/cpf/like/${searchInput}?page=${currentPage}&size=10`);
 };
 
+export const findLaudosByPacienteCpfToMedico = (searchInput, currentPage) => {
+    return axios.get(`${BASE_URL}/laudos/find/DEFINITIVO/cpf/like/${searchInput}?page=${currentPage}&size=10`);
+};
+
+export const findLaudosByPacienteCpfToResidente = (searchInput, crm, currentPage) => {
+    return axios.get(`${BASE_URL}/laudos/find/cpf/like/${searchInput}/DEFINITIVO/${crm}?page=${currentPage}&size=10`);
+};
+
 export const findLaudosByPacienteName = async (searchInput) => {
     return axios.get(`${BASE_URL}/laudos/find/name/like/${searchInput}`);
+};
+
+export const findLaudosByPacienteNameToMedico = (searchInput, currentPage) => {
+    return axios.get(`${BASE_URL}/laudos/find/DEFINITIVO/name/like/${searchInput}?page=${currentPage}&size=10`);
+};
+
+export const findLaudosByPacienteNameToResidente = (searchInput, crm, currentPage) => {
+    return axios.get(`${BASE_URL}/laudos/find/name/like/${searchInput}/DEFINITIVO/${crm}?page=${currentPage}&size=10`);
 };
 
 export const findLaudosByStatusNot = async (status) => {
@@ -74,23 +82,12 @@ export const toPostLaudo = async (laudoData, type) => {
     return laudoData;
 };
 
-export const saveLaudo = async (laudoData) => {
-    try {
-        console.log(laudoData);
-        const response = await axios.post(`${BASE_URL}/laudos`, laudoData);
-        return response;
-    } catch (error) {
-        return error.response;
-    }
+export const saveLaudo = (laudoData) => {
+    return axios.post(`${BASE_URL}/laudos`, laudoData);
 };
 
-export const updateLaudo = async (laudoData) => {
-    try {
-        const response = await axios.put(`${BASE_URL}/laudos`, laudoData);
-        return response;
-    } catch (error) {
-        return error.response;
-    }
+export const updateLaudo = (laudoData) => {
+    return axios.put(`${BASE_URL}/laudos`, laudoData);
 };
 
 export const deleteLaudo = async (id) => {

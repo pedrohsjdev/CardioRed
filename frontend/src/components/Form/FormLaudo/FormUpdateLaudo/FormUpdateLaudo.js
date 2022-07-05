@@ -7,6 +7,7 @@ import moment from "moment";
 import { getPacientesByName } from "../../../../services/Paciente/PacienteService";
 import { getLastLaudoId, consultaExists } from "../../../../services/Laudo/LaudoService";
 import { findCIDByCode, findCIDByName } from "../../../../services/Consulta/ConsultaService";
+import { userIsDocente, userIsAdm } from "../../../../services/Login/LoginService";
 
 const FormUpdateLaudo = ({ laudoData, setLaudoData, updateLaudo, setShow }) => {
     const laudoChange = (event) => {
@@ -65,7 +66,6 @@ const FormUpdateLaudo = ({ laudoData, setLaudoData, updateLaudo, setShow }) => {
     const [validated, setValidated] = useState(false);
     const [errorPacienteMessage, setErrorPacienteMessage] = useState("");
     const handleSubmit = (event) => {
-        console.log(laudoData);
         event.preventDefault();
         if (!laudoData.paciente) {
             console.log("a");
@@ -78,10 +78,6 @@ const FormUpdateLaudo = ({ laudoData, setLaudoData, updateLaudo, setShow }) => {
             setConclusionIsInvalid(true);
             return;
         }
-        if (examTypeIsInvalid) {
-            console.log("c");
-            return;
-        }
         if (resultIsInvalid) {
             console.log("d");
             return;
@@ -91,35 +87,11 @@ const FormUpdateLaudo = ({ laudoData, setLaudoData, updateLaudo, setShow }) => {
             console.log("e");
             event.stopPropagation();
         } else {
-            console.log(laudoData);
             updateLaudo();
         }
 
         setValidated(true);
     };
-
-    const [examTypeError, setExamTypeError] = useState("Informe o tipo de exame.");
-    const [examTypeIsInvalid, setExamTypeIsInvalid] = useState(false);
-    useEffect(
-        () => {
-            const timeoutExamType = setTimeout(() => {
-                console.log(laudoData);
-                consultaExists({ ...laudoData, results: "" }).then((res) => {
-                    if (!res.data) {
-                        setExamTypeIsInvalid(true);
-                        setExamTypeError(
-                            "O paciente selecionado não possui nenhuma consulta, com esse tipo de exame, aguardando a emissão do laudo."
-                        );
-                    } else {
-                        setExamTypeIsInvalid(false);
-                    }
-                });
-            }, 500);
-            return () => clearTimeout(timeoutExamType);
-        },
-        [laudoData.examType],
-        [laudoData.paciente]
-    );
 
     const [resultIsInvalid, setResultIsInvalid] = useState(false);
     const [resultsErrorMessage, setResultsErrorMessage] = useState("É necessário carregar o resultado do exame.");
@@ -157,6 +129,63 @@ const FormUpdateLaudo = ({ laudoData, setLaudoData, updateLaudo, setShow }) => {
         cpf = cpf.replace(/(\d{3})(\d)/, "$1.$2");
         cpf = cpf.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
         return cpf;
+    };
+
+    /* Medico ASYNC */
+    const [isLoadingMedico, setIsLoadingMedico] = useState(false);
+    const [optionsMedico, setOptionsMedico] = useState([]);
+    const [medicoIsInvalid, setMedicoIsInvalid] = useState(false);
+    const handleSearchMedico = (name) => {
+        setIsLoadingMedico(true);
+
+        getMedicosByName(name.charAt(0).toUpperCase() + name.slice(1)).then((response) => {
+            setOptionsMedico(response.data);
+            setIsLoadingMedico(false);
+        });
+    };
+
+    const renderMedicoInput = () => {
+        if (userIsAdm()) {
+            return (
+                <Form.Group as={Row} className="mb-3">
+                    <Form.Label column sm={2}>
+                        Médico*:
+                    </Form.Label>
+                    <Col sm={10}>
+                        <AsyncTypeahead
+                            id="medicoAsync"
+                            isInvalid={medicoIsInvalid}
+                            required
+                            isLoading={isLoadingMedico}
+                            labelKey={(option) => `${option.name} - (${option.crm})`}
+                            onSearch={handleSearchMedico}
+                            options={optionsMedico}
+                            minLength={1}
+                            promptText="Buscar médicos..."
+                            searchText="Buscando..."
+                            emptyLabel="Nenhum médico encontrado."
+                            placeholder="Buscar médicos..."
+                            onChange={(option) => {
+                                setNewLaudoData({ ...laudoData, medico: option[0] });
+                                if (!option.length) {
+                                    setMedicoIsInvalid(true);
+                                } else {
+                                    setMedicoIsInvalid(false);
+                                }
+                            }}
+                            renderMenuItemChildren={(option) => (
+                                <span>
+                                    {option.name} - ({option.crm})
+                                </span>
+                            )}
+                        />
+                        <div hidden={!medicoIsInvalid} className="invalid-tooltip" style={{ display: "block" }}>
+                            Informe o médico que irá realizar a consulta.
+                        </div>
+                    </Col>
+                </Form.Group>
+            );
+        }
     };
 
     const [modifyFile, setModifyFile] = useState(false);
@@ -230,6 +259,7 @@ const FormUpdateLaudo = ({ laudoData, setLaudoData, updateLaudo, setShow }) => {
                     ></Form.Control>
                 </Col>
             </Form.Group>
+            {renderMedicoInput()}
             <Form.Group as={Row} className="mb-3">
                 <Form.Label column sm={2}>
                     Exame*:

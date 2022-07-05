@@ -3,10 +3,15 @@ import "./LaudosTable.css";
 import {
     findAllLaudos,
     findLaudosByPacienteName,
+    findLaudosByPacienteCpfToMedico,
+    findLaudosByPacienteCpfToResidente,
+    findLaudosByPacienteNameToMedico,
+    findLaudosByPacienteNameToResidente,
     findLaudosByPacienteCpf,
     findLaudosByStatusNot,
+    findAllLaudosResidenteUser,
 } from "../../../services/Laudo/LaudoService";
-import { userIsMedico } from "../../../services/Login/LoginService";
+import { userIsMedico, userIsResidente, getUsername } from "../../../services/Login/LoginService";
 
 const LaudosTable = ({ searchInput, currentPage, refreshLaudoTable, setPageData, openModalView }) => {
     const [laudos, setLaudos] = useState([{}]);
@@ -21,26 +26,66 @@ const LaudosTable = ({ searchInput, currentPage, refreshLaudoTable, setPageData,
 
     useEffect(() => {
         const getLaudos = async () => {
-            const response = userIsMedico()
-                ? await findLaudosByStatusNot("PROVISORIO", currentPage)
-                : await findAllLaudos(currentPage);
-            if (response.content) {
-                console.log(response);
-                setLaudos(response.content);
+            let response;
+            if (userIsMedico()) {
+                response = await findLaudosByStatusNot("PROVISORIO", currentPage);
+            } else if (userIsResidente()) {
+                response = await findAllLaudosResidenteUser(getUsername(), currentPage);
+            } else {
+                response = await findAllLaudos(currentPage);
+            }
+
+            if (response.data.content) {
+                setLaudos(response.data.content);
             } else {
                 setLaudos([{}]);
             }
-            setPageData(response);
+            setPageData(response.data);
         };
 
         const getLaudosByPacienteName = async () => {
-            const response = await findLaudosByPacienteName(searchInput.charAt(0).toUpperCase() + searchInput.slice(1));
+            let response;
+            if (userIsMedico()) {
+                response = await findLaudosByPacienteNameToMedico(
+                    searchInput.charAt(0).toUpperCase() + searchInput.slice(1),
+                    currentPage
+                );
+            } else if (userIsResidente()) {
+                response = await findLaudosByPacienteNameToResidente(
+                    searchInput.charAt(0).toUpperCase() + searchInput.slice(1),
+                    getUsername(),
+                    currentPage
+                );
+            } else {
+                response = await findLaudosByPacienteName(
+                    searchInput.charAt(0).toUpperCase() + searchInput.slice(1),
+                    currentPage
+                );
+            }
             setLaudos(response.data.content);
             setPageData(response.data);
         };
 
         const getLaudosByPacienteCpf = async () => {
-            const response = await findLaudosByPacienteCpf(searchInput);
+            let response;
+            if (userIsMedico()) {
+                response = await findLaudosByPacienteCpfToMedico(
+                    searchInput.charAt(0).toUpperCase() + searchInput.slice(1),
+                    currentPage
+                );
+            } else if (userIsResidente()) {
+                response = await findLaudosByPacienteCpfToResidente(
+                    searchInput.charAt(0).toUpperCase() + searchInput.slice(1),
+                    getUsername(),
+                    currentPage
+                );
+            } else {
+                response = await findLaudosByPacienteCpf(
+                    searchInput.charAt(0).toUpperCase() + searchInput.slice(1),
+                    currentPage
+                );
+            }
+
             setLaudos(response.data.content);
             setPageData(response.data);
         };
