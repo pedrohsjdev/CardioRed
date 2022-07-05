@@ -15,9 +15,9 @@ function Home() {
 
     return (
         <>
-            <div class="page-container-home">
+            <div className="page-container-home">
                 <NavBar currentPage="H" />
-                <div class="content-wrap">
+                <div className="content-wrap">
                     <HomeContent />
                 </div>
                 <Footer />

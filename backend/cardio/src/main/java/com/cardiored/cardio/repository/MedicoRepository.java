@@ -16,6 +16,8 @@ public interface MedicoRepository extends JpaRepository<Medico, Integer> {
 
     Page<Medico> findByNameContains(@Param("name") String name, Pageable pageable);
 
+    List<Medico> findByNameContains(@Param("name") String name);
+
     Page<Medico> findByCrmContains(@Param("crm") String crm, Pageable pageable);
 
     Medico findByCrm(String crm);

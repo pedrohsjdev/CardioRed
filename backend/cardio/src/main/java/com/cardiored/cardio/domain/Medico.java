@@ -14,7 +14,6 @@ import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -44,6 +43,11 @@ public class Medico {
     @Enumerated(EnumType.STRING)
     @NotNull
     private DoctorType doctorType;
+
+    private Integer residencyYear;
+
+    @Enumerated(EnumType.STRING)
+    private Titulation titulation;
 
     @OneToOne
     @JoinColumn(name = "userId")

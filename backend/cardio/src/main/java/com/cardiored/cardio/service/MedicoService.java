@@ -39,6 +39,10 @@ public class MedicoService {
         return medicoRepository.findByNameContains(name, pageable);
     }
 
+    public List<Medico> findByNameContains(String name) {
+        return medicoRepository.findByNameContains(name);
+    }
+
     public Medico findByIdOrThrowException(Integer id) {
         return medicoRepository.findById(id).orElseThrow(() -> new RuntimeException("Medico not found!"));
     }
@@ -61,14 +65,18 @@ public class MedicoService {
     public void replace(Medico medico) {
         findByIdOrThrowException(medico.getId());
 
-        // Search a Medico with the same CRM as the new Medico.
-        Medico medicoSameCRM = findByCrm(medico.getCrm());
-        // If Medico with the same CRM was found and he isn't the Medico being updated,
-        // then...
-        if (medicoSameCRM != null && medicoSameCRM.getId() != medico.getId()) {
-            throw new RuntimeException("Already exists a Medico with this CRM!");
-        }
+        medicoSameCRM(medico.getCrm(), medico.getId());
 
         medicoRepository.save(medico);
+    }
+
+    public void medicoSameCRM(String crm, Integer id) {
+        // Search a Medico with the same CRM as the new Medico.
+        Medico medicoSameCRM = findByCrm(crm);
+        // If Medico with the same CRM was found and he isn't the Medico being updated,
+        // then...
+        if (medicoSameCRM != null && medicoSameCRM.getId() != id) {
+            throw new RuntimeException("Already exists a Medico with this CRM!");
+        }
     }
 }

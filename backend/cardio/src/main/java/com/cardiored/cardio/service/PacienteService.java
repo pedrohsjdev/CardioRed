@@ -35,6 +35,10 @@ public class PacienteService {
         return pacienteRepository.findByNameContains(name, pageable);
     }
 
+    public List<Paciente> findByNameContains(String name) {
+        return pacienteRepository.findByNameContains(name);
+    }
+
     public Page<Paciente> findByCpfContains(String cpf, Pageable pageable) {
         return pacienteRepository.findByCpfContains(cpf, pageable);
     }

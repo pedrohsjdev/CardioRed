@@ -5,14 +5,11 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import com.cardiored.cardio.domain.Docente;
 import com.cardiored.cardio.domain.Medico;
-import com.cardiored.cardio.domain.Residente;
 import com.cardiored.cardio.domain.User;
-import com.cardiored.cardio.request.medico.AllMedicoInfo;
-import com.cardiored.cardio.service.DocenteService;
+import com.cardiored.cardio.request.medico.MedicoDTO;
+import com.cardiored.cardio.request.medico.MedicoPutDTO;
 import com.cardiored.cardio.service.MedicoService;
-import com.cardiored.cardio.service.ResidenteService;
 import com.cardiored.cardio.service.UserService;
 
 import org.springframework.data.domain.Page;
@@ -38,8 +35,6 @@ import lombok.RequiredArgsConstructor;
 public class MedicoController {
     private final MedicoService medicoService;
     private final UserService userService;
-    private final DocenteService docenteService;
-    private final ResidenteService residenteService;
     private final PasswordEncoder passwordEncoder;
 
     @GetMapping
@@ -62,6 +57,11 @@ public class MedicoController {
         return ResponseEntity.ok(medicoService.findByNameContains(name, pageable));
     }
 
+    @GetMapping(path = "findList/name/like/{name}")
+    public ResponseEntity<List<Medico>> findByNameLikeList(@PathVariable String name) {
+        return ResponseEntity.ok(medicoService.findByNameContains(name));
+    }
+
     @GetMapping("find/crm/{crm}")
     public ResponseEntity<Medico> findByCrm(@PathVariable(required = false) String crm) {
         return ResponseEntity.ok(medicoService.findByCrm(crm));
@@ -73,44 +73,42 @@ public class MedicoController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> save(@RequestBody @Valid AllMedicoInfo allMedicoInfo) {
-        User user;
-        switch (allMedicoInfo.getDoctorType()) {
+    public ResponseEntity<Void> save(@RequestBody @Valid MedicoDTO medicoDTO) {
+
+        User user = null;
+        switch (medicoDTO.getDoctorType()) {
             case DOCENTE:
                 user = userService
-                        .save(new User(null, allMedicoInfo.getCrm(), allMedicoInfo.getPassword(), new ArrayList<>()));
-                userService.addRoleToUser(allMedicoInfo.getCrm(), "ROLE_DOCENTE");
-
-                docenteService.save(Docente.builder()
-                        .crm(allMedicoInfo.getCrm())
-                        .name(allMedicoInfo.getName())
-                        .doctorType(allMedicoInfo.getDoctorType())
+                        .save(new User(null, medicoDTO.getCrm(), medicoDTO.getPassword(), new ArrayList<>()));
+                userService.addRoleToUser(medicoDTO.getCrm(), "ROLE_DOCENTE");
+                medicoService.save(Medico.builder()
+                        .crm(medicoDTO.getCrm())
+                        .name(medicoDTO.getName())
+                        .doctorType(medicoDTO.getDoctorType())
                         .user(user)
-                        .titulation(allMedicoInfo.getTitulation())
+                        .titulation(medicoDTO.getTitulation())
                         .build());
                 break;
             case RESIDENTE:
                 user = userService
-                        .save(new User(null, allMedicoInfo.getCrm(), allMedicoInfo.getPassword(), new ArrayList<>()));
-                userService.addRoleToUser(allMedicoInfo.getCrm(), "ROLE_RESIDENTE");
-
-                residenteService.save(Residente.builder()
-                        .crm(allMedicoInfo.getCrm())
-                        .name(allMedicoInfo.getName())
-                        .doctorType(allMedicoInfo.getDoctorType())
+                        .save(new User(null, medicoDTO.getCrm(), medicoDTO.getPassword(), new ArrayList<>()));
+                userService.addRoleToUser(medicoDTO.getCrm(), "ROLE_RESIDENTE");
+                medicoService.save(Medico.builder()
+                        .crm(medicoDTO.getCrm())
+                        .name(medicoDTO.getName())
+                        .doctorType(medicoDTO.getDoctorType())
                         .user(user)
-                        .residencyYear(allMedicoInfo.getResidencyYear())
+                        .residencyYear(medicoDTO.getResidencyYear())
                         .build());
                 break;
             case MEDICO:
                 user = userService
-                        .save(new User(null, allMedicoInfo.getCrm(), allMedicoInfo.getPassword(), new ArrayList<>()));
-                userService.addRoleToUser(allMedicoInfo.getCrm(), "ROLE_MEDICO");
-
+                        .save(new User(null, medicoDTO.getCrm(), medicoDTO.getPassword(), new ArrayList<>()));
+                userService.addRoleToUser(medicoDTO.getCrm(), "ROLE_MEDICO");
                 medicoService.save(Medico.builder()
-                        .crm(allMedicoInfo.getCrm())
-                        .name(allMedicoInfo.getName())
-                        .doctorType(allMedicoInfo.getDoctorType())
+                        .crm(medicoDTO.getCrm())
+                        .name(medicoDTO.getName())
+                        .doctorType(medicoDTO.getDoctorType())
                         .user(user)
                         .build());
         }
@@ -119,79 +117,47 @@ public class MedicoController {
     }
 
     @PutMapping
-    public ResponseEntity<Void> replace(@RequestBody @Valid AllMedicoInfo allMedicoInfo) {
-        Medico medicoReplacing = medicoService.findByIdOrThrowException(allMedicoInfo.getId());
-        System.out.println("\nMedicoReplacing: " + medicoReplacing);
-        Medico medicoSameCrm = medicoService.findByCrm(allMedicoInfo.getCrm());
-        System.out.println("\nMedico: " + medicoSameCrm);
-        if (medicoSameCrm != null && medicoReplacing.getId() != medicoSameCrm.getId()) {
-            throw new RuntimeException("Alrealdy exists a medico with the same CRM.");
+    public ResponseEntity<Void> replace(@RequestBody @Valid MedicoPutDTO medicoPutDTO) {
+        medicoService.medicoSameCRM(medicoPutDTO.getCrm(), medicoPutDTO.getId());
+        User user = medicoPutDTO.getUser();
+        user.setUsername(medicoPutDTO.getCrm());
+        if (!user.getPassword().equals("")) {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+        } else {
+            user.setPassword(userService.findByIdOrThrowException(user.getId()).getPassword());
         }
-
-        User user;
-        switch (allMedicoInfo.getDoctorType()) {
+        user.getRoles().clear();
+        userService.replace(user);
+        switch (medicoPutDTO.getDoctorType()) {
             case DOCENTE:
-                user = docenteService.findByIdOrThrowException(allMedicoInfo.getId()).getUser();
-                docenteService.delete(allMedicoInfo.getId());
-                user.setUsername(allMedicoInfo.getCrm());
-                if (allMedicoInfo.getPassword() != null) {
-                    user.setPassword(passwordEncoder.encode(allMedicoInfo.getPassword()));
-                }
-                user.setRoles(new ArrayList<>());
-                userService.replace(user);
-                userService.addRoleToUser(allMedicoInfo.getCrm(), "ROLE_DOCENTE");
-                userService.addRoleToUser(allMedicoInfo.getCrm(), "ROLE_MEDICO");
-
-                docenteService.save(Docente.builder()
-                        .id(allMedicoInfo.getId())
-                        .crm(allMedicoInfo.getCrm())
-                        .name(allMedicoInfo.getName())
-                        .doctorType(allMedicoInfo.getDoctorType())
+                userService.addRoleToUser(user.getUsername(), "ROLE_DOCENTE");
+                medicoService.replace(Medico.builder().id(medicoPutDTO.getId())
+                        .crm(medicoPutDTO.getCrm())
+                        .name(medicoPutDTO.getName())
+                        .doctorType(medicoPutDTO.getDoctorType())
                         .user(user)
-                        .titulation(allMedicoInfo.getTitulation())
+                        .titulation(medicoPutDTO.getTitulation())
                         .build());
                 break;
             case RESIDENTE:
-                user = residenteService.findByIdOrThrowException(allMedicoInfo.getId()).getUser();
-                residenteService.delete(allMedicoInfo.getId());
-                user.setUsername(allMedicoInfo.getCrm());
-                if (allMedicoInfo.getPassword() != null) {
-                    user.setPassword(passwordEncoder.encode(allMedicoInfo.getPassword()));
-                }
-                user.setRoles(new ArrayList<>());
-                userService.replace(user);
-                userService.addRoleToUser(allMedicoInfo.getCrm(), "ROLE_RESIDENTE");
-                userService.addRoleToUser(allMedicoInfo.getCrm(), "ROLE_MEDICO");
-
-                residenteService.save(Residente.builder()
-                        .id(allMedicoInfo.getId())
-                        .crm(allMedicoInfo.getCrm())
-                        .name(allMedicoInfo.getName())
-                        .doctorType(allMedicoInfo.getDoctorType())
+                userService.addRoleToUser(user.getUsername(), "ROLE_RESIDENTE");
+                medicoService.replace(Medico.builder().id(medicoPutDTO.getId())
+                        .crm(medicoPutDTO.getCrm())
+                        .name(medicoPutDTO.getName())
+                        .doctorType(medicoPutDTO.getDoctorType())
                         .user(user)
-                        .residencyYear(allMedicoInfo.getResidencyYear())
+                        .residencyYear(medicoPutDTO.getResidencyYear())
                         .build());
                 break;
             case MEDICO:
-                user = medicoService.findByIdOrThrowException(allMedicoInfo.getId()).getUser();
-                medicoService.delete(allMedicoInfo.getId());
-                user.setUsername(allMedicoInfo.getCrm());
-                if (allMedicoInfo.getPassword() != null) {
-                    user.setPassword(passwordEncoder.encode(allMedicoInfo.getPassword()));
-                }
-                user.setRoles(new ArrayList<>());
-                userService.replace(user);
-                userService.addRoleToUser(allMedicoInfo.getCrm(), "ROLE_MEDICO");
-
-                medicoService.save(Medico.builder()
-                        .id(allMedicoInfo.getId())
-                        .crm(allMedicoInfo.getCrm())
-                        .name(allMedicoInfo.getName())
-                        .doctorType(allMedicoInfo.getDoctorType())
+                userService.addRoleToUser(user.getUsername(), "ROLE_MEDICO");
+                medicoService.replace(Medico.builder().id(medicoPutDTO.getId())
+                        .crm(medicoPutDTO.getCrm())
+                        .name(medicoPutDTO.getName())
+                        .doctorType(medicoPutDTO.getDoctorType())
                         .user(user)
                         .build());
         }
-
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

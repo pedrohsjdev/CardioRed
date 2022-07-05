@@ -4,7 +4,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { AsyncTypeahead } from "react-bootstrap-typeahead";
 import moment from "moment";
-import { findPacientesByName } from "../../../../services/Paciente/PacienteService";
+import { getPacientesByName } from "../../../../services/Paciente/PacienteService";
 import { findMedicosByName } from "../../../../services/Medico/MedicoService";
 import {
     getLastCosultaId,
@@ -65,7 +65,7 @@ const FormCreateConsulta = ({ newConsultaData, setNewConsultaData, saveConsulta,
     const handleSearch = (name) => {
         setIsLoading(true);
 
-        findPacientesByName(name.charAt(0).toUpperCase() + name.slice(1)).then((response) => {
+        getPacientesByName(name.charAt(0).toUpperCase() + name.slice(1)).then((response) => {
             setOptions(response.data);
             setIsLoading(false);
         });
