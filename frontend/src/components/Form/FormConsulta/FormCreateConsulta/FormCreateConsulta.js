@@ -20,6 +20,7 @@ const FormCreateConsulta = ({ newConsultaData, setNewConsultaData, saveConsulta,
     useEffect(() => {
         const getNewId = async () => {
             await getLastCosultaId().then((res) => {
+                setNewConsultaData({ ...newConsultaData, id: res.data + 1 });
                 setNewId(res.data + 1);
             });
         };
