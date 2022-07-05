@@ -22,6 +22,7 @@ public class LaudoService {
     private final LaudoRepository laudoRepository;
     private final PacienteService pacienteService;
     private final ConsultaRepository consultaRepository;
+    private final ConsultaService consultaService;
 
     public Page<Laudo> pageAll(Pageable pageable) {
         return laudoRepository.findAll(pageable);
@@ -31,16 +32,42 @@ public class LaudoService {
         return laudoRepository.findAllByStatusNot(status, pageable);
     }
 
+    public Page<Laudo> pageAllByStatusOrMedicoCrm(LaudoStatus status, String crm, Pageable pageable) {
+        Page<Laudo> page = laudoRepository.findAllByStatusOrMedicoCrm(status, crm, pageable);
+        System.out.println("\n\nPAGE: " + page);
+        return page;
+    }
+
     public Laudo findByIdOrThrowException(Integer id) {
         return laudoRepository.findById(id).orElseThrow(() -> new RuntimeException("Laudo not found!"));
     }
 
-    public Page<Laudo> findAllByPacienteNameContains(String name, Pageable pageable) {
+    public Page<Laudo> findAllByPacienteName(String name, Pageable pageable) {
         return laudoRepository.findAllByPacienteNameContains(name, pageable);
     }
 
-    public Page<Laudo> findAllByPacienteCpfContains(String cpf, Pageable pageable) {
+    public Page<Laudo> findAllByPacienteNameAndStatus(String name, LaudoStatus status, Pageable pageable) {
+        return laudoRepository.findAllByPacienteNameContainsAndStatus(name, status, pageable);
+    }
+
+    public Page<Laudo> findAllByPacienteNameAndStatusOrMedicoCrm(String name, LaudoStatus status, String crm,
+            Pageable pageable) {
+        return laudoRepository.findAllByPacienteNameContainsAndStatusOrPacienteNameContainsAndMedicoCrm(name, status,
+                name, crm, pageable);
+    }
+
+    public Page<Laudo> findAllByPacienteCpf(String cpf, Pageable pageable) {
         return laudoRepository.findAllByPacienteCpfContains(cpf, pageable);
+    }
+
+    public Page<Laudo> findAllByPacienteCpfAndStatus(String cpf, LaudoStatus status, Pageable pageable) {
+        return laudoRepository.findAllByPacienteCpfContainsAndStatus(cpf, status, pageable);
+    }
+
+    public Page<Laudo> findAllByPacienteCpfAndStatusOrMedicoCrm(String cpf, LaudoStatus status, String crm,
+            Pageable pageable) {
+        return laudoRepository.findAllByPacienteCpfContainsAndStatusOrPacienteCpfContainsAndMedicoCrm(cpf, status,
+                cpf, crm, pageable);
     }
 
     public Integer getLastId() {
@@ -62,7 +89,11 @@ public class LaudoService {
     }
 
     public void delete(Integer id) {
-        laudoRepository.delete(findByIdOrThrowException(id));
+        Laudo laudo = findByIdOrThrowException(id);
+        Consulta consulta = laudo.getConsulta();
+        consulta.setStatus(ConsultaStatus.AGUARDANDO_LAUDO);
+        consultaRepository.save(consulta);
+        laudoRepository.delete(laudo);
     }
 
     public void replace(Laudo laudo) {

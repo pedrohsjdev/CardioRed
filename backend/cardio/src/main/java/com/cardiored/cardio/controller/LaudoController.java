@@ -26,6 +26,12 @@ public class LaudoController {
         return ResponseEntity.ok(laudoService.pageAll(pageable));
     }
 
+    @GetMapping(path = "/{status}/{crm}")
+    public ResponseEntity<Page<Laudo>> pageAllByStatusOrMedicoCrm(@PathVariable LaudoStatus status,
+            @PathVariable String crm, Pageable pageable) {
+        return ResponseEntity.ok(laudoService.pageAllByStatusOrMedicoCrm(status, crm, pageable));
+    }
+
     @GetMapping(path = "/statusnot/{status}")
     public ResponseEntity<Page<Laudo>> pageStatusNot(@PathVariable LaudoStatus status, Pageable pageable) {
         return ResponseEntity.ok(laudoService.pageAllStatusNot(status, pageable));
@@ -36,14 +42,49 @@ public class LaudoController {
         return ResponseEntity.ok(laudoService.findByIdOrThrowException(id));
     }
 
+    // Geral
     @GetMapping(path = "find/name/like/{name}")
-    public ResponseEntity<Page<Laudo>> findByPacienteNameContains(@PathVariable String name, Pageable pageable) {
-        return ResponseEntity.ok(laudoService.findAllByPacienteNameContains(name, pageable));
+    public ResponseEntity<Page<Laudo>> findAllByPacienteName(@PathVariable String name,
+            Pageable pageable) {
+        return ResponseEntity.ok(laudoService.findAllByPacienteName(name, pageable));
     }
 
+    // Medico
+    @GetMapping(path = "find/{status}/name/like/{name}")
+    public ResponseEntity<Page<Laudo>> findAllByPacienteNameAndStatus(@PathVariable String name,
+            @PathVariable LaudoStatus status, Pageable pageable) {
+        return ResponseEntity.ok(laudoService.findAllByPacienteNameAndStatus(name, status, pageable));
+    }
+
+    // Residente
+    @GetMapping(path = "find/name/like/{name}/{status}/{crm}")
+    public ResponseEntity<Page<Laudo>> findAllByPacienteNameAndStatusOrMedicoCrm(@PathVariable String name,
+            @PathVariable LaudoStatus status,
+            @PathVariable String crm, Pageable pageable) {
+        return ResponseEntity
+                .ok(laudoService.findAllByPacienteNameAndStatusOrMedicoCrm(name, status, crm, pageable));
+    }
+
+    // Geral
     @GetMapping(path = "find/cpf/like/{cpf}")
-    public ResponseEntity<Page<Laudo>> findByPacienteCpfContains(@PathVariable String cpf, Pageable pageable) {
-        return ResponseEntity.ok(laudoService.findAllByPacienteCpfContains(cpf, pageable));
+    public ResponseEntity<Page<Laudo>> findAllByPacienteCpf(@PathVariable String cpf, Pageable pageable) {
+        return ResponseEntity.ok(laudoService.findAllByPacienteCpf(cpf, pageable));
+    }
+
+    // Medico
+    @GetMapping(path = "find/{status}/cpf/like/{cpf}")
+    public ResponseEntity<Page<Laudo>> findAllByPacienteCpfAndStatus(@PathVariable String cpf,
+            @PathVariable LaudoStatus status, Pageable pageable) {
+        return ResponseEntity.ok(laudoService.findAllByPacienteCpfAndStatus(cpf, status, pageable));
+    }
+
+    // Residente
+    @GetMapping(path = "find/cpf/like/{cpf}/{status}/{crm}")
+    public ResponseEntity<Page<Laudo>> findAllByPacienteCpfAndStatusOrMedicoCrm(@PathVariable String cpf,
+            @PathVariable LaudoStatus status,
+            @PathVariable String crm, Pageable pageable) {
+        return ResponseEntity
+                .ok(laudoService.findAllByPacienteCpfAndStatusOrMedicoCrm(cpf, status, crm, pageable));
     }
 
     @GetMapping(path = "getLastId")
