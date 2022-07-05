@@ -1,13 +1,12 @@
 package com.cardiored.cardio.request.medico;
 
-import javax.persistence.Inheritance;
 import javax.validation.constraints.NotEmpty;
 
 import com.cardiored.cardio.domain.DoctorType;
+import com.cardiored.cardio.domain.Titulation;
 import com.cardiored.cardio.domain.User;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,7 +17,6 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-@Inheritance
 public class MedicoPutDTO {
     private Integer id;
 
@@ -30,5 +28,10 @@ public class MedicoPutDTO {
 
     private DoctorType doctorType;
 
+    private Integer residencyYear;
+
+    private Titulation titulation;
+
     private User user;
+
 }
