@@ -6,6 +6,13 @@ import { getMedicoByCRM } from "../../../../services/Medico/MedicoService";
 
 const FormUpdateMedico = ({ startCrmTemporary, medicoData, setMedicoData, updateMedico, setShow }) => {
     const medicoChange = (event) => {
+        if (event.target.name === "password") {
+            setMedicoData({
+                ...medicoData,
+                user: { ...medicoData.user, password: event.target.value },
+            });
+            return;
+        }
         setMedicoData({
             ...medicoData,
             [event.target.name]: event.target.value,
@@ -200,6 +207,8 @@ const FormUpdateMedico = ({ startCrmTemporary, medicoData, setMedicoData, update
                         autoComplete="off"
                         onChange={(e) => {
                             medicoChange(e);
+                            console.log(e.target.value);
+                            console.log(medicoData);
                             verifyPassword(e.target.value);
                         }}
                         name="password"

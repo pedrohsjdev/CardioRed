@@ -106,6 +106,7 @@ const Medicos = () => {
 
     const openModalUpdate = () => {
         setShowModalUpdate(true);
+        setMedicoData({ ...medicoData, user: { ...medicoData.user, password: "" } });
         setStartCrmTemporary(medicoData.crm);
     };
 
@@ -157,7 +158,7 @@ const Medicos = () => {
                 <h1 className="title-element">Listagem de Médicos</h1>
                 <div className="d-flex justify-content-between">
                     <Button value="Cadastrar" action={openModalCreate} />
-                    <TableSearch searchInput={searchInput} setSearchInput={setSearchInput} criteria="CRM" />
+                    <TableSearch searchInput={searchInput} setSearchInput={setSearchInput} criteria="CRM ou nome" />
                 </div>
                 <MedicosTable
                     setPageData={setPageData}
