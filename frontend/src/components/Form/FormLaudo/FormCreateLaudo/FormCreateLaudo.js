@@ -165,10 +165,10 @@ const FormCreateLaudo = ({ newLaudoData, setNewLaudoData, saveLaudo, setShow }) 
         if (userIsAdm()) {
             return (
                 <Form.Group as={Row} className="mb-3">
-                    <Form.Label column sm={2}>
+                    <Form.Label column sm={3}>
                         Médico*:
                     </Form.Label>
-                    <Col sm={10}>
+                    <Col sm={9}>
                         <AsyncTypeahead
                             id="medicoAsync"
                             isInvalid={medicoIsInvalid}
@@ -208,18 +208,18 @@ const FormCreateLaudo = ({ newLaudoData, setNewLaudoData, saveLaudo, setShow }) 
     return (
         <Form noValidate validated={validated} onSubmit={handleSubmit}>
             <Form.Group as={Row} className="mb-3">
-                <Form.Label column sm={2}>
+                <Form.Label column sm={3}>
                     Identificador:
                 </Form.Label>
-                <Col sm={10}>
+                <Col sm={9}>
                     <Form.Control value={newId} name="id" disabled onChange={laudoChange} type="number" />
                 </Col>
             </Form.Group>
             <Form.Group as={Row} className="mb-3">
-                <Form.Label column sm={2}>
+                <Form.Label column sm={3}>
                     Resultados*:
                 </Form.Label>
-                <Col sm={10}>
+                <Col sm={9}>
                     <Col className="mb-3">
                         <Form.Control
                             isInvalid={resultIsInvalid}
@@ -261,10 +261,10 @@ const FormCreateLaudo = ({ newLaudoData, setNewLaudoData, saveLaudo, setShow }) 
                 </Col>
             </Form.Group>
             <Form.Group as={Row} className="mb-3">
-                <Form.Label column sm={2}>
+                <Form.Label column sm={3}>
                     Paciente*:
                 </Form.Label>
-                <Col sm={10}>
+                <Col sm={9}>
                     <AsyncTypeahead
                         id="pacienteAsync"
                         isInvalid={pacienteIsInvalid}
@@ -299,10 +299,10 @@ const FormCreateLaudo = ({ newLaudoData, setNewLaudoData, saveLaudo, setShow }) 
             </Form.Group>
             {renderMedicoInput()}
             <Form.Group as={Row} className="mb-3">
-                <Form.Label column sm={2}>
+                <Form.Label column sm={3}>
                     Exame*:
                 </Form.Label>
-                <Col sm={10}>
+                <Col sm={9}>
                     <Form.Select isInvalid={examTypeIsInvalid} onChange={laudoChange} required name="examType">
                         <option value="">Escolha uma opção</option>
                         <option value="Ecocardiograma">Ecocardiograma</option>
@@ -317,10 +317,10 @@ const FormCreateLaudo = ({ newLaudoData, setNewLaudoData, saveLaudo, setShow }) 
                 </Col>
             </Form.Group>
             <Form.Group as={Row} className="mb-3">
-                <Form.Label column sm={2}>
+                <Form.Label column sm={3}>
                     Descrição*:
                 </Form.Label>
-                <Col sm={10}>
+                <Col sm={9}>
                     <Form.Control
                         placeholder="Informe uma breve descrição dos resultados."
                         as="textarea"
@@ -335,10 +335,10 @@ const FormCreateLaudo = ({ newLaudoData, setNewLaudoData, saveLaudo, setShow }) 
                 </Col>
             </Form.Group>
             <Form.Group as={Row} className="mb-3">
-                <Form.Label column sm={2}>
+                <Form.Label column sm={3}>
                     Conclusão*:
                 </Form.Label>
-                <Col sm={10}>
+                <Col sm={9}>
                     <AsyncTypeahead
                         id="cidAsync"
                         isInvalid={conclusionIsInvalid}

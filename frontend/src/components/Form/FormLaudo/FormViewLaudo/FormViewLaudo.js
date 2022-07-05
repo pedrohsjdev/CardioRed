@@ -85,18 +85,18 @@ const FormViewLaudo = ({ laudoData, openModalUpdate, openModalDelete, setShow })
     return (
         <Form>
             <Form.Group as={Row} className="mb-3">
-                <Form.Label column sm={2}>
+                <Form.Label column sm={3}>
                     Identificador:
                 </Form.Label>
-                <Col sm={10}>
+                <Col sm={9}>
                     <Form.Control defaultValue={laudoData.id} disabled type="text" />
                 </Col>
             </Form.Group>
             <Form.Group as={Row} className="mb-3">
-                <Form.Label column sm={2}>
-                    Resultados*:
+                <Form.Label column sm={3}>
+                    Resultados:
                 </Form.Label>
-                <Col sm={9}>
+                <Col sm={8}>
                     <Form.Control defaultValue="Arquivo PDF com resultados" disabled />
                 </Col>
                 <Col className="print-container">
@@ -113,17 +113,17 @@ const FormViewLaudo = ({ laudoData, openModalUpdate, openModalDelete, setShow })
             </Form.Group>
             <Form.Group as={Row} className="mb-3">
                 <Form.Label column sm={3}>
-                    Data e Hora*:
+                    Data e Hora:
                 </Form.Label>
                 <Col sm={9}>
                     <Form.Control defaultValue={laudoData.dateTime} disabled type="text" />
                 </Col>
             </Form.Group>
             <Form.Group as={Row} className="mb-3">
-                <Form.Label column sm={2}>
+                <Form.Label column sm={3}>
                     Paciente:
                 </Form.Label>
-                <Col sm={10}>
+                <Col sm={9}>
                     <Form.Control
                         disabled
                         defaultValue={laudoData.paciente.name + " - (" + maskCPF(laudoData.paciente.cpf) + ")"}
@@ -132,26 +132,26 @@ const FormViewLaudo = ({ laudoData, openModalUpdate, openModalDelete, setShow })
             </Form.Group>
             {renderMedicoInput()}
             <Form.Group as={Row} className="mb-3">
-                <Form.Label column sm={2}>
-                    Exame*:
+                <Form.Label column sm={3}>
+                    Exame:
                 </Form.Label>
-                <Col sm={10}>
+                <Col sm={9}>
                     <Form.Control defaultValue={laudoData.examType} type="text" disabled />
                 </Col>
             </Form.Group>
             <Form.Group as={Row} className="mb-3">
-                <Form.Label column sm={2}>
+                <Form.Label column sm={3}>
                     Descrição*:
                 </Form.Label>
-                <Col sm={10}>
+                <Col sm={9}>
                     <Form.Control disabled defaultValue={laudoData.description} type="text" />
                 </Col>
             </Form.Group>
             <Form.Group as={Row} className="mb-3">
-                <Form.Label column sm={2}>
-                    Conclusão*:
+                <Form.Label column sm={3}>
+                    Conclusão:
                 </Form.Label>
-                <Col sm={10}>
+                <Col sm={9}>
                     <Form.Control
                         disabled
                         defaultValue={laudoData.conclusion.code + " - " + laudoData.conclusion.name}

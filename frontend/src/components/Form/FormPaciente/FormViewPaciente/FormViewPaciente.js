@@ -15,7 +15,7 @@ const FormViewPaciente = ({ pacienteData, openModalUpdate, openModalDelete, setS
             <Form.Control hidden defaultValue={pacienteData.id} />
             <Form.Group as={Row} className="mb-3">
                 <Form.Label column sm={2}>
-                    CPF*:
+                    CPF:
                 </Form.Label>
                 <Col sm={10}>
                     <Form.Control disabled defaultValue={maskCPF(pacienteData.cpf)} type="text" />
@@ -23,7 +23,7 @@ const FormViewPaciente = ({ pacienteData, openModalUpdate, openModalDelete, setS
             </Form.Group>
             <Form.Group as={Row} className="mb-3">
                 <Form.Label column sm={2}>
-                    Nome*:
+                    Nome:
                 </Form.Label>
                 <Col sm={10}>
                     <Form.Control disabled defaultValue={pacienteData.name} type="text" />
@@ -31,7 +31,7 @@ const FormViewPaciente = ({ pacienteData, openModalUpdate, openModalDelete, setS
             </Form.Group>
             <Form.Group as={Row} className="mb-3">
                 <Form.Label column sm={2}>
-                    Sexo*:
+                    Sexo:
                 </Form.Label>
                 <Col sm={10}>
                     <Form.Select disabled defaultValue={pacienteData.gender} type="text">
@@ -43,7 +43,7 @@ const FormViewPaciente = ({ pacienteData, openModalUpdate, openModalDelete, setS
             </Form.Group>
             <Form.Group as={Row} className="mb-3">
                 <Form.Label column sm={2}>
-                    Cor*:
+                    Cor:
                 </Form.Label>
                 <Col sm={10}>
                     <Form.Select disabled type="text" defaultValue={pacienteData.ethnicity}>
@@ -58,7 +58,7 @@ const FormViewPaciente = ({ pacienteData, openModalUpdate, openModalDelete, setS
             </Form.Group>
             <Form.Group as={Row} className="mb-3">
                 <Form.Label column sm={4}>
-                    Data de Nascimento*:
+                    Data de Nascimento:
                 </Form.Label>
                 <Col sm={8}>
                     <Form.Control disabled defaultValue={pacienteData.birthDate} type="text" />

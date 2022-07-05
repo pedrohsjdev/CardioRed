@@ -17,7 +17,9 @@ import { userIsAuthenticated } from "../services/Login/LoginService";
 import { Notify } from "notiflix/build/notiflix-notify-aio";
 import { useNavigate } from "react-router-dom";
 import { savePaciente, updatePaciente, deletePaciente } from "../services/Paciente/PacienteService";
-import { Loading } from "notiflix";
+import { Loading, Report } from "notiflix";
+import { existsConsultaByPacienteCpf } from "../services/Consulta/ConsultaService";
+import { existsLaudoByPacienteCpf } from "../services/Laudo/LaudoService";
 
 const Pacientes = () => {
     const navigate = useNavigate();
@@ -80,19 +82,42 @@ const Pacientes = () => {
 
     const deletePacienteData = async () => {
         Loading.circle();
-        const response = await deletePaciente(pacienteData.id);
+        existsConsultaByPacienteCpf(pacienteData.cpf).then((e) => {
+            if (!e.data) {
+                existsLaudoByPacienteCpf(pacienteData.cpf).then(async (e) => {
+                    if (!e.data) {
+                        const response = await deletePaciente(pacienteData.id);
 
-        if (response.status == 204) {
-            Loading.remove();
-            setShowModalDelete(false);
-            setShowModalView(false);
-            flushPacienteTable();
-            Notify.success("Paciente removido com sucesso!");
-        } else {
-            Loading.remove();
-            Notify.failure("Não foi possível remover o paciente.");
-            console.error(response);
-        }
+                        if (response.status == 204) {
+                            Loading.remove();
+                            setShowModalDelete(false);
+                            setShowModalView(false);
+                            flushPacienteTable();
+                            Notify.success("Paciente removido com sucesso!");
+                        } else {
+                            Loading.remove();
+                            Notify.failure("Não foi possível remover o paciente.");
+                            console.error(response);
+                        }
+                    } else {
+                        Loading.remove();
+                        Report.failure("Ops...", "Existem laudos cadastrados para esse paciente.", "Ok", () => {}, {
+                            titleColor: "#b5303e",
+                            okButtonBackground: "#b5303e",
+                            titleFontSize: "1.3rem",
+                            messageFontSize: "1rem",
+                            buttonsFontSize: "1rem",
+                        });
+                    }
+                });
+            } else {
+                Loading.remove();
+                Report.failure("Ops...", "Existem consultas cadastradas para esse paciente.", "Ok", () => {}, {
+                    titleColor: "#b5303e",
+                    okButtonBackground: "#b5303e",
+                });
+            }
+        });
     };
 
     const openModalCreate = () => {

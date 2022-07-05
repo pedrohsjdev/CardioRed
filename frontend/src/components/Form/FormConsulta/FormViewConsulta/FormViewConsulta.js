@@ -34,13 +34,21 @@ const FormViewConsulta = ({ consultaData, setConsultaData, openModalUpdate, open
         );
     };
 
+    const maskCPF = (cpf) => {
+        cpf = cpf.replace(/\D/g, "");
+        cpf = cpf.replace(/(\d{3})(\d)/, "$1.$2");
+        cpf = cpf.replace(/(\d{3})(\d)/, "$1.$2");
+        cpf = cpf.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+        return cpf;
+    };
+
     const renderPrintIcon = () => {
         if (consultaData.status === "Aguardando exame") {
             return (
                 <button
                     onClick={(e) => {
                         e.preventDefault();
-                        generatePDF(consultaData.paciente.name, consultaData.dateTime);
+                        generatePDF(consultaData);
                     }}
                     className="btn-print-consulta"
                 >
@@ -148,7 +156,9 @@ const FormViewConsulta = ({ consultaData, setConsultaData, openModalUpdate, open
                 <Col sm={9}>
                     <Form.Control
                         defaultValue={
-                            consultaData.paciente ? consultaData.paciente.name + " - " + consultaData.paciente.cpf : ""
+                            consultaData.paciente
+                                ? consultaData.paciente.name + " (" + maskCPF(consultaData.paciente.cpf) + ")"
+                                : ""
                         }
                         disabled
                         type="text"

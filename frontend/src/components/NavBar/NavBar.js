@@ -4,8 +4,10 @@ import Logo from "../../assets/logo-navbar.svg";
 import Logout from "../../assets/logout.svg";
 import { BASE_URL_FRONTEND } from "../../utils/Consts";
 import { logoutUser, userIsAdm, userIsAuthenticated } from "../../services/Login/LoginService";
+import Notiflix from "notiflix";
 
 const NavBar = ({ currentPage }) => {
+    Notiflix.Notify.init({ closeButton: true });
     if (!userIsAuthenticated()) {
         return null;
     }

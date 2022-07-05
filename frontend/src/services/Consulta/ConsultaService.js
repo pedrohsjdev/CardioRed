@@ -50,6 +50,14 @@ export const findByPacienteCpfExamTypeStatus = (cpf, examType, status) => {
     return axios.get(`${BASE_URL}/consultas/find/cpf/examtype/status?cpf=${cpf}&examType=${examType}&status=${status}`);
 };
 
+export const existsConsultaByPacienteCpf = (cpf) => {
+    return axios.get(`${BASE_URL}/consultas/existsbycpf/${cpf}`);
+};
+
+export const existsConsultaByMedicoCrm = (crm) => {
+    return axios.get(`${BASE_URL}/consultas/existsbycrm/${crm}`);
+};
+
 export const toPostConsulta = async (consultaData, type) => {
     let dateTimeFormated = consultaData.dateTime;
     if (type === "post") {
@@ -86,50 +94,115 @@ export const deleteConsulta = async (id) => {
     }
 };
 
-export const generatePDF = async (namePaciente, dataHoraConsulta) => {
+export const generatePDF = async (consultaData) => {
     const template = {
         schemas: [
             {
+                diagnosticAssumption: {
+                    type: "text",
+                    position: {
+                        x: 29.83,
+                        y: 153.51,
+                    },
+                    width: 149.99,
+                    height: 20.51,
+                    fontSize: 13,
+                    fontColor: "#000000",
+                    alignment: "center",
+                    lineHeight: 1.1,
+                },
+                medico: {
+                    type: "text",
+                    position: {
+                        x: 30.36,
+                        y: 180.27,
+                    },
+                    width: 149.46,
+                    height: 8.35,
+                    fontSize: 13,
+                    fontColor: "#000000",
+                    alignment: "center",
+                    lineHeight: 1.3,
+                },
+                id: {
+                    type: "text",
+                    position: {
+                        x: 2,
+                        y: 0.06,
+                    },
+                    width: 32.52,
+                    height: 8.35,
+                    fontSize: 13,
+                    fontColor: "#000000",
+                    alignment: "left",
+                },
+                exam: {
+                    type: "text",
+                    position: {
+                        x: -0.07,
+                        y: 127.59,
+                    },
+                    width: 209.79,
+                    height: 8.35,
+                    fontSize: 13,
+                    fontColor: "#000000",
+                    alignment: "center",
+                },
+                dateTime: {
+                    type: "text",
+                    position: {
+                        x: -0.07,
+                        y: 101.25,
+                    },
+                    width: 209.79,
+                    height: 8.35,
+                    fontSize: 13,
+                    fontColor: "#000000",
+                    alignment: "center",
+                },
                 pacienteName: {
                     type: "text",
                     position: {
-                        x: 44.88,
-                        y: 56.62,
+                        x: -0.07,
+                        y: 75.44,
                     },
-                    width: 120.2,
-                    height: 6.99,
-                    alignment: "center",
+                    width: 209.79,
+                    height: 8.35,
                     fontSize: 13,
-                    characterSpacing: 0,
-                    lineHeight: 1,
-                },
-                dataHora: {
-                    type: "text",
-                    position: {
-                        x: 45.09,
-                        y: 110.65,
-                    },
-                    width: 120.2,
-                    height: 6.99,
+                    fontColor: "#000000",
                     alignment: "center",
-                    fontSize: 13,
-                    characterSpacing: 0,
-                    lineHeight: 1,
                 },
             },
         ],
         basePdf: getPdfTemplate(),
     };
+    console.log(consultaData);
     const inputs = [
         {
-            pacienteName: namePaciente,
-            dataHora: dataHoraConsulta,
+            diagnosticAssumption:
+                consultaData.diagnosticAssumption.code + " - " + consultaData.diagnosticAssumption.name,
+            medico: consultaData.medico.name + " (" + consultaData.medico.crm + ")",
+            id: "Nº " + consultaData.id,
+            exam: consultaData.examType,
+            dateTime: consultaData.dateTime,
+            pacienteName: consultaData.paciente.name + " (" + maskCPF(consultaData.paciente.cpf) + ")",
         },
     ];
 
     const pdf = await generate({ template, inputs });
 
+    // Node.js
+    // fs.writeFileSync(path.join(__dirname, 'test.pdf'), pdf);
+
     // Browser
     const blob = new Blob([pdf.buffer], { type: "application/pdf" });
     window.open(URL.createObjectURL(blob));
+};
+
+const maskCPF = (cpf) => {
+    cpf = cpf.replace(/\D/g, "");
+    cpf = cpf.replace(/(\d{3})(\d)/, "$1.$2");
+    cpf = cpf.replace(/(\d{3})(\d)/, "$1.$2");
+    cpf = cpf.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+    return cpf;
 };

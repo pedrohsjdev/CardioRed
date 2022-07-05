@@ -49,6 +49,14 @@ export const consultaExists = async (laudoData) => {
     return axios.post(`${BASE_URL}/laudos/consultaExists`, laudoData);
 };
 
+export const existsLaudoByPacienteCpf = (cpf) => {
+    return axios.get(`${BASE_URL}/laudos/existsbycpf/${cpf}`);
+};
+
+export const existsLaudoByMedicoCrm = (crm) => {
+    return axios.get(`${BASE_URL}/laudos/existsbycrm/${crm}`);
+};
+
 export const toPostLaudo = async (laudoData, type) => {
     laudoData = {
         ...laudoData,

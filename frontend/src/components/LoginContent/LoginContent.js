@@ -22,7 +22,7 @@ const LoginContent = () => {
                 closeButton: true,
             });
             saveTokens(response.data);
-            setTimeout(navigate("/home"), 5000);
+            setTimeout(navigate("/home"), 2500);
         } else if (response.status == 401) {
             Notify.failure("Não foi possível efetuar o login.");
             setCredentialsValidated(false);
@@ -72,6 +72,7 @@ const LoginContent = () => {
                                         <p className="valitation-message ">Credenciais inválidas!</p>
                                     </div>
                                     <input
+                                        autoComplete="off"
                                         type="text"
                                         placeholder="Usuário"
                                         className={"login-input " + (credentialsValidated ? "" : "invalid")}
@@ -82,6 +83,7 @@ const LoginContent = () => {
 
                                 <div className="login-box">
                                     <input
+                                        autoComplete="off"
                                         type="password"
                                         placeholder="Senha"
                                         className={"login-input " + (credentialsValidated ? "" : "invalid")}

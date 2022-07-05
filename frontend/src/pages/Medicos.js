@@ -17,7 +17,9 @@ import { Notify } from "notiflix/build/notiflix-notify-aio";
 import { userIsAuthenticated, userIsAdm } from "../services/Login/LoginService";
 import { useNavigate } from "react-router-dom";
 import { saveMedico, updateMedico, deleteMedico } from "../services/Medico/MedicoService";
-import { Loading } from "notiflix";
+import { Loading, Report } from "notiflix";
+import { existsConsultaByMedicoCrm } from "../services/Consulta/ConsultaService";
+import { existsLaudoByMedicoCrm } from "../services/Laudo/LaudoService";
 
 const Medicos = () => {
     const navigate = useNavigate();
@@ -54,10 +56,10 @@ const Medicos = () => {
             Loading.remove();
             setShowModalCreate(false);
             flushMedicoTable();
-            Notify.success("Medico cadastrado com sucesso!");
+            Notify.success("Medico cadastrado com sucesso!", { closeButton: true });
         } else {
             Loading.remove();
-            Notify.failure("Não foi possível cadastrar o médico!");
+            Notify.failure("Não foi possível cadastrar o médico!", { closeButton: true });
             console.error(response);
         }
     };
@@ -80,19 +82,54 @@ const Medicos = () => {
 
     const deleteMedicoData = async () => {
         Loading.circle();
-        const response = await deleteMedico(medicoData.id);
+        existsConsultaByMedicoCrm(medicoData.crm).then((e) => {
+            if (!e.data) {
+                existsLaudoByMedicoCrm(medicoData.crm).then(async (e) => {
+                    if (!e.data) {
+                        const response = await deleteMedico(medicoData.id);
 
-        if (response.status == 204) {
-            Loading.remove();
-            setShowModalDelete(false);
-            setShowModalView(false);
-            flushMedicoTable();
-            Notify.success("Medico removido com sucesso!");
-        } else {
-            Loading.remove();
-            Notify.failure("Não foi possível remover o Medico.");
-            console.error(response);
-        }
+                        if (response.status == 204) {
+                            Loading.remove();
+                            setShowModalDelete(false);
+                            setShowModalView(false);
+                            flushMedicoTable();
+                            Notify.success("Médico removido com sucesso!", { closeButton: true });
+                        } else {
+                            Loading.remove();
+                            Notify.failure("Não foi possível remover o médico.", { closeButton: true });
+                            console.error(response);
+                        }
+                    } else {
+                        Loading.remove();
+                        Report.failure(
+                            "Não foi possível remover o médico.",
+                            "Existem laudos cadastrados por esse médico.",
+                            "Ok",
+                            () => {},
+                            {
+                                titleColor: "#b5303e",
+                                okButtonBackground: "#b5303e",
+                                titleFontSize: "1.3rem",
+                                messageFontSize: "1rem",
+                                buttonsFontSize: "1rem",
+                            }
+                        );
+                    }
+                });
+            } else {
+                Loading.remove();
+                Report.failure(
+                    "Não foi possível remover o médico.",
+                    "Existem consultas cadastradas por esse médico.",
+                    "Ok",
+                    () => {},
+                    {
+                        titleColor: "#b5303e",
+                        okButtonBackground: "#b5303e",
+                    }
+                );
+            }
+        });
     };
 
     const openModalCreate = () => {

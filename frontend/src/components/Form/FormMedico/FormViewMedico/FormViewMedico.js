@@ -8,7 +8,7 @@ const FormViewMedico = ({ medicoData, openModalUpdate, openModalDelete, setShow 
             <Form.Control hidden defaultValue={medicoData.id} />
             <Form.Group as={Row} className="mb-3">
                 <Form.Label column sm={2}>
-                    CRM*:
+                    CRM:
                 </Form.Label>
                 <Col sm={10}>
                     <Form.Control disabled defaultValue={medicoData.crm} type="text" />
@@ -16,7 +16,7 @@ const FormViewMedico = ({ medicoData, openModalUpdate, openModalDelete, setShow 
             </Form.Group>
             <Form.Group as={Row} className="mb-3">
                 <Form.Label column sm={2}>
-                    Nome*:
+                    Nome:
                 </Form.Label>
                 <Col sm={10}>
                     <Form.Control disabled defaultValue={medicoData.name} type="text" />
@@ -24,7 +24,7 @@ const FormViewMedico = ({ medicoData, openModalUpdate, openModalDelete, setShow 
             </Form.Group>
             <Form.Group as={Row} className="mb-3">
                 <Form.Label column sm={2}>
-                    Hierarquia*:
+                    Hierarquia:
                 </Form.Label>
                 <Col sm={10}>
                     <Form.Select disabled defaultValue={medicoData.doctorType} type="text">
@@ -37,7 +37,7 @@ const FormViewMedico = ({ medicoData, openModalUpdate, openModalDelete, setShow 
             </Form.Group>
             <Form.Group as={Row} className="mb-3">
                 <Form.Label column sm={4}>
-                    Ano de Residência*:
+                    Ano de Residência:
                 </Form.Label>
                 <Col sm={8}>
                     <Form.Control disabled type="number" defaultValue={medicoData.residencyYear} />
@@ -45,7 +45,7 @@ const FormViewMedico = ({ medicoData, openModalUpdate, openModalDelete, setShow 
             </Form.Group>
             <Form.Group as={Row} className="mb-3">
                 <Form.Label column sm={2}>
-                    Titulação*:
+                    Titulação:
                 </Form.Label>
                 <Col sm={10}>
                     <Form.Select disabled defaultValue={medicoData.titulation} type="text">
@@ -59,7 +59,7 @@ const FormViewMedico = ({ medicoData, openModalUpdate, openModalDelete, setShow 
             </Form.Group>
             <Form.Group as={Row} className="mb-3">
                 <Form.Label column sm={2}>
-                    Senha*:
+                    Senha:
                 </Form.Label>
                 <Col sm={10}>
                     <Form.Control disabled defaultValue={medicoData.password} type="text" />

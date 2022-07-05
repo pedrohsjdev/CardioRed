@@ -148,10 +148,10 @@ const FormUpdateLaudo = ({ laudoData, setLaudoData, updateLaudo, setShow }) => {
         if (userIsAdm()) {
             return (
                 <Form.Group as={Row} className="mb-3">
-                    <Form.Label column sm={2}>
+                    <Form.Label column sm={3}>
                         Médico*:
                     </Form.Label>
-                    <Col sm={10}>
+                    <Col sm={9}>
                         <AsyncTypeahead
                             id="medicoAsync"
                             isInvalid={medicoIsInvalid}
@@ -192,18 +192,18 @@ const FormUpdateLaudo = ({ laudoData, setLaudoData, updateLaudo, setShow }) => {
     return (
         <Form noValidate validated={validated} onSubmit={handleSubmit}>
             <Form.Group as={Row} className="mb-3">
-                <Form.Label column sm={2}>
+                <Form.Label column sm={3}>
                     Identificador:
                 </Form.Label>
-                <Col sm={10}>
+                <Col sm={9}>
                     <Form.Control defaultValue={laudoData.id} name="id" disabled type="number" />
                 </Col>
             </Form.Group>
             <Form.Group as={Row} className="mb-3">
-                <Form.Label column sm={2}>
+                <Form.Label column sm={3}>
                     Resultados*:
                 </Form.Label>
-                <Col sm={10}>
+                <Col sm={9}>
                     <button
                         onClick={(e) => {
                             e.preventDefault();
@@ -249,10 +249,10 @@ const FormUpdateLaudo = ({ laudoData, setLaudoData, updateLaudo, setShow }) => {
                 </Col>
             </Form.Group>
             <Form.Group as={Row} className="mb-3">
-                <Form.Label column sm={2}>
+                <Form.Label column sm={3}>
                     Paciente*:
                 </Form.Label>
-                <Col sm={10}>
+                <Col sm={9}>
                     <Form.Control
                         disabled
                         defaultValue={laudoData.paciente.name + " - " + maskCPF(laudoData.paciente.cpf)}
@@ -261,18 +261,18 @@ const FormUpdateLaudo = ({ laudoData, setLaudoData, updateLaudo, setShow }) => {
             </Form.Group>
             {renderMedicoInput()}
             <Form.Group as={Row} className="mb-3">
-                <Form.Label column sm={2}>
+                <Form.Label column sm={3}>
                     Exame*:
                 </Form.Label>
-                <Col sm={10}>
+                <Col sm={9}>
                     <Form.Control disabled defaultValue={laudoData.examType}></Form.Control>
                 </Col>
             </Form.Group>
             <Form.Group as={Row} className="mb-3">
-                <Form.Label column sm={2}>
+                <Form.Label column sm={3}>
                     Descrição*:
                 </Form.Label>
-                <Col sm={10}>
+                <Col sm={9}>
                     <Form.Control
                         defaultValue={laudoData.description}
                         as="textarea"
@@ -287,10 +287,10 @@ const FormUpdateLaudo = ({ laudoData, setLaudoData, updateLaudo, setShow }) => {
                 </Col>
             </Form.Group>
             <Form.Group as={Row} className="mb-3">
-                <Form.Label column sm={2}>
+                <Form.Label column sm={3}>
                     Conclusão*:
                 </Form.Label>
-                <Col sm={10}>
+                <Col sm={9}>
                     <AsyncTypeahead
                         defaultInputValue={laudoData.conclusion.code + " - " + laudoData.conclusion.name}
                         id="cidAsync"
