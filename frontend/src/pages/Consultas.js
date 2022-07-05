@@ -75,17 +75,16 @@ const Consultas = () => {
 
     const updateConsultaData = async () => {
         Loading.circle();
-        const response = await updateConsulta(consultaData);
-
-        if (response.status == 204) {
-            Loading.remove();
-            setShowModalUpdate(false);
-            flushConsultaTable();
-            Notify.success("Consulta atualizada com sucesso!");
-        } else {
+        const response = await updateConsulta(consultaData).catch((e) => {
             Loading.remove();
             Notify.failure("Não foi possível modificar a consulta!");
-            console.error(response);
+        });
+
+        if (response.status == 204) {
+            setShowModalUpdate(false);
+            flushConsultaTable();
+            Loading.remove();
+            Notify.success("Consulta atualizada com sucesso!");
         }
     };
 

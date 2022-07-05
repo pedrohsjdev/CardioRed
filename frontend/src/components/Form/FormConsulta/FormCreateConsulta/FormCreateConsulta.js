@@ -5,7 +5,7 @@ import Col from "react-bootstrap/Col";
 import { AsyncTypeahead } from "react-bootstrap-typeahead";
 import moment from "moment";
 import { getPacientesByName } from "../../../../services/Paciente/PacienteService";
-import { findMedicosByName } from "../../../../services/Medico/MedicoService";
+import { getMedicosByName } from "../../../../services/Medico/MedicoService";
 import {
     getLastCosultaId,
     consultaAlreadyExistsSaving,
@@ -31,7 +31,6 @@ const FormCreateConsulta = ({ newConsultaData, setNewConsultaData, saveConsulta,
             ...newConsultaData,
             [event.target.name]: event.target.value,
         });
-        console.log(newConsultaData);
     };
 
     const isLetter = (char) => {
@@ -77,8 +76,6 @@ const FormCreateConsulta = ({ newConsultaData, setNewConsultaData, saveConsulta,
     const [errorPacienteMessage, setErrorPacienteMessage] = useState("");
     const handleSubmit = (event) => {
         event.preventDefault();
-        if (!newConsultaData.medico) {
-        }
         if (!newConsultaData.paciente) {
             setPacienteIsInvalid(true);
             setErrorPacienteMessage("Informe o paciente.");
@@ -127,7 +124,7 @@ const FormCreateConsulta = ({ newConsultaData, setNewConsultaData, saveConsulta,
     const handleSearchMedico = (name) => {
         setIsLoadingMedico(true);
 
-        findMedicosByName(name.charAt(0).toUpperCase() + name.slice(1)).then((response) => {
+        getMedicosByName(name.charAt(0).toUpperCase() + name.slice(1)).then((response) => {
             setOptionsMedico(response.data);
             setIsLoadingMedico(false);
         });
@@ -137,10 +134,10 @@ const FormCreateConsulta = ({ newConsultaData, setNewConsultaData, saveConsulta,
         if (userIsAdm()) {
             return (
                 <Form.Group as={Row} className="mb-3">
-                    <Form.Label column sm={2}>
+                    <Form.Label column sm={3}>
                         Médico*:
                     </Form.Label>
-                    <Col sm={10}>
+                    <Col sm={9}>
                         <AsyncTypeahead
                             id="medicoAsync"
                             isInvalid={medicoIsInvalid}
@@ -160,7 +157,6 @@ const FormCreateConsulta = ({ newConsultaData, setNewConsultaData, saveConsulta,
                                 } else {
                                     setMedicoIsInvalid(false);
                                 }
-                                console.log(newConsultaData);
                             }}
                             renderMenuItemChildren={(option) => (
                                 <span>
@@ -180,18 +176,18 @@ const FormCreateConsulta = ({ newConsultaData, setNewConsultaData, saveConsulta,
     return (
         <Form noValidate validated={validated} onSubmit={handleSubmit}>
             <Form.Group as={Row} className="mb-3">
-                <Form.Label column sm={2}>
+                <Form.Label column sm={3}>
                     Identificador*:
                 </Form.Label>
-                <Col sm={3}>
+                <Col sm={9}>
                     <Form.Control value={newId} disabled name="id" type="number" />
                 </Col>
             </Form.Group>
             <Form.Group as={Row} className="mb-3">
-                <Form.Label column sm={2}>
+                <Form.Label column sm={3}>
                     Paciente*:
                 </Form.Label>
-                <Col sm={10}>
+                <Col sm={9}>
                     <AsyncTypeahead
                         id="pacienteAsync"
                         isInvalid={pacienteIsInvalid}
@@ -247,10 +243,10 @@ const FormCreateConsulta = ({ newConsultaData, setNewConsultaData, saveConsulta,
                 </Col>
             </Form.Group>
             <Form.Group as={Row} className="mb-3">
-                <Form.Label column sm={2}>
+                <Form.Label column sm={3}>
                     Exame*:
                 </Form.Label>
-                <Col sm={10}>
+                <Col sm={9}>
                     <Form.Select isInvalid={examTypeIsInvalid} onChange={consultaChange} required name="examType">
                         <option value="">Escolha uma opção</option>
                         <option value="Ecocardiograma">Ecocardiograma</option>
@@ -265,11 +261,12 @@ const FormCreateConsulta = ({ newConsultaData, setNewConsultaData, saveConsulta,
                 </Col>
             </Form.Group>
             <Form.Group as={Row} className="mb-3">
-                <Form.Label column sm={4}>
+                <Form.Label column sm={3}>
                     Hipótese diagnóstica*:
                 </Form.Label>
-                <Col sm={8}>
+                <Col sm={9}>
                     <AsyncTypeahead
+                        className="input-heigth-large"
                         id="cidAsync"
                         isInvalid={diagnosticAssumptionIsInvalid}
                         required
@@ -283,7 +280,6 @@ const FormCreateConsulta = ({ newConsultaData, setNewConsultaData, saveConsulta,
                         searchText="Buscando..."
                         emptyLabel="Nenhum código encontrado."
                         onChange={(option) => {
-                            console.log;
                             setNewConsultaData({ ...newConsultaData, diagnosticAssumption: option[0] });
                             if (!option.length) {
                                 setDiagnosticAssumptionIsInvalid(true);
@@ -297,10 +293,13 @@ const FormCreateConsulta = ({ newConsultaData, setNewConsultaData, saveConsulta,
                             </span>
                         )}
                     />
-
-                    <Form.Control.Feedback tooltip type="invalid">
+                    <div
+                        hidden={!diagnosticAssumptionIsInvalid}
+                        className="invalid-tooltip"
+                        style={{ display: "block" }}
+                    >
                         Informe a hipótese diagnóstica.
-                    </Form.Control.Feedback>
+                    </div>
                 </Col>
             </Form.Group>
             <div className="modal-footer d-flex justify-content-between">

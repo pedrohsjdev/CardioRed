@@ -7,6 +7,7 @@ import TaskChecked from "../../../../assets/task-checked.svg";
 import "./FormViewConsulta.css";
 import { generatePDF, updateConsulta } from "../../../../services/Consulta/ConsultaService";
 import { Confirm, Notify } from "notiflix";
+import { userIsAdm, getUsername } from "../../../../services/Login/LoginService";
 
 const FormViewConsulta = ({ consultaData, setConsultaData, openModalUpdate, openModalDelete, setShow }) => {
     const finishedConsulta = () => {
@@ -63,6 +64,72 @@ const FormViewConsulta = ({ consultaData, setConsultaData, openModalUpdate, open
             );
         }
     };
+
+    const renderMedicoInput = () => {
+        if (userIsAdm()) {
+            return (
+                <Form.Group as={Row} className="mb-3">
+                    <Form.Label column sm={3}>
+                        Médico:
+                    </Form.Label>
+                    <Col sm={9}>
+                        <Form.Control
+                            defaultValue={consultaData.medico.name + " (" + consultaData.medico.crm + ")"}
+                            disabled
+                            type="text"
+                        />
+                    </Col>
+                </Form.Group>
+            );
+        }
+    };
+
+    const renderFooter = () => {
+        if (!userIsAdm() && consultaData.medico.crm !== getUsername()) {
+            return null;
+        }
+        if (consultaData.status === "Aguardando laudo") {
+            return (
+                <div className="modal-footer d-flex justify-content-center">
+                    <button
+                        type="button"
+                        className="btn btn-primary btn-modal btn-left"
+                        onClick={() => {
+                            openModalDelete();
+                        }}
+                    >
+                        Remover
+                    </button>
+                </div>
+            );
+        }
+        if (consultaData.status !== "Laudo emitido") {
+            return (
+                <div className="modal-footer d-flex justify-content-between">
+                    <button
+                        type="button"
+                        className="btn btn-primary btn-modal btn-left"
+                        onClick={() => {
+                            openModalDelete();
+                        }}
+                    >
+                        Remover
+                    </button>
+                    <button
+                        type="button"
+                        className="btn btn-primary btn-modal"
+                        onClick={() => {
+                            setShow(false);
+                            openModalUpdate();
+                        }}
+                    >
+                        Modificar
+                    </button>
+                </div>
+            );
+        }
+    };
+
     return (
         <Form>
             <Form.Group as={Row} className="mb-3">
@@ -80,12 +147,15 @@ const FormViewConsulta = ({ consultaData, setConsultaData, openModalUpdate, open
                 </Form.Label>
                 <Col sm={9}>
                     <Form.Control
-                        defaultValue={consultaData.paciente ? consultaData.paciente.name : ""}
+                        defaultValue={
+                            consultaData.paciente ? consultaData.paciente.name + " - " + consultaData.paciente.cpf : ""
+                        }
                         disabled
                         type="text"
                     />
                 </Col>
             </Form.Group>
+            {renderMedicoInput()}
             <Form.Group as={Row} className="mb-3">
                 <Form.Label column sm={3}>
                     Data e Hora:
@@ -132,27 +202,7 @@ const FormViewConsulta = ({ consultaData, setConsultaData, openModalUpdate, open
                 </Col>
                 <Col className="print-container">{renderChangeStatusIcon()}</Col>
             </Form.Group>
-            <div className="modal-footer d-flex justify-content-between">
-                <button
-                    type="button"
-                    className="btn btn-primary btn-modal btn-left"
-                    onClick={() => {
-                        openModalDelete();
-                    }}
-                >
-                    Remover
-                </button>
-                <button
-                    type="button"
-                    className="btn btn-primary btn-modal"
-                    onClick={() => {
-                        setShow(false);
-                        openModalUpdate();
-                    }}
-                >
-                    Modificar
-                </button>
-            </div>
+            {renderFooter()}
         </Form>
     );
 };

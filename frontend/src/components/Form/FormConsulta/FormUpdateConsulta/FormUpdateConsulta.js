@@ -4,7 +4,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { AsyncTypeahead } from "react-bootstrap-typeahead";
 import { getPacientesByName } from "../../../../services/Paciente/PacienteService";
-import { findMedicosByName } from "../../../../services/Medico/MedicoService";
+import { getMedicosByName } from "../../../../services/Medico/MedicoService";
 import moment from "moment";
 import {
     findCIDByCode,
@@ -124,7 +124,7 @@ const FormUpdateConsulta = ({ consultaData, setConsultaData, updateConsulta, set
     const handleSearchMedico = (name) => {
         setIsLoadingMedico(true);
 
-        findMedicosByName(name.charAt(0).toUpperCase() + name.slice(1)).then((response) => {
+        getMedicosByName(name.charAt(0).toUpperCase() + name.slice(1)).then((response) => {
             setOptionsMedico(response.data);
             setIsLoadingMedico(false);
         });
@@ -134,11 +134,12 @@ const FormUpdateConsulta = ({ consultaData, setConsultaData, updateConsulta, set
         if (userIsAdm()) {
             return (
                 <Form.Group as={Row} className="mb-3">
-                    <Form.Label column sm={2}>
+                    <Form.Label column sm={3}>
                         Médicos*:
                     </Form.Label>
-                    <Col sm={10}>
+                    <Col sm={9}>
                         <AsyncTypeahead
+                            defaultInputValue={consultaData.medico.name + " - " + consultaData.medico.crm}
                             id="pacienteAsync"
                             isInvalid={medicoIsInvalid}
                             required
@@ -177,10 +178,10 @@ const FormUpdateConsulta = ({ consultaData, setConsultaData, updateConsulta, set
     return (
         <Form noValidate validated={validated} onSubmit={handleSubmit}>
             <Form.Group as={Row} className="mb-3">
-                <Form.Label column sm={2}>
+                <Form.Label column sm={3}>
                     Identificador*:
                 </Form.Label>
-                <Col sm={3}>
+                <Col sm={9}>
                     <Form.Control
                         defaultValue={consultaData.id}
                         disabled
@@ -191,12 +192,12 @@ const FormUpdateConsulta = ({ consultaData, setConsultaData, updateConsulta, set
                 </Col>
             </Form.Group>
             <Form.Group as={Row} className="mb-3">
-                <Form.Label column sm={2}>
+                <Form.Label column sm={3}>
                     Paciente*:
                 </Form.Label>
-                <Col sm={10}>
+                <Col sm={9}>
                     <AsyncTypeahead
-                        defaultInputValue={consultaData.paciente.name}
+                        defaultInputValue={consultaData.paciente.name + " - " + consultaData.paciente.cpf}
                         id="pacienteAsync"
                         isInvalid={pacienteIsInvalid}
                         required
@@ -247,10 +248,10 @@ const FormUpdateConsulta = ({ consultaData, setConsultaData, updateConsulta, set
                 </Col>
             </Form.Group>
             <Form.Group as={Row} className="mb-3">
-                <Form.Label column sm={2}>
+                <Form.Label column sm={3}>
                     Exame*:
                 </Form.Label>
-                <Col sm={10}>
+                <Col sm={9}>
                     <Form.Select
                         isInvalid={examTypeIsInvalid}
                         defaultValue={consultaData.examType}
@@ -270,11 +271,12 @@ const FormUpdateConsulta = ({ consultaData, setConsultaData, updateConsulta, set
                 </Col>
             </Form.Group>
             <Form.Group as={Row} className="mb-3">
-                <Form.Label column sm={4}>
+                <Form.Label column sm={3}>
                     Hipótese diagnóstica*:
                 </Form.Label>
-                <Col sm={8}>
+                <Col sm={9}>
                     <AsyncTypeahead
+                        className="input-heigth-large"
                         defaultInputValue={
                             consultaData.diagnosticAssumption.code + " - " + consultaData.diagnosticAssumption.name
                         }
