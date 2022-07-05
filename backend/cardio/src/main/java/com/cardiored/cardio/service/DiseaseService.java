@@ -40,10 +40,10 @@ public class DiseaseService {
         boolean loaded = false;
 
         try {
-            File file = new File("backend/cardio/src/cid10.json");
+            File file = new File("cardio/src/cid10.json");
             System.out.println("path:" + file.getCanonicalPath());
             ObjectMapper mapper = new ObjectMapper();
-            InputStream inputStream = new FileInputStream(new File("backend/cardio/src/cid10.json"));
+            InputStream inputStream = new FileInputStream(new File("cardio/src/cid10.json"));
             TypeReference<List<Disease>> typeReference = new TypeReference<List<Disease>>() {
             };
             List<Disease> diseases = mapper.readValue(inputStream, typeReference);
