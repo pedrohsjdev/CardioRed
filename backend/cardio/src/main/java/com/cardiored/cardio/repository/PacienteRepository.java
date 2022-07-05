@@ -16,6 +16,8 @@ public interface PacienteRepository extends JpaRepository<Paciente, Integer> {
 
     Page<Paciente> findByNameContains(@Param("name") String name, Pageable pageable);
 
+    List<Paciente> findByNameContains(@Param("name") String name);
+
     Page<Paciente> findByCpfContains(@Param("cpf") String cpf, Pageable pageable);
 
     Paciente findByCpf(String cpf);
