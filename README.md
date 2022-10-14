@@ -2,8 +2,6 @@
 ### Sistema Web de Cardiologia para Universidades com curso de medicina.
 
 [Clique aqui para acessar o sistema](https://cardiored.netlify.app/)
-Usuário: admin
-Senha: 1234
 
 Para esse processo foi desenvolvido um documento de especificações de requisitos, com todas as funcionalidades do sistema, modelo conceitual, lógico e  fisíco do banco de dados, juntamente com a lógica de negócio e o fluxo que os usuários utilizam no sistema.
 
